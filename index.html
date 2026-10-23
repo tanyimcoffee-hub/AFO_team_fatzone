@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="วางแผนทริปท่องเที่ยวประเทศไทยด้วย Thai Travel AI" />
+  <title>Thai Travel AI — วางแผนทริปท่องเที่ยว</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Noto Sans Thai", "Segoe UI", Tahoma, sans-serif;
+      color: #1d2939;
+      background: #f3f6fa;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; }
+    header { padding: 1.25rem max(1rem, calc((100% - 980px) / 2)); background: #123b32; color: #fff; }
+    header h1 { margin: 0; font-size: 1.45rem; }
+    header p { margin: .25rem 0 0; color: #d5e8dd; }
+    main { width: min(980px, calc(100% - 2rem)); margin: 1.5rem auto 3rem; }
+    .notice { padding: .9rem 1rem; border: 1px solid #f0c36d; border-radius: .75rem; background: #fff8e7; color: #694b0b; line-height: 1.55; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .75fr); gap: 1rem; margin-top: 1rem; align-items: start; }
+    .card { padding: 1.2rem; border: 1px solid #e1e7ef; border-radius: 1rem; background: #fff; box-shadow: 0 4px 16px #172b4d0c; }
+    h2 { margin: 0 0 1rem; font-size: 1.1rem; }
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; }
+    label { display: block; margin-bottom: .35rem; font-size: .9rem; font-weight: 600; }
+    input, select { width: 100%; min-height: 2.7rem; padding: .55rem .7rem; border: 1px solid #cbd5e1; border-radius: .55rem; color: inherit; background: #fff; font: inherit; }
+    input:focus, select:focus { outline: 3px solid #2e8b6c33; border-color: #2e8b6c; }
+    .interests { margin: 1rem 0; }
+    .checks { display: flex; flex-wrap: wrap; gap: .5rem .9rem; }
+    .check { display: inline-flex; align-items: center; gap: .35rem; font-weight: 400; }
+    .check input { width: auto; min-height: auto; accent-color: #20785b; }
+    button { width: 100%; min-height: 2.8rem; border: 0; border-radius: .6rem; background: #167252; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+    button:hover { background: #105c42; }
+    button:disabled { cursor: wait; opacity: .65; }
+    .status { margin: .85rem 0 0; color: #475467; line-height: 1.5; }
+    .status.error { color: #b42318; }
+    .result { margin-top: 1rem; }
+    .result h3 { margin: 1rem 0 .35rem; font-size: 1rem; }
+    .result p { margin: .25rem 0; line-height: 1.55; }
+    .result-day { padding: .8rem 0; border-top: 1px solid #e7ebf0; }
+    .result-day ul { margin: .4rem 0 0; padding-left: 1.2rem; }
+    .muted { color: #667085; }
+    .empty { padding: .85rem; border-radius: .6rem; background: #f5f7fa; color: #667085; line-height: 1.5; }
+    .hidden { display: none !important; }
+    @media (max-width: 720px) {
+      .layout { grid-template-columns: 1fr; }
+      .field-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🧭 Thai Travel AI</h1>
+    <p>ผู้ช่วยวางแผน Road Trip ในประเทศไทย</p>
+  </header>
+  <main>
+    <div class="notice" role="note">
+      <strong>สถานะระบบ:</strong> API วางแผนที่เชื่อมต่ออยู่เป็นข้อมูลจำลอง ไม่ใช่คำแนะนำจาก AI หรือข้อมูลสถานที่/เส้นทางที่ตรวจสอบจริง
+      รายการสถานที่ในเครื่องจะว่างไว้จนกว่าจะมีข้อมูลที่มีแหล่งอ้างอิง
+    </div>
+    <div class="layout">
+      <section class="card" aria-labelledby="planner-heading">
+        <h2 id="planner-heading">รายละเอียดการเดินทาง</h2>
+        <form id="plan-form">
+          <div class="field-grid">
+            <div>
+              <label for="origin">จุดเริ่มต้น</label>
+              <input id="origin" name="origin" required maxlength="120" placeholder="เช่น ขอนแก่น" />
+            </div>
+            <div>
+              <label for="destination">จุดหมายปลายทาง</label>
+              <input id="destination" name="destination" required maxlength="120" placeholder="เช่น นครราชสีมา" />
+            </div>
+            <div>
+              <label for="days">จำนวนวัน</label>
+              <input id="days" name="days" type="number" min="1" max="30" value="3" required />
+            </div>
+            <div>
+              <label for="budget">งบประมาณรวม (บาท)</label>
+              <input id="budget" name="budgetTHB" type="number" min="0" step="100" value="5000" required />
+            </div>
+          </div>
+          <fieldset class="interests">
+            <legend><strong>ความสนใจ</strong></legend>
+            <div class="checks">
+              <label class="check"><input type="checkbox" name="interests" value="ธรรมชาติ" checked /> ธรรมชาติ</label>
+              <label class="check"><input type="checkbox" name="interests" value="วัฒนธรรม" /> วัฒนธรรม</label>
+              <label class="check"><input type="checkbox" name="interests" value="คาเฟ่" /> คาเฟ่</label>
+              <label class="check"><input type="checkbox" name="interests" value="อาหาร" /> อาหาร</label>
+            </div>
+          </fieldset>
+          <button id="submit-button" type="submit">สร้างแผนตัวอย่าง</button>
+        </form>
+        <p id="request-status" class="status" role="status">กรอกข้อมูลเพื่อเรียก API วางแผน</p>
+        <section id="plan-result" class="result hidden" aria-live="polite"></section>
+      </section>
+      <aside class="card" aria-labelledby="places-heading">
+        <h2 id="places-heading">สถานที่ที่มีแหล่งอ้างอิง</h2>
+        <p id="places-status" class="empty" role="status">กำลังโหลดรายการสถานที่…</p>
+        <ul id="places-list"></ul>
+      </aside>
+    </div>
+  </main>
+  <script src="./app.js" defer></script>
+</body>
+</html>
