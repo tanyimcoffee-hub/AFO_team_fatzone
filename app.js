@@ -214,6 +214,7 @@ function clearFormErrors() {
 }
 
 function showFormErrors(errors) {
+  document.getElementById("trip-details").open = true;
   const shown = new Set();
   const list = document.createElement("ul");
 
@@ -611,6 +612,7 @@ function initRouteCar() {
 // ---------- จังหวัด แผนสำเร็จรูป และการ์ด ----------
 
 function scrollToPlanner(focusTarget) {
+  document.getElementById("trip-details").open = true;
   document.getElementById("planner").scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
   focusTarget.focus({ preventScroll: true });
 }
@@ -831,6 +833,8 @@ async function sendPlanRequest(payload, userText, { retry = false } = {}) {
         : "AI ตอบกลับแล้ว แต่ยังต้องการข้อมูลเพิ่มเติม พิมพ์ตอบในช่องใต้แชตได้"
     );
     replyForm.classList.remove("hidden");
+    // ได้คำตอบแล้ว: พับฟอร์มเก็บ ให้บทสนทนาเด่นขึ้น (กดหัวข้อ "ข้อมูลทริป" เพื่อแก้ไขได้)
+    document.getElementById("trip-details").open = false;
     replyInput.placeholder = plan.status === "ready" ? "อยากปรับแผน? พิมพ์บอก AI ได้เลย" : "พิมพ์ตอบคำถามของ AI";
     renderPlan(result, payload);
   } catch (error) {

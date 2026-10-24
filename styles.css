@@ -153,6 +153,11 @@ nav { margin-left: auto; }
 .bubble h3:focus { outline: none; }
 .bubble h3:focus-visible { outline: 3px solid var(--focus); }
 
+.trip-details { border-radius: 16px; background: var(--cream); color: var(--text); }
+.trip-details > summary { padding: .8rem 1rem; font-weight: 700; color: var(--brown-700); cursor: pointer; list-style-position: inside; }
+.trip-details[open] > summary { padding-bottom: 0; }
+.trip-details[open] .summary-hint { display: none; }
+.summary-hint { font-weight: 400; color: var(--muted); font-size: .9rem; }
 .chat-form { padding: 1rem; border-radius: 16px; background: var(--cream); color: var(--text); }
 .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
 @media (max-width: 520px) { .field-grid { grid-template-columns: 1fr; } }
