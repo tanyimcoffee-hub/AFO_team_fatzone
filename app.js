@@ -151,7 +151,8 @@ async function loadPlaces() {
 
 // ---------- ตรวจสอบข้อมูลในฟอร์ม ----------
 
-const VALIDATED_FIELDS = ["origin", "destination", "days", "budget"];
+const VALIDATED_FIELDS = ["origin", "destination", "tripType", "travelers", "days", "budget"];
+const MAX_TRAVELERS = 50;
 
 function readForm() {
   const formData = new FormData(form);
@@ -166,6 +167,8 @@ function readForm() {
     destination: String(formData.get("destination") || "").trim(),
     daysRaw: String(formData.get("days") || "").trim(),
     budgetRaw: String(formData.get("budgetTHB") || "").trim(),
+    tripType: String(formData.get("tripType") || ""),
+    travelersRaw: String(formData.get("travelers") || "").trim(),
     interests,
   };
 }
@@ -176,6 +179,14 @@ function validateForm(values) {
   if (!values.destination) errors.push({ id: "destination", message: "กรุณาระบุจุดหมายปลายทาง" });
   if (values.origin && values.destination && values.origin === values.destination) {
     errors.push({ id: "destination", message: "จุดหมายปลายทางต้องไม่ซ้ำกับจุดเริ่มต้น" });
+  }
+  if (!TRIP_TYPE_LABELS[values.tripType]) {
+    errors.push({ id: "tripType", message: "กรุณาเลือกประเภททริป" });
+  }
+
+  const travelers = Number(values.travelersRaw);
+  if (!values.travelersRaw || !Number.isInteger(travelers) || travelers < 1 || travelers > MAX_TRAVELERS) {
+    errors.push({ id: "travelers", message: `จำนวนผู้เดินทางต้องเป็นจำนวนเต็มระหว่าง 1–${MAX_TRAVELERS}` });
   }
 
   const days = Number(values.daysRaw);
@@ -188,7 +199,7 @@ function validateForm(values) {
     errors.push({ id: "budget", message: "งบประมาณต้องเป็นตัวเลขมากกว่า 0 บาท" });
   }
 
-  return { errors, days, budget };
+  return { errors, days, budget, travelers };
 }
 
 function clearFormErrors() {
@@ -322,7 +333,7 @@ function hideTyping() {
 
 function describeRequest(payload) {
   const interests = payload.interests.length ? ` ชอบ${payload.interests.join(", ")}` : "";
-  return `อยากเที่ยวจาก ${payload.origin} ไป ${payload.destination} ${payload.days} วัน งบ ${formatTHB(payload.budgetTHB)}${interests}`;
+  return `อยากเที่ยวจาก ${payload.origin} ไป ${payload.destination} ${payload.days} วัน แบบ${TRIP_TYPE_LABELS[payload.tripType]} ${payload.travelers} คน งบ ${formatTHB(payload.budgetTHB)}${interests}`;
 }
 
 // ---------- แสดงผล ----------
@@ -433,6 +444,7 @@ function setLoading(isLoading) {
   submitButton.disabled = isLoading;
   submitButton.classList.toggle("is-loading", isLoading);
   submitLabel.textContent = isLoading ? "AI กำลังวางแผน…" : "สร้างแผนเที่ยว";
+  replyButton.disabled = isLoading;
   chatLog.setAttribute("aria-busy", String(isLoading));
 }
 
@@ -720,7 +732,7 @@ async function loadExplorerPlaces() {
     for (const place of items) {
       const item = document.createElement("li");
       appendTextElement(item, "strong", place.name);
-      const extra = [place.nameEn, place.brand && place.brand !== place.name ? place.brand : null].filter(Boolean);
+      const extra = [...new Set([place.nameEn, place.brand].filter((text) => text && text !== place.name))];
       if (extra.length) appendTextElement(item, "span", extra.join(" · "));
       const link = osmLink(place);
       if (link) item.append(link);
@@ -788,12 +800,55 @@ function initCarousel() {
 
 // ---------- ส่งฟอร์ม ----------
 
+// บทสนทนาของทริปปัจจุบัน ส่งเป็น history ให้ AI เมื่อผู้ใช้พิมพ์ตอบ
+const MAX_HISTORY_ITEMS = 20;
+const replyForm = document.getElementById("reply-form");
+const replyInput = document.getElementById("reply-input");
+const replyButton = document.getElementById("reply-button");
+let conversation = [];
+let currentPayload = null;
+
+async function sendPlanRequest(payload, userText) {
+  setLoading(true);
+  appendTextElement(addBubble("user"), "p", userText);
+  showTyping();
+  setStatus("AI กำลังสร้างแผนเที่ยว อาจใช้เวลาสักครู่…");
+
+  try {
+    const result = await requestPlan({ ...payload, history: conversation });
+    hideTyping();
+    const plan = result.data;
+    conversation = [
+      ...conversation,
+      { role: "user", content: userText },
+      // เก็บเฉพาะคำตอบและข้อมูลทริป ไม่เก็บแผนรายวันทั้งหมด เพื่อลดขนาดคำขอ
+      { role: "assistant", content: JSON.stringify({ reply: plan.reply, status: plan.status, trip: plan.trip }) },
+    ].slice(-MAX_HISTORY_ITEMS);
+
+    setStatus(
+      plan.status === "ready"
+        ? `สร้างแผนเที่ยว ${payload.origin} → ${payload.destination} เรียบร้อย`
+        : "AI ตอบกลับแล้ว แต่ยังต้องการข้อมูลเพิ่มเติม พิมพ์ตอบในช่องใต้แชตได้"
+    );
+    replyForm.classList.remove("hidden");
+    replyInput.placeholder = plan.status === "ready" ? "อยากปรับแผน? พิมพ์บอก AI ได้เลย" : "พิมพ์ตอบคำถามของ AI";
+    renderPlan(result, payload);
+  } catch (error) {
+    if (error && error.name === "AbortError") return; // ถูกแทนที่ด้วยคำขอใหม่
+    hideTyping();
+    appendTextElement(addBubble("error"), "p", `เรียก API ไม่สำเร็จ: ${error.message}`);
+    setStatus(`เรียก API ไม่สำเร็จ: ${error.message}`, true);
+  } finally {
+    setLoading(false);
+  }
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   clearFormErrors();
 
   const values = readForm();
-  const { errors, days, budget } = validateForm(values);
+  const { errors, days, budget, travelers } = validateForm(values);
   if (errors.length) {
     showFormErrors(errors);
     return;
@@ -805,30 +860,25 @@ form.addEventListener("submit", async (event) => {
     days,
     budgetTHB: budget,
     interests: values.interests,
+    tripType: values.tripType,
+    travelers,
   };
 
-  setLoading(true);
-  appendTextElement(addBubble("user"), "p", describeRequest(payload));
-  showTyping();
-  setStatus("AI กำลังสร้างแผนเที่ยว อาจใช้เวลาสักครู่…");
+  // ส่งฟอร์มใหม่ = เริ่มทริปใหม่
+  conversation = [];
+  currentPayload = payload;
+  await sendPlanRequest(payload, describeRequest(payload));
+});
 
-  try {
-    const result = await requestPlan(payload);
-    hideTyping();
-    setStatus(
-      result.data.status === "ready"
-        ? `สร้างแผนเที่ยว ${payload.origin} → ${payload.destination} เรียบร้อย`
-        : "AI ตอบกลับแล้ว แต่ยังต้องการข้อมูลเพิ่มเติม"
-    );
-    renderPlan(result, payload);
-  } catch (error) {
-    if (error && error.name === "AbortError") return; // ถูกแทนที่ด้วยคำขอใหม่
-    hideTyping();
-    appendTextElement(addBubble("error"), "p", `เรียก API ไม่สำเร็จ: ${error.message}`);
-    setStatus(`เรียก API ไม่สำเร็จ: ${error.message}`, true);
-  } finally {
-    setLoading(false);
+replyForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const message = replyInput.value.trim();
+  if (!message || !currentPayload) {
+    replyInput.focus();
+    return;
   }
+  replyInput.value = "";
+  await sendPlanRequest({ ...currentPayload, message }, message);
 });
 
 for (const button of document.querySelectorAll(".region")) {

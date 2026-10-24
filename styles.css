@@ -158,6 +158,12 @@ label { display: block; margin-bottom: .3rem; font-size: .9rem; font-weight: 600
 .req { color: var(--error); }
 .hint { margin: .25rem 0 0; color: var(--muted); font-size: .82rem; }
 .field-error { margin: .25rem 0 0; color: var(--error); font-size: .85rem; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.reply-form { display: flex; gap: .5rem; margin: 0 0 .9rem; }
+.reply-form input { flex: 1; border-color: transparent; }
+.reply-form .btn { flex: none; border-radius: 10px; }
+select { width: 100%; min-height: 2.7rem; padding: .55rem .75rem; border: 1px solid #d7c6b3; border-radius: 10px; color: inherit; background: #fff; font: inherit; }
+select[aria-invalid="true"] { border-color: var(--error); }
 input { width: 100%; min-height: 2.7rem; padding: .55rem .75rem; border: 1px solid #d7c6b3; border-radius: 10px; color: inherit; background: #fff; font: inherit; }
 input:focus { border-color: var(--brown-500); }
 input[aria-invalid="true"] { border-color: var(--error); background: #fffafa; }

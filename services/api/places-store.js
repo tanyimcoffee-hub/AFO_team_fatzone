@@ -20,10 +20,11 @@ const PROVINCE_ALIASES = {
 };
 
 // จำนวนสถานที่สูงสุดต่อประเภทที่ส่งให้ AI ต่อจังหวัดต้นทาง/ปลายทาง
-const PLAN_CAPS = { attraction: 8, restaurant: 5, cafe: 3, hotel: 4, fuel: 3, rest_stop: 2 };
+// เก็บให้น้อย เพราะ Groq แผนฟรีจำกัด 8,000 token ต่อนาที และ system prompt ใช้ไปมากแล้ว
+const PLAN_CAPS = { attraction: 4, restaurant: 2, cafe: 2, hotel: 2, fuel: 2, rest_stop: 1 };
 // จังหวัดที่อยู่ระหว่างทาง (ประมาณจากเส้นตรง) ส่งเฉพาะประเภทที่ใช้แวะพัก
-const CORRIDOR_CAPS = { fuel: 2, rest_stop: 1, restaurant: 1, attraction: 1 };
-const MAX_CORRIDOR_PROVINCES = 3;
+const CORRIDOR_CAPS = { fuel: 1, rest_stop: 1, restaurant: 1 };
+const MAX_CORRIDOR_PROVINCES = 2;
 const CORRIDOR_WIDTH_KM = 60;
 
 // ปั๊มน้ำมันแบรนด์หลัก ใช้จัดลำดับก่อน เพราะข้อมูล OSM บางแถวใช้ชื่อร้านสะดวกซื้อในปั๊ม
@@ -40,8 +41,8 @@ function rankScore(place) {
 }
 
 const INTEREST_BOOSTS = {
-  คาเฟ่: { cafe: 3 },
-  อาหาร: { restaurant: 3 },
+  คาเฟ่: { cafe: 2 },
+  อาหาร: { restaurant: 2 },
   ธรรมชาติ: { attraction: 2 },
   วัฒนธรรม: { attraction: 2 },
   ภูเขา: { attraction: 2 },

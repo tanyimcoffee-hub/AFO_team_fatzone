@@ -132,10 +132,10 @@ test("selectForPlan ส่งเฉพาะ id ชื่อ จังหวั�
   assert.equal(selection.origin.code, "TH-10");
   assert.equal(selection.destination.code, "TH-50");
   assert.ok(selection.places.every((p) => Object.keys(p).sort().join() === "id,name,province,type"));
-  assert.equal(selection.places.filter((p) => p.type === "cafe").length, 3);
+  assert.equal(selection.places.filter((p) => p.type === "cafe").length, 2);
   // ปั๊มแบรนด์น้ำมันต้องมาก่อนแถวที่ชื่อร้านสะดวกซื้อ
   const bangkokFuel = selection.places.filter((p) => p.type === "fuel" && p.province === "กรุงเทพมหานคร");
-  assert.equal(bangkokFuel.length, 3);
+  assert.equal(bangkokFuel.length, 2);
   assert.equal(bangkokFuel[0].id, "osm-node-2");
   // นครสวรรค์อยู่ใกล้เส้นตรงกรุงเทพ–เชียงใหม่ ภูเก็ตไม่อยู่
   assert.ok(selection.corridor.some((p) => p.code === "TH-60"));
@@ -149,7 +149,7 @@ test("selectForPlan ส่งเฉพาะ id ชื่อ จังหวั�
 test("selectForPlan เพิ่มจำนวนคาเฟ่เมื่อสนใจคาเฟ่", async () => {
   const store = await makeFixture();
   const selection = store.selectForPlan({ origin: "กรุงเทพฯ", destination: "เชียงใหม่", interests: ["คาเฟ่"] });
-  assert.equal(selection.places.filter((p) => p.type === "cafe").length, 6);
+  assert.equal(selection.places.filter((p) => p.type === "cafe").length, 4);
 });
 
 test("selectForPlan ไม่พังเมื่อหาจังหวัดไม่เจอ", async () => {

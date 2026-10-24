@@ -35,6 +35,21 @@ const getTravelAi = async () => {
     return travelAiModule;
 };
 
+const TRIP_TYPES = ['one_way', 'round_trip'];
+const TRIP_TYPE_TEXT = { one_way: 'เที่ยวเดียว (ไม่ขับกลับ)', round_trip: 'ไป-กลับ' };
+const MAX_MESSAGE_LENGTH = 1000;
+const MAX_HISTORY_ITEMS = 20;
+const MAX_HISTORY_CONTENT = 8000;
+
+const isValidHistory = (history) =>
+    Array.isArray(history) &&
+    history.length <= MAX_HISTORY_ITEMS &&
+    history.every((item) =>
+        item &&
+        ['user', 'assistant'].includes(item.role) &&
+        typeof item.content === 'string' &&
+        item.content.length <= MAX_HISTORY_CONTENT);
+
 const attributionFor = (places) =>
     places.some((place) => place.source === 'osm') ? OSM_ATTRIBUTION : null;
 
@@ -94,22 +109,54 @@ app.get('/api/places', (req, res) => {
 
 app.post('/api/plan', async (req, res) => {
     try {
-        const { origin, destination, days, budgetTHB, interests } = req.body;
+        const { origin, destination, days, budgetTHB, interests, tripType, travelers, message, history } = req.body;
 
         if (!origin || !destination) {
             return res.status(400).json({ success: false, error: 'กรุณาระบุจุดเริ่มต้นและจุดหมายปลายทาง' });
         }
+        // ฟิลด์เสริม (ไม่บังคับ): tripType, travelers, message และ history สำหรับคุยต่อกับ AI
+        if (tripType !== undefined && !TRIP_TYPES.includes(tripType)) {
+            return res.status(400).json({ success: false, error: 'tripType ต้องเป็น one_way หรือ round_trip' });
+        }
+        if (travelers !== undefined && (!Number.isInteger(travelers) || travelers < 1 || travelers > 50)) {
+            return res.status(400).json({ success: false, error: 'travelers ต้องเป็นจำนวนเต็ม 1–50' });
+        }
+        if (message !== undefined && (typeof message !== 'string' || message.trim().length > MAX_MESSAGE_LENGTH)) {
+            return res.status(400).json({ success: false, error: `message ต้องเป็นข้อความไม่เกิน ${MAX_MESSAGE_LENGTH} ตัวอักษร` });
+        }
+        if (history !== undefined && !isValidHistory(history)) {
+            return res.status(400).json({ success: false, error: `history ต้องเป็น Array ไม่เกิน ${MAX_HISTORY_ITEMS} รายการ ของ { role: user|assistant, content }` });
+        }
 
         const interestList = Array.isArray(interests) ? interests.map(String) : [];
         const selection = placeStore.selectForPlan({ origin, destination, interests: interestList });
-        const userMessage = `อยากเที่ยวจาก ${origin} ไป ${destination} เป็นเวลา ${days} วัน งบประมาณ ${budgetTHB} บาท ความสนใจ: ${interestList.length ? interestList.join(', ') : 'ทั่วไป'}`;
+        const details = [
+            `อยากเที่ยวจาก ${origin} ไป ${destination} เป็นเวลา ${days} วัน`,
+            'เดินทางด้วยรถยนต์ส่วนตัวแบบ Road Trip',
+            tripType ? `แบบ${TRIP_TYPE_TEXT[tripType]}` : null,
+            travelers ? `ผู้เดินทาง ${travelers} คน` : null,
+            `งบประมาณ ${budgetTHB} บาท`,
+            `ความสนใจ: ${interestList.length ? interestList.join(', ') : 'ทั่วไป'}`,
+            // ฟอร์มส่งข้อมูลครบแล้ว บอก AI ให้จัดแผนเลยแทนการถามซ้ำ
+            tripType && Number.isInteger(days)
+                ? `ข้อมูลครบแล้ว ช่วยจัดแผนเลย โดย itinerary ต้องมี ${days} รายการ (day 1 ถึง day ${days}) ห้ามขาดวันใด`
+                : null,
+        ].filter(Boolean).join(' ');
+        const userMessage = message && message.trim()
+            ? `${message.trim()}\n\n(ข้อมูลทริปปัจจุบัน: ${details})`
+            : details;
 
         const { generateTravelResponse } = await getTravelAi();
-        const aiResponse = await generateTravelResponse({
-            message: userMessage,
-            history: [],
-            places: selection.places,
-        });
+        const request = { message: userMessage, history: history ?? [], places: selection.places };
+        let aiResponse;
+        try {
+            aiResponse = await generateTravelResponse(request);
+        } catch (error) {
+            // ไม่ลองซ้ำทันที เพราะโควตาต่อนาทีของ Groq มักเต็มจากคำขอแรก
+            // error ที่ไม่มี status มาจากตัวตรวจ JSON ของ ai-engine (เช่น จำนวนวันไม่ครบ)
+            if (error?.status || error?.error) throw error;
+            throw Object.assign(new Error(error?.message), { aiInvalid: true });
+        }
 
         // เติมพิกัดให้จุดแวะ เพื่อให้หน้าเว็บวาดแผนที่ได้
         aiResponse.itinerary = placeStore.locateItinerary(aiResponse.itinerary);
@@ -130,7 +177,18 @@ app.post('/api/plan', async (req, res) => {
         });
 
     } catch (error) {
-        console.error("AI Engine API Error:", error);
+        console.error("AI Engine API Error:", error?.status ?? '', error?.error?.error?.code ?? '', error?.message ?? error);
+        // Groq แผนฟรีจำกัด token ต่อนาที: แจ้งให้รอแทนข้อความ error ทั่วไป
+        if (error?.status === 429) {
+            return res.status(503).json({ success: false, error: 'AI ใช้โควตาต่อนาทีเต็มแล้ว กรุณารอประมาณ 1 นาทีแล้วลองใหม่' });
+        }
+        if (error?.error?.error?.code === 'json_validate_failed') {
+            return res.status(502).json({ success: false, error: 'AI ตอบกลับไม่ครบ (อาจเพราะโควตาต่อนาทีใกล้เต็ม) กรุณารอสักครู่แล้วลองใหม่' });
+        }
+        if (error?.aiInvalid) {
+            // AI ส่งแผนที่ไม่ผ่านตัวตรวจของ ai-engine
+            return res.status(502).json({ success: false, error: 'AI จัดแผนไม่ครบ กรุณารอประมาณ 1 นาทีแล้วลองใหม่' });
+        }
         res.status(500).json({ success: false, error: "เกิดข้อผิดพลาดในการประมวลผลของ AI Engine" });
     }
 });

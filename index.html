@@ -56,6 +56,12 @@
               </div>
             </div>
 
+            <form id="reply-form" class="reply-form hidden" novalidate>
+              <label for="reply-input" class="visually-hidden">ตอบ AI</label>
+              <input id="reply-input" name="reply" maxlength="1000" autocomplete="off" placeholder="พิมพ์ตอบ AI เช่น ไป-กลับ 2 คน" />
+              <button id="reply-button" type="submit" class="btn btn-primary">ส่ง</button>
+            </form>
+
             <div id="form-errors" class="error-summary hidden" role="alert" tabindex="-1"></div>
 
             <form id="plan-form" class="chat-form" novalidate>
@@ -70,6 +76,19 @@
                   <input id="destination" name="destination" required maxlength="120" autocomplete="off" placeholder="เช่น จันทบุรี" list="province-options" aria-describedby="destination-error" />
                   <datalist id="province-options"></datalist>
                   <p id="destination-error" class="field-error hidden"></p>
+                </div>
+                <div>
+                  <label for="tripType">ประเภททริป <span class="req" aria-hidden="true">*</span></label>
+                  <select id="tripType" name="tripType" required aria-describedby="tripType-error">
+                    <option value="round_trip" selected>ไป-กลับ</option>
+                    <option value="one_way">เที่ยวเดียว</option>
+                  </select>
+                  <p id="tripType-error" class="field-error hidden"></p>
+                </div>
+                <div>
+                  <label for="travelers">จำนวนผู้เดินทาง <span class="req" aria-hidden="true">*</span></label>
+                  <input id="travelers" name="travelers" type="number" inputmode="numeric" min="1" max="50" step="1" value="2" required aria-describedby="travelers-error" />
+                  <p id="travelers-error" class="field-error hidden"></p>
                 </div>
                 <div>
                   <label for="days">จำนวนวัน <span class="req" aria-hidden="true">*</span></label>

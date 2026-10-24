@@ -142,7 +142,7 @@ export async function generateTravelResponse({
 
   const placesContext = `
 ข้อมูลสถานที่ที่ระบบส่งมาให้:
-${JSON.stringify(validPlaces, null, 2)}
+${JSON.stringify(validPlaces)}
 
 กฎการใช้สถานที่:
 - ใช้เฉพาะสถานที่ในรายการนี้เมื่อสร้าง stops
@@ -171,9 +171,16 @@ ${JSON.stringify(validPlaces, null, 2)}
       { role: "user", content: message.trim() },
     ],
     response_format: { type: "json_object" },
+    // ลด token ที่ใช้คิดก่อนตอบ เพื่อไม่ให้ชนโควตา 8,000 token/นาทีของ Groq แผนฟรี
+    reasoning_effort: "low",
   });
 
   const content = response.choices[0]?.message?.content;
+
+  // ตั้ง AI_DEBUG=1 เพื่อดู JSON ดิบจาก AI เวลาตรวจสอบปัญหา
+  if (process.env.AI_DEBUG) {
+    console.log("[AI_DEBUG] raw response:", content);
+  }
 
   if (!content) {
     throw new Error("AI ไม่ส่งข้อมูลกลับมา");
