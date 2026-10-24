@@ -808,9 +808,9 @@ const replyButton = document.getElementById("reply-button");
 let conversation = [];
 let currentPayload = null;
 
-async function sendPlanRequest(payload, userText) {
+async function sendPlanRequest(payload, userText, { retry = false } = {}) {
   setLoading(true);
-  appendTextElement(addBubble("user"), "p", userText);
+  if (!retry) appendTextElement(addBubble("user"), "p", userText);
   showTyping();
   setStatus("AI กำลังสร้างแผนเที่ยว อาจใช้เวลาสักครู่…");
 
@@ -836,7 +836,17 @@ async function sendPlanRequest(payload, userText) {
   } catch (error) {
     if (error && error.name === "AbortError") return; // ถูกแทนที่ด้วยคำขอใหม่
     hideTyping();
-    appendTextElement(addBubble("error"), "p", `เรียก API ไม่สำเร็จ: ${error.message}`);
+    const bubble = addBubble("error");
+    appendTextElement(bubble, "p", `เรียก API ไม่สำเร็จ: ${error.message}`);
+    const retryButton = document.createElement("button");
+    retryButton.type = "button";
+    retryButton.className = "btn btn-retry";
+    retryButton.textContent = "ลองอีกครั้ง";
+    retryButton.addEventListener("click", () => {
+      bubble.remove();
+      sendPlanRequest(payload, userText, { retry: true });
+    });
+    bubble.append(retryButton);
     setStatus(`เรียก API ไม่สำเร็จ: ${error.message}`, true);
   } finally {
     setLoading(false);

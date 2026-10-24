@@ -194,6 +194,11 @@ ${JSON.stringify(validPlaces)}
     throw new Error("AI ส่ง JSON ไม่ถูกต้อง");
   }
 
+  // บางครั้งโมเดลห่อคำตอบไว้ใน Array 1 ตัว เช่น [ { ... } ]
+  if (Array.isArray(result) && result.length === 1) {
+    result = result[0];
+  }
+
   // ตรวจสอบโครงสร้าง JSON
   validateTravelResponse(result);
 

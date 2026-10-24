@@ -141,6 +141,8 @@ nav { margin-left: auto; }
 .bubble-ai { align-self: flex-start; border-bottom-left-radius: 4px; }
 .bubble-ai.wide { max-width: 100%; width: 100%; }
 .bubble-error { align-self: flex-start; background: var(--error-soft); color: var(--error); border: 1px solid var(--error); }
+.btn-retry { min-height: 2.2rem; margin-top: .5rem; padding: .3rem 1rem; background: var(--error); color: #fff; }
+.btn-retry:hover { background: #8f1c13; }
 .bubble-typing { display: inline-flex; gap: .3rem; align-items: center; }
 .bubble-typing span { width: .45rem; height: .45rem; border-radius: 50%; background: var(--brown-500); animation: blink 1.2s infinite; }
 .bubble-typing span:nth-child(2) { animation-delay: .2s; }
