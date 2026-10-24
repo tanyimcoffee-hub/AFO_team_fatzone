@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  
-"scripts": {
-  "test": "node test-place-validator.js && node test-response-validator.js",
-  "test:integration": "node test-travel-ai.js"
-},
+  "scripts": {
+    "test": "node test-place-validator.js && node test-response-validator.js",
+    "test:integration": "node test-travel-ai.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

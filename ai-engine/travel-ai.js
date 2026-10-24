@@ -1,10 +1,21 @@
+import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import dotenv from "dotenv";
+import Groq from "groq-sdk";
 import { validateItineraryPlaces } from "./place-validator.js";
 import { validateTravelResponse } from "./response-validator.js";
-import Groq from "groq-sdk";
-import "dotenv/config";
-import { readFile } from "node:fs/promises";
 
+// โหลด .env จากโฟลเดอร์เดียวกับไฟล์นี้ (ai-engine/.env)
+// ไม่ว่าจะรัน node/nodemon จากโฟลเดอร์ไหนก็ตาม
+dotenv.config({
+  path: fileURLToPath(new URL("./.env", import.meta.url)),
+});
 
+if (!process.env.GROQ_API_KEY) {
+  throw new Error(
+    "ไม่พบ GROQ_API_KEY: ตรวจสอบว่ามีไฟล์ ai-engine/.env และมีบรรทัด GROQ_API_KEY=gsk_..."
+  );
+}
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
@@ -21,16 +32,16 @@ const jsonInstructions = `
 {
   "reply": "ข้อความตอบผู้ใช้เป็นภาษาไทย",
   "status": "need_more_info หรือ ready",
-  
-"trip": {
-  "origin": null,
-  "destination": null,
-  "days": null,
-  "travelers": null,
-  "budget": null,
-  "interests": [],
-  "tripType": null
-},
+
+  "trip": {
+    "origin": null,
+    "destination": null,
+    "days": null,
+    "travelers": null,
+    "budget": null,
+    "interests": [],
+    "tripType": null
+  },
 
   "itinerary": []
 }
@@ -101,7 +112,6 @@ const jsonInstructions = `
 
 `;
 
-
 export async function generateTravelResponse({
   message,
   history = [],
@@ -115,21 +125,20 @@ export async function generateTravelResponse({
     throw new Error("history ต้องเป็น Array");
   }
 
-  
-if (!Array.isArray(places)) {
-  throw new Error("places ต้องเป็น Array");
-}
+  if (!Array.isArray(places)) {
+    throw new Error("places ต้องเป็น Array");
+  }
 
-const validPlaces = places.filter(
-  (place) =>
-    place &&
-    typeof place.id === "string" &&
-    typeof place.name === "string" &&
-    typeof place.province === "string" &&
-    typeof place.type === "string"
-);
+  const validPlaces = places.filter(
+    (place) =>
+      place &&
+      typeof place.id === "string" &&
+      typeof place.name === "string" &&
+      typeof place.province === "string" &&
+      typeof place.type === "string"
+  );
 
-const placesContext = `
+  const placesContext = `
 ข้อมูลสถานที่ที่ระบบส่งมาให้:
 ${JSON.stringify(validPlaces, null, 2)}
 
@@ -140,27 +149,21 @@ ${JSON.stringify(validPlaces, null, 2)}
 - ห้ามถือว่าข้อมูลนี้ผ่านการตรวจสอบแล้วโดยอัตโนมัติ
 - หากไม่มีหลักฐานยืนยัน ให้ verified เป็น false
 `;
-  
-const validHistory = history.filter(
-  (item) =>
-    item &&
-    ["user", "assistant"].includes(item.role) &&
-    typeof item.content === "string"
-);
 
-    const response = await groq.chat.completions.create({
+  const validHistory = history.filter(
+    (item) =>
+      item &&
+      ["user", "assistant"].includes(item.role) &&
+      typeof item.content === "string"
+  );
+
+  const response = await groq.chat.completions.create({
     model: "openai/gpt-oss-20b",
     messages: [
       {
         role: "system",
-        
-content:
-  systemPrompt +
-  "\n" +
-  jsonInstructions +
-  "\n" +
-  placesContext,
-
+        content:
+          systemPrompt + "\n" + jsonInstructions + "\n" + placesContext,
       },
       ...validHistory,
       { role: "user", content: message.trim() },
@@ -182,18 +185,11 @@ content:
     throw new Error("AI ส่ง JSON ไม่ถูกต้อง");
   }
 
-    
   // ตรวจสอบโครงสร้าง JSON
   validateTravelResponse(result);
 
-
   // ตรวจสอบสถานที่ก่อนส่งข้อมูลให้ Backend
-  result.itinerary = validateItineraryPlaces(
-    result.itinerary,
-    validPlaces
-  );
-
+  result.itinerary = validateItineraryPlaces(result.itinerary, validPlaces);
 
   return result;
-
 }
