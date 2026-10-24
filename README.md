@@ -33,6 +33,6 @@ cd services/api
 npm start
 ```
 
-The browser UI sends requests to `http://localhost:3000/api/plan`. Override this address by setting `window.TRAVEL_API_BASE_URL` before `app.js` loads.
+The browser UI sends requests to `http://localhost:3000/api/plan`. Override this address by setting `window.TRAVEL_API_BASE_URL` before `app.js` loads, or by adding `?api=http://host:port` to the page URL.
 
-The current `/api/plan` endpoint returns mock data; the web page labels it as a sample and does not claim it is AI-generated or verified. `places_bkk_cnx.json` uses the current place-validator shape (`id`, `name`, `province`, `type`) and starts empty until sourced place records are available.
+`/api/plan` returns the AI engine response in `data` (`reply`, `status`, `trip`, `itinerary`). When `status` is `need_more_info`, the page shows the AI's follow-up question; when it is `ready`, the page shows the day-by-day itinerary. The page labels every stop as unverified and does not claim routes or places were checked. `places_bkk_cnx.json` uses the current place-validator shape (`id`, `name`, `province`, `type`) and starts empty until sourced place records are available.

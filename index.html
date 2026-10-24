@@ -13,33 +13,57 @@
       background: #f3f6fa;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; }
+    body { margin: 0; min-height: 100vh; line-height: 1.55; }
+    .skip-link { position: absolute; left: -9999px; }
+    .skip-link:focus { left: 1rem; top: .5rem; z-index: 10; padding: .5rem .75rem; border-radius: .5rem; background: #fff; color: #123b32; }
     header { padding: 1.25rem max(1rem, calc((100% - 980px) / 2)); background: #123b32; color: #fff; }
     header h1 { margin: 0; font-size: 1.45rem; }
     header p { margin: .25rem 0 0; color: #d5e8dd; }
     main { width: min(980px, calc(100% - 2rem)); margin: 1.5rem auto 3rem; }
     .notice { padding: .9rem 1rem; border: 1px solid #f0c36d; border-radius: .75rem; background: #fff8e7; color: #694b0b; line-height: 1.55; }
     .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .75fr); gap: 1rem; margin-top: 1rem; align-items: start; }
-    .card { padding: 1.2rem; border: 1px solid #e1e7ef; border-radius: 1rem; background: #fff; box-shadow: 0 4px 16px #172b4d0c; }
+    .card { min-width: 0; padding: 1.2rem; border: 1px solid #e1e7ef; border-radius: 1rem; background: #fff; box-shadow: 0 4px 16px #172b4d0c; }
     h2 { margin: 0 0 1rem; font-size: 1.1rem; }
     .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; }
     label { display: block; margin-bottom: .35rem; font-size: .9rem; font-weight: 600; }
+    .req { color: #b42318; }
+    .hint { margin: .25rem 0 0; color: #667085; font-size: .82rem; }
+    .field-error { margin: .25rem 0 0; color: #b42318; font-size: .85rem; }
     input, select { width: 100%; min-height: 2.7rem; padding: .55rem .7rem; border: 1px solid #cbd5e1; border-radius: .55rem; color: inherit; background: #fff; font: inherit; }
     input:focus, select:focus { outline: 3px solid #2e8b6c33; border-color: #2e8b6c; }
-    .interests { margin: 1rem 0; }
+    input[aria-invalid="true"] { border-color: #b42318; }
+    :focus-visible { outline: 3px solid #1d4ed8; outline-offset: 2px; }
+    .interests { margin: 1rem 0; padding: .75rem; border: 1px solid #e1e7ef; border-radius: .6rem; }
     .checks { display: flex; flex-wrap: wrap; gap: .5rem .9rem; }
     .check { display: inline-flex; align-items: center; gap: .35rem; font-weight: 400; }
     .check input { width: auto; min-height: auto; accent-color: #20785b; }
-    button { width: 100%; min-height: 2.8rem; border: 0; border-radius: .6rem; background: #167252; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+    .sub-label { margin-top: .75rem; font-weight: 400; color: #475467; }
+    button { width: 100%; min-height: 2.8rem; display: inline-flex; align-items: center; justify-content: center; gap: .6rem; border: 0; border-radius: .6rem; background: #167252; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
     button:hover { background: #105c42; }
     button:disabled { cursor: wait; opacity: .65; }
+    .spinner { display: none; width: 1.1rem; height: 1.1rem; border: 2px solid #ffffff80; border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
+    .is-loading .spinner { display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2s; } }
+    .error-summary { margin-bottom: 1rem; padding: .8rem 1rem; border: 1px solid #b42318; border-radius: .6rem; background: #fdecea; color: #b42318; }
+    .error-summary ul { margin: .4rem 0 0; padding-left: 1.2rem; }
+    .error-summary a { color: inherit; }
     .status { margin: .85rem 0 0; color: #475467; line-height: 1.5; }
     .status.error { color: #b42318; }
     .result { margin-top: 1rem; }
-    .result h3 { margin: 1rem 0 .35rem; font-size: 1rem; }
+    .result h3 { margin: 0 0 .35rem; font-size: 1rem; }
     .result p { margin: .25rem 0; line-height: 1.55; }
+    .ai-reply { padding: .85rem 1rem; border-left: 4px solid #167252; border-radius: .5rem; background: #eef7f3; }
+    .trip-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: .5rem; margin: 1rem 0; }
+    .trip-summary div { padding: .55rem .7rem; border-radius: .55rem; background: #f5f7fa; }
+    .trip-summary dt { font-size: .78rem; color: #667085; }
+    .trip-summary dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+    .days { margin: 0; padding: 0; list-style: none; }
     .result-day { padding: .8rem 0; border-top: 1px solid #e7ebf0; }
     .result-day ul { margin: .4rem 0 0; padding-left: 1.2rem; }
+    .result-day li + li { margin-top: .4rem; }
+    .stop-name { font-weight: 600; overflow-wrap: anywhere; }
+    .badge { display: inline-block; margin-left: .35rem; padding: 0 .45rem; border-radius: 999px; background: #fff3d6; color: #694b0b; font-size: .75rem; font-weight: 400; }
     .muted { color: #667085; }
     .empty { padding: .85rem; border-radius: .6rem; background: #f5f7fa; color: #667085; line-height: 1.5; }
     .hidden { display: none !important; }
@@ -50,35 +74,42 @@
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#planner-heading">ข้ามไปยังฟอร์มวางแผน</a>
   <header>
     <h1>🧭 Thai Travel AI</h1>
     <p>ผู้ช่วยวางแผน Road Trip ในประเทศไทย</p>
   </header>
   <main>
     <div class="notice" role="note">
-      <strong>สถานะระบบ:</strong> API วางแผนที่เชื่อมต่ออยู่เป็นข้อมูลจำลอง ไม่ใช่คำแนะนำจาก AI หรือข้อมูลสถานที่/เส้นทางที่ตรวจสอบจริง
+      <strong>สถานะระบบ:</strong> แผนเที่ยวสร้างโดย AI เป็นแผนเบื้องต้นเท่านั้น ยังไม่ได้ตรวจสอบสถานที่ เส้นทาง ราคา หรือเวลาเปิดปิดกับแหล่งข้อมูลจริง
       รายการสถานที่ในเครื่องจะว่างไว้จนกว่าจะมีข้อมูลที่มีแหล่งอ้างอิง
     </div>
     <div class="layout">
       <section class="card" aria-labelledby="planner-heading">
-        <h2 id="planner-heading">รายละเอียดการเดินทาง</h2>
-        <form id="plan-form">
+        <h2 id="planner-heading" tabindex="-1">รายละเอียดการเดินทาง</h2>
+        <div id="form-errors" class="error-summary hidden" role="alert" tabindex="-1"></div>
+        <form id="plan-form" novalidate>
           <div class="field-grid">
             <div>
-              <label for="origin">จุดเริ่มต้น</label>
-              <input id="origin" name="origin" required maxlength="120" placeholder="เช่น ขอนแก่น" />
+              <label for="origin">จุดเริ่มต้น <span class="req" aria-hidden="true">*</span></label>
+              <input id="origin" name="origin" required maxlength="120" autocomplete="off" placeholder="เช่น ขอนแก่น" aria-describedby="origin-error" />
+              <p id="origin-error" class="field-error hidden"></p>
             </div>
             <div>
-              <label for="destination">จุดหมายปลายทาง</label>
-              <input id="destination" name="destination" required maxlength="120" placeholder="เช่น นครราชสีมา" />
+              <label for="destination">จุดหมายปลายทาง <span class="req" aria-hidden="true">*</span></label>
+              <input id="destination" name="destination" required maxlength="120" autocomplete="off" placeholder="เช่น นครราชสีมา" aria-describedby="destination-error" />
+              <p id="destination-error" class="field-error hidden"></p>
             </div>
             <div>
-              <label for="days">จำนวนวัน</label>
-              <input id="days" name="days" type="number" min="1" max="30" value="3" required />
+              <label for="days">จำนวนวัน <span class="req" aria-hidden="true">*</span></label>
+              <input id="days" name="days" type="number" inputmode="numeric" min="1" max="30" step="1" value="3" required aria-describedby="days-hint days-error" />
+              <p id="days-hint" class="hint">1–30 วัน</p>
+              <p id="days-error" class="field-error hidden"></p>
             </div>
             <div>
-              <label for="budget">งบประมาณรวม (บาท)</label>
-              <input id="budget" name="budgetTHB" type="number" min="0" step="100" value="5000" required />
+              <label for="budget">งบประมาณรวม (บาท) <span class="req" aria-hidden="true">*</span></label>
+              <input id="budget" name="budgetTHB" type="number" inputmode="numeric" min="1" step="1" value="5000" required aria-describedby="budget-error" />
+              <p id="budget-error" class="field-error hidden"></p>
             </div>
           </div>
           <fieldset class="interests">
@@ -88,12 +119,19 @@
               <label class="check"><input type="checkbox" name="interests" value="วัฒนธรรม" /> วัฒนธรรม</label>
               <label class="check"><input type="checkbox" name="interests" value="คาเฟ่" /> คาเฟ่</label>
               <label class="check"><input type="checkbox" name="interests" value="อาหาร" /> อาหาร</label>
+              <label class="check"><input type="checkbox" name="interests" value="ทะเล" /> ทะเล</label>
+              <label class="check"><input type="checkbox" name="interests" value="ภูเขา" /> ภูเขา</label>
             </div>
+            <label for="interest-other" class="sub-label">อื่น ๆ (คั่นด้วยเครื่องหมายจุลภาค)</label>
+            <input id="interest-other" name="interestOther" maxlength="200" autocomplete="off" placeholder="เช่น ถ่ายรูป, ตลาดน้ำ" />
           </fieldset>
-          <button id="submit-button" type="submit">สร้างแผนตัวอย่าง</button>
+          <button id="submit-button" type="submit">
+            <span class="btn-label">สร้างแผนเที่ยว</span>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
         </form>
-        <p id="request-status" class="status" role="status">กรอกข้อมูลเพื่อเรียก API วางแผน</p>
-        <section id="plan-result" class="result hidden" aria-live="polite"></section>
+        <p id="request-status" class="status" role="status" aria-live="polite">กรอกข้อมูลเพื่อเรียก API วางแผน</p>
+        <section id="plan-result" class="result hidden" aria-labelledby="result-heading" aria-busy="false"></section>
       </section>
       <aside class="card" aria-labelledby="places-heading">
         <h2 id="places-heading">สถานที่ที่มีแหล่งอ้างอิง</h2>
