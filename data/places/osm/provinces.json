@@ -1,0 +1,702 @@
+{
+  "source": "OpenStreetMap via Overpass API",
+  "attribution": "© OpenStreetMap contributors",
+  "license": "ODbL-1.0",
+  "licenseUrl": "https://www.openstreetmap.org/copyright",
+  "note": "ข้อมูลเริ่มต้น ยังไม่ได้ตรวจสอบ (verified: false)",
+  "provinces": [
+    {
+      "code": "TH-10",
+      "nameTh": "กรุงเทพมหานคร",
+      "nameEn": "Bangkok",
+      "total": 7647,
+      "counts": {
+        "attraction": 258,
+        "cafe": 1778,
+        "fuel": 407,
+        "hotel": 1587,
+        "restaurant": 3610,
+        "rest_stop": 7
+      },
+      "fetchedAt": "2026-10-24T16:49:05.333Z"
+    },
+    {
+      "code": "TH-11",
+      "nameTh": "สมุทรปราการ",
+      "nameEn": "Samut Prakan",
+      "total": 571,
+      "counts": {
+        "attraction": 156,
+        "cafe": 105,
+        "fuel": 94,
+        "hotel": 51,
+        "restaurant": 163,
+        "rest_stop": 2
+      },
+      "fetchedAt": "2026-10-24T16:49:46.538Z"
+    },
+    {
+      "code": "TH-12",
+      "nameTh": "นนทบุรี",
+      "nameEn": "Nonthaburi",
+      "total": 400,
+      "counts": {
+        "attraction": 14,
+        "cafe": 90,
+        "fuel": 67,
+        "hotel": 33,
+        "restaurant": 196
+      },
+      "fetchedAt": "2026-10-24T16:50:11.617Z"
+    },
+    {
+      "code": "TH-13",
+      "nameTh": "ปทุมธานี",
+      "nameEn": "Pathum Thani",
+      "total": 448,
+      "counts": {
+        "attraction": 35,
+        "cafe": 117,
+        "fuel": 124,
+        "hotel": 17,
+        "restaurant": 154,
+        "rest_stop": 1
+      },
+      "fetchedAt": "2026-10-24T16:50:52.311Z"
+    },
+    {
+      "code": "TH-14",
+      "nameTh": "พระนครศรีอยุธยา",
+      "nameEn": "Phra Nakhon Si Ayutthaya",
+      "total": 684,
+      "counts": {
+        "attraction": 310,
+        "cafe": 73,
+        "fuel": 94,
+        "hotel": 88,
+        "restaurant": 119
+      },
+      "fetchedAt": "2026-10-24T16:51:38.109Z"
+    },
+    {
+      "code": "TH-15",
+      "nameTh": "อ่างทอง",
+      "nameEn": "Ang Thong",
+      "total": 90,
+      "counts": {
+        "attraction": 6,
+        "cafe": 15,
+        "fuel": 19,
+        "hotel": 4,
+        "restaurant": 46
+      },
+      "fetchedAt": "2026-10-24T16:52:17.297Z"
+    },
+    {
+      "code": "TH-16",
+      "nameTh": "ลพบุรี",
+      "nameEn": "Lop Buri",
+      "total": 145,
+      "counts": {
+        "attraction": 22,
+        "cafe": 31,
+        "fuel": 41,
+        "hotel": 29,
+        "restaurant": 22
+      },
+      "fetchedAt": "2026-10-24T16:52:52.480Z"
+    },
+    {
+      "code": "TH-17",
+      "nameTh": "สิงห์บุรี",
+      "nameEn": "Sing Buri",
+      "total": 77,
+      "counts": {
+        "attraction": 9,
+        "cafe": 8,
+        "fuel": 32,
+        "hotel": 10,
+        "restaurant": 18
+      },
+      "fetchedAt": "2026-10-24T16:53:28.075Z"
+    },
+    {
+      "code": "TH-18",
+      "nameTh": "ชัยนาท",
+      "nameEn": "Chai Nat",
+      "total": 61,
+      "counts": {
+        "attraction": 5,
+        "cafe": 12,
+        "fuel": 31,
+        "hotel": 5,
+        "restaurant": 8
+      },
+      "fetchedAt": "2026-10-24T16:54:14.202Z"
+    },
+    {
+      "code": "TH-19",
+      "nameTh": "สระบุรี",
+      "nameEn": "Saraburi",
+      "total": 206,
+      "counts": {
+        "attraction": 18,
+        "cafe": 39,
+        "fuel": 71,
+        "hotel": 31,
+        "restaurant": 47
+      },
+      "fetchedAt": "2026-10-24T16:54:50.571Z"
+    },
+    {
+      "code": "TH-20",
+      "nameTh": "ชลบุรี",
+      "nameEn": "Chon Buri",
+      "total": 3631,
+      "counts": {
+        "attraction": 179,
+        "cafe": 548,
+        "fuel": 249,
+        "hotel": 1462,
+        "restaurant": 1186,
+        "rest_stop": 7
+      },
+      "fetchedAt": "2026-10-24T16:55:31.046Z"
+    },
+    {
+      "code": "TH-21",
+      "nameTh": "ระยอง",
+      "nameEn": "Rayong",
+      "total": 1491,
+      "counts": {
+        "attraction": 25,
+        "cafe": 870,
+        "fuel": 128,
+        "hotel": 249,
+        "restaurant": 217,
+        "rest_stop": 2
+      },
+      "fetchedAt": "2026-10-24T16:56:20.171Z"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-22",
+      "nameTh": "จันทบุรี",
+      "nameEn": "Chanthaburi"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-23",
+      "nameTh": "ตราด",
+      "nameEn": "Trat"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-24",
+      "nameTh": "ฉะเชิงเทรา",
+      "nameEn": "Chachoengsao"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-25",
+      "nameTh": "ปราจีนบุรี",
+      "nameEn": "Prachin Buri"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-26",
+      "nameTh": "นครนายก",
+      "nameEn": "Nakhon Nayok"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-27",
+      "nameTh": "สระแก้ว",
+      "nameEn": "Sa Kaeo"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-30",
+      "nameTh": "นครราชสีมา",
+      "nameEn": "Nakhon Ratchasima"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-31",
+      "nameTh": "บุรีรัมย์",
+      "nameEn": "Buri Ram"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-32",
+      "nameTh": "สุรินทร์",
+      "nameEn": "Surin"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-33",
+      "nameTh": "ศรีสะเกษ",
+      "nameEn": "Si Sa Ket"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-34",
+      "nameTh": "อุบลราชธานี",
+      "nameEn": "Ubon Ratchathani"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-35",
+      "nameTh": "ยโสธร",
+      "nameEn": "Yasothon"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-36",
+      "nameTh": "ชัยภูมิ",
+      "nameEn": "Chaiyaphum"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-37",
+      "nameTh": "อำนาจเจริญ",
+      "nameEn": "Amnat Charoen"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-38",
+      "nameTh": "บึงกาฬ",
+      "nameEn": "Bueng Kan"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-39",
+      "nameTh": "หนองบัวลำภู",
+      "nameEn": "Nong Bua Lam Phu"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-40",
+      "nameTh": "ขอนแก่น",
+      "nameEn": "Khon Kaen"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-41",
+      "nameTh": "อุดรธานี",
+      "nameEn": "Udon Thani"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-42",
+      "nameTh": "เลย",
+      "nameEn": "Loei"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-43",
+      "nameTh": "หนองคาย",
+      "nameEn": "Nong Khai"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-44",
+      "nameTh": "มหาสารคาม",
+      "nameEn": "Maha Sarakham"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-45",
+      "nameTh": "ร้อยเอ็ด",
+      "nameEn": "Roi Et"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-46",
+      "nameTh": "กาฬสินธุ์",
+      "nameEn": "Kalasin"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-47",
+      "nameTh": "สกลนคร",
+      "nameEn": "Sakon Nakhon"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-48",
+      "nameTh": "นครพนม",
+      "nameEn": "Nakhon Phanom"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-49",
+      "nameTh": "มุกดาหาร",
+      "nameEn": "Mukdahan"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-50",
+      "nameTh": "เชียงใหม่",
+      "nameEn": "Chiang Mai"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-51",
+      "nameTh": "ลำพูน",
+      "nameEn": "Lamphun"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-52",
+      "nameTh": "ลำปาง",
+      "nameEn": "Lampang"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-53",
+      "nameTh": "อุตรดิตถ์",
+      "nameEn": "Uttaradit"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-54",
+      "nameTh": "แพร่",
+      "nameEn": "Phrae"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-55",
+      "nameTh": "น่าน",
+      "nameEn": "Nan"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-56",
+      "nameTh": "พะเยา",
+      "nameEn": "Phayao"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-57",
+      "nameTh": "เชียงราย",
+      "nameEn": "Chiang Rai"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-58",
+      "nameTh": "แม่ฮ่องสอน",
+      "nameEn": "Mae Hong Son"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-60",
+      "nameTh": "นครสวรรค์",
+      "nameEn": "Nakhon Sawan"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-61",
+      "nameTh": "อุทัยธานี",
+      "nameEn": "Uthai Thani"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-62",
+      "nameTh": "กำแพงเพชร",
+      "nameEn": "Kamphaeng Phet"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-63",
+      "nameTh": "ตาก",
+      "nameEn": "Tak"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-64",
+      "nameTh": "สุโขทัย",
+      "nameEn": "Sukhothai"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-65",
+      "nameTh": "พิษณุโลก",
+      "nameEn": "Phitsanulok"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-66",
+      "nameTh": "พิจิตร",
+      "nameEn": "Phichit"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-67",
+      "nameTh": "เพชรบูรณ์",
+      "nameEn": "Phetchabun"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-70",
+      "nameTh": "ราชบุรี",
+      "nameEn": "Ratchaburi"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-71",
+      "nameTh": "กาญจนบุรี",
+      "nameEn": "Kanchanaburi"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-72",
+      "nameTh": "สุพรรณบุรี",
+      "nameEn": "Suphan Buri"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-73",
+      "nameTh": "นครปฐม",
+      "nameEn": "Nakhon Pathom"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-74",
+      "nameTh": "สมุทรสาคร",
+      "nameEn": "Samut Sakhon"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-75",
+      "nameTh": "สมุทรสงคราม",
+      "nameEn": "Samut Songkhram"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-76",
+      "nameTh": "เพชรบุรี",
+      "nameEn": "Phetchaburi"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-77",
+      "nameTh": "ประจวบคีรีขันธ์",
+      "nameEn": "Prachuap Khiri Khan"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-80",
+      "nameTh": "นครศรีธรรมราช",
+      "nameEn": "Nakhon Si Thammarat"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-81",
+      "nameTh": "กระบี่",
+      "nameEn": "Krabi"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-82",
+      "nameTh": "พังงา",
+      "nameEn": "Phang-nga"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-83",
+      "nameTh": "ภูเก็ต",
+      "nameEn": "Phuket"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-84",
+      "nameTh": "สุราษฎร์ธานี",
+      "nameEn": "Surat Thani"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-85",
+      "nameTh": "ระนอง",
+      "nameEn": "Ranong"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-86",
+      "nameTh": "ชุมพร",
+      "nameEn": "Chumphon"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-90",
+      "nameTh": "สงขลา",
+      "nameEn": "Songkhla"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-91",
+      "nameTh": "สตูล",
+      "nameEn": "Satun"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-92",
+      "nameTh": "ตรัง",
+      "nameEn": "Trang"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-93",
+      "nameTh": "พัทลุง",
+      "nameEn": "Phatthalung"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-94",
+      "nameTh": "ปัตตานี",
+      "nameEn": "Pattani"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-95",
+      "nameTh": "ยะลา",
+      "nameEn": "Yala"
+    },
+    {
+      "total": 0,
+      "counts": {},
+      "fetchedAt": null,
+      "code": "TH-96",
+      "nameTh": "นราธิวาส",
+      "nameEn": "Narathiwat"
+    }
+  ]
+}

@@ -16,6 +16,8 @@ const STOP_TYPE_LABELS = {
   restaurant: "ร้านอาหาร",
   cafe: "คาเฟ่",
   rest_stop: "จุดพักรถ",
+  hotel: "ที่พัก/โรงแรม",
+  fuel: "ปั๊มน้ำมัน",
 };
 
 const TRIP_TYPE_LABELS = {
@@ -103,54 +105,41 @@ function appendTextElement(parent, tagName, text, className = "") {
   return element;
 }
 
-function validatePlaces(places) {
-  if (!Array.isArray(places)) {
-    throw new Error("รูปแบบไฟล์สถานที่ต้องเป็น Array");
-  }
-
-  const ids = new Set();
-  for (const place of places) {
-    if (
-      !place ||
-      typeof place.id !== "string" ||
-      !place.id.trim() ||
-      typeof place.name !== "string" ||
-      !place.name.trim() ||
-      typeof place.province !== "string" ||
-      !place.province.trim() ||
-      typeof place.type !== "string" ||
-      !place.type.trim()
-    ) {
-      throw new Error("พบรายการสถานที่ที่ไม่ตรง schema {id, name, province, type}");
-    }
-    if (ids.has(place.id)) {
-      throw new Error(`พบรหัสสถานที่ซ้ำ: ${place.id}`);
-    }
-    ids.add(place.id);
-  }
-  return places;
-}
-
+// สรุปจำนวนสถานที่ทั่วประเทศจาก GET /api/places/provinces (ข้อมูลทีม + OpenStreetMap)
 async function loadPlaces() {
   try {
-    const response = await fetch("./places_bkk_cnx.json", { cache: "no-store" });
+    const response = await fetch(`${API_BASE_URL}/api/places/provinces`, { cache: "no-store" });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const places = validatePlaces(await response.json());
+    const result = await response.json();
+    if (!result || result.success !== true || !Array.isArray(result.data)) {
+      throw new Error("รูปแบบข้อมูลไม่ถูกต้อง");
+    }
 
-    if (!places.length) {
-      placesStatusElement.textContent =
-        "ยังไม่มีข้อมูลสถานที่ที่ยืนยันแหล่งที่มา จึงไม่แสดงชื่อหรือพิกัดที่คาดเดาขึ้น";
+    const totals = {};
+    let teamTotal = 0;
+    for (const province of result.data) {
+      teamTotal += Number(province.team) || 0;
+      for (const [type, count] of Object.entries(province.counts || {})) {
+        totals[type] = (totals[type] || 0) + (Number(count) || 0);
+      }
+    }
+    const grandTotal = Object.values(totals).reduce((sum, n) => sum + n, 0);
+    if (!grandTotal) {
+      placesStatusElement.textContent = "ยังไม่มีข้อมูลสถานที่ในระบบ";
       return;
     }
 
-    placesStatusElement.classList.add("hidden");
-    for (const place of places) {
+    placesStatusElement.textContent =
+      `${grandTotal.toLocaleString("th-TH")} สถานที่ใน ${result.data.length} จังหวัด ` +
+      `(ข้อมูลทีม ${teamTotal.toLocaleString("th-TH")} แห่ง ที่เหลือจาก OpenStreetMap ยังไม่ได้ตรวจสอบ)`;
+    for (const [type, count] of Object.entries(totals)) {
       const item = document.createElement("li");
-      item.textContent = `${place.name} · ${place.province} · ${place.type}`;
+      item.textContent = `${STOP_TYPE_LABELS[type] || type}: ${count.toLocaleString("th-TH")} แห่ง`;
       placesListElement.append(item);
     }
+    if (result.attribution) appendTextElement(placesListElement.parentElement, "p", `ข้อมูลแผนที่ ${result.attribution}`, "hint");
   } catch (error) {
-    placesStatusElement.textContent = `โหลดรายการสถานที่ไม่สำเร็จ: ${error.message}`;
+    placesStatusElement.textContent = `โหลดข้อมูลสถานที่จาก API ไม่สำเร็จ: ${error.message}`;
     placesStatusElement.classList.add("error");
   }
 }
@@ -425,6 +414,10 @@ function renderPlan(result, payload) {
     renderItinerary(bubble, plan.itinerary, `plan-${planCount}`);
   } else if (plan.status === "ready") {
     appendTextElement(bubble, "p", "AI ยังไม่ได้ส่งแผนรายวันกลับมา", "empty");
+  }
+
+  if (result.meta && typeof result.meta.attribution === "string") {
+    appendTextElement(bubble, "p", `ข้อมูลสถานที่ ${result.meta.attribution} ยังไม่ได้ตรวจสอบ`, "muted");
   }
 
   updateRouteMap(payload, plan);

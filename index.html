@@ -33,69 +33,12 @@
   </header>
 
   <main id="top">
-    <!-- Hero -->
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="container hero-inner">
-        <div class="hero-text">
-          <p class="eyebrow">ผู้ช่วยวางแผน Road Trip ภาษาไทย</p>
-          <h1 id="hero-title">ขับรถเที่ยวทั่วไทย<br />ให้ AI ช่วยจัดแผนรายวัน</h1>
-          <p class="lead">บอกต้นทาง ปลายทาง จำนวนวัน งบประมาณ และสิ่งที่ชอบ แล้วรับแผนเที่ยวแบบวันต่อวัน พร้อมจุดแวะระหว่างทาง</p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#planner">ลองวางแผนเลย</a>
-            <a class="btn btn-ghost" href="#templates">ดูแผนสำเร็จรูป</a>
-          </div>
-        </div>
-        <svg class="hero-art" viewBox="0 0 420 300" role="img" aria-label="ภาพประกอบถนนคดเคี้ยวผ่านภูเขา">
-          <defs>
-            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#f9d9a8" />
-              <stop offset="1" stop-color="#f3b46b" />
-            </linearGradient>
-          </defs>
-          <rect width="420" height="300" rx="24" fill="url(#sky)" />
-          <circle cx="320" cy="80" r="34" fill="#fff4d6" />
-          <path d="M0 210 L90 120 L150 170 L230 90 L320 180 L420 120 L420 300 L0 300 Z" fill="#8a4a1c" />
-          <path d="M0 240 L110 170 L200 220 L300 160 L420 220 L420 300 L0 300 Z" fill="#5a2a0c" />
-          <path d="M210 300 C 200 260, 260 250, 240 220 C 225 198, 180 205, 200 180" fill="none" stroke="#f6efe6" stroke-width="16" stroke-linecap="round" />
-          <path d="M210 300 C 200 260, 260 250, 240 220 C 225 198, 180 205, 200 180" fill="none" stroke="#e8a33d" stroke-width="2" stroke-dasharray="8 8" />
-          <g transform="translate(228 236) rotate(-20)">
-            <rect x="-11" y="-7" width="22" height="14" rx="4" fill="#f2c230" />
-            <rect x="-5" y="-5" width="9" height="10" rx="2" fill="#3b2a1a" />
-          </g>
-          <g fill="#c62828">
-            <circle cx="200" cy="150" r="10" />
-            <path d="M191 154 L200 172 L209 154 Z" />
-            <circle cx="200" cy="150" r="4" fill="#fff" />
-          </g>
-        </svg>
-      </div>
-    </section>
-
-    <!-- How it works -->
-    <section id="how" class="section section-brown" aria-labelledby="how-title">
-      <div class="container split">
-        <div>
-          <h2 id="how-title" class="section-title">วางแผนทริปได้ใน 3 ขั้นตอน</h2>
-          <ol class="steps">
-            <li><span class="step-num" aria-hidden="true">1</span><div><strong>กรอกข้อมูลทริป</strong><p>ต้นทาง ปลายทาง จำนวนวัน งบ และความสนใจ</p></div></li>
-            <li><span class="step-num" aria-hidden="true">2</span><div><strong>AI จัดแผนให้</strong><p>ถ้าข้อมูลยังไม่พอ AI จะถามกลับเป็นภาษาไทย</p></div></li>
-            <li><span class="step-num" aria-hidden="true">3</span><div><strong>ดูแผนรายวัน</strong><p>เห็นจุดแวะแต่ละวัน พร้อมป้ายบอกว่าข้อมูลไหนยังไม่ได้ตรวจสอบ</p></div></li>
-          </ol>
-        </div>
-        <div class="mock-card" aria-hidden="true">
-          <p class="mock-title">ตัวอย่างหน้าตาแผน</p>
-          <div class="mock-day"><span>วันที่ 1</span><i></i><i class="short"></i></div>
-          <div class="mock-day"><span>วันที่ 2</span><i></i><i class="short"></i></div>
-          <div class="mock-day"><span>วันที่ 3</span><i></i><i class="short"></i></div>
-        </div>
-      </div>
-    </section>
-
     <!-- Planner: chat + route map -->
-    <section id="planner" class="section" aria-labelledby="planner-heading">
+    <section id="planner" class="hero-planner" aria-labelledby="planner-heading">
       <div class="container">
-        <h2 id="planner-heading" class="section-title dark" tabindex="-1">คุยกับ AI วางแผนเที่ยว</h2>
-        <p class="section-sub">แผนที่ได้เป็นแผนเบื้องต้น ยังไม่ได้ตรวจสอบสถานที่ เส้นทาง ราคา หรือเวลาเปิดปิดกับแหล่งข้อมูลจริง</p>
+        <p class="eyebrow">ผู้ช่วยวางแผน Road Trip ภาษาไทย</p>
+        <h1 id="planner-heading" tabindex="-1">คุยกับ AI วางแผนเที่ยวทั่วไทย</h1>
+        <p class="lead">บอกต้นทาง ปลายทาง จำนวนวัน งบ และสิ่งที่ชอบ แล้วรับแผนรายวัน แผนที่ได้เป็นแผนเบื้องต้น ยังไม่ได้ตรวจสอบสถานที่ เส้นทาง ราคา หรือเวลาเปิดปิดกับแหล่งข้อมูลจริง</p>
 
         <div class="planner">
           <div class="chat-panel">
@@ -170,6 +113,26 @@
       </div>
     </section>
 
+    <!-- How it works -->
+    <section id="how" class="section section-light" aria-labelledby="how-title">
+      <div class="container split">
+        <div>
+          <h2 id="how-title" class="section-title dark">วางแผนทริปได้ใน 3 ขั้นตอน</h2>
+          <ol class="steps">
+            <li><span class="step-num" aria-hidden="true">1</span><div><strong>กรอกข้อมูลทริป</strong><p>ต้นทาง ปลายทาง จำนวนวัน งบ และความสนใจ</p></div></li>
+            <li><span class="step-num" aria-hidden="true">2</span><div><strong>AI จัดแผนให้</strong><p>ถ้าข้อมูลยังไม่พอ AI จะถามกลับเป็นภาษาไทย</p></div></li>
+            <li><span class="step-num" aria-hidden="true">3</span><div><strong>ดูแผนรายวัน</strong><p>เห็นจุดแวะแต่ละวัน พร้อมป้ายบอกว่าข้อมูลไหนยังไม่ได้ตรวจสอบ</p></div></li>
+          </ol>
+        </div>
+        <div class="mock-card" aria-hidden="true">
+          <p class="mock-title">ตัวอย่างหน้าตาแผน</p>
+          <div class="mock-day"><span>วันที่ 1</span><i></i><i class="short"></i></div>
+          <div class="mock-day"><span>วันที่ 2</span><i></i><i class="short"></i></div>
+          <div class="mock-day"><span>วันที่ 3</span><i></i><i class="short"></i></div>
+        </div>
+      </div>
+    </section>
+
     <!-- Provinces + features -->
     <section id="provinces" class="section section-brown" aria-labelledby="provinces-title">
       <div class="container">
@@ -178,7 +141,7 @@
           <h3>ความโปร่งใสของข้อมูล</h3>
           <p>AI รับคำขอได้ทุกจังหวัด แต่จะแนะนำเฉพาะสถานที่ที่อยู่ในฐานข้อมูลของระบบเท่านั้น และทุกจุดแวะจะติดป้าย “ยังไม่ได้ตรวจสอบ” จนกว่าจะยืนยันกับแหล่งข้อมูลภายนอก ระบบยังไม่ได้คำนวณระยะทางหรือเวลาเดินทางจริง</p>
           <div class="places-box">
-            <h4 id="places-heading">สถานที่ที่มีแหล่งอ้างอิงในระบบ</h4>
+            <h4 id="places-heading">ข้อมูลสถานที่ในระบบ</h4>
             <p id="places-status" class="empty" role="status">กำลังโหลดรายการสถานที่…</p>
             <ul id="places-list" aria-labelledby="places-heading"></ul>
           </div>
@@ -243,6 +206,7 @@
     <div class="container footer-inner">
       <p><strong>Thai Travel AI</strong> · โปรเจกต์ AFO_team_fatzone</p>
       <p>แผนเที่ยวสร้างโดย AI เป็นแผนเบื้องต้น กรุณาตรวจสอบเส้นทาง สถานที่ และเวลาเปิดปิดก่อนเดินทางทุกครั้ง</p>
+      <p>ข้อมูลสถานที่บางส่วน © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL)</p>
     </div>
   </footer>
 
