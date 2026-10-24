@@ -113,6 +113,8 @@ test("query กรองตามประเภท คำค้น และแ
   assert.equal(page.items.length, 2);
   assert.equal(store.query({ q: "test hotel" }).items[0].id, "osm-way-7");
   assert.equal(store.query({ type: "fuel" }).total, 6);
+  // ปั๊มแบรนด์น้ำมันขึ้นก่อนแถว 7-Eleven
+  assert.equal(store.query({ provinceCode: "TH-10", type: "fuel" }).items[0].id, "osm-node-2");
 });
 
 test("provinceSummary นับสถานที่ทุกประเภท", async () => {
@@ -155,6 +157,28 @@ test("selectForPlan ไม่พังเมื่อหาจังหวัด
   const selection = store.selectForPlan({ origin: "ปารีส", destination: "ลอนดอน" });
   assert.equal(selection.places.length, 0);
   assert.equal(selection.origin, null);
+});
+
+test("locateItinerary เติมพิกัดจาก placeId และไม่แตะจุดที่ไม่รู้จัก", async () => {
+  const store = await makeFixture();
+  const itinerary = [
+    { day: 1, title: "วันแรก", stops: [{ placeId: "osm-node-5", name: "ดอยสุเทพ" }, { placeId: "unknown", name: "x" }] },
+    { day: 2, title: "วันสอง", stops: [] },
+  ];
+  const located = store.locateItinerary(itinerary);
+  assert.equal(located[0].stops[0].lat, 18.8);
+  assert.equal(located[0].stops[0].lon, 98.92);
+  assert.equal(located[0].stops[1].lat, undefined);
+  assert.equal(located[0].title, "วันแรก");
+  assert.equal(itinerary[0].stops[0].lat, undefined);
+  assert.equal(store.locateItinerary(null), null);
+});
+
+test("provincePoint คืนจุดกึ่งกลางจังหวัด", async () => {
+  const store = await makeFixture();
+  const point = store.provincePoint(store.findProvince("ภูเก็ต"));
+  assert.deepEqual(point, { name: "ภูเก็ต", lat: 7.9, lon: 98.3 });
+  assert.equal(store.provincePoint(null), null);
 });
 
 test("loadPlaceStore แจ้งเมื่อยังไม่มีไฟล์ provinces.json", async () => {

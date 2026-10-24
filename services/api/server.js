@@ -111,6 +111,9 @@ app.post('/api/plan', async (req, res) => {
             places: selection.places,
         });
 
+        // เติมพิกัดให้จุดแวะ เพื่อให้หน้าเว็บวาดแผนที่ได้
+        aiResponse.itinerary = placeStore.locateItinerary(aiResponse.itinerary);
+
         res.json({
             success: true,
             message: "สร้างแผนเที่ยวด้วย AI และข้อมูลสถานที่สำเร็จ",
@@ -119,6 +122,8 @@ app.post('/api/plan', async (req, res) => {
                 placesProvided: selection.places.length,
                 originProvince: selection.origin?.nameTh ?? null,
                 destinationProvince: selection.destination?.nameTh ?? null,
+                originPoint: placeStore.provincePoint(selection.origin),
+                destinationPoint: placeStore.provincePoint(selection.destination),
                 corridorProvinces: selection.corridor.map((p) => p.nameTh),
                 attribution: selection.hasOsm ? OSM_ATTRIBUTION : null,
             },

@@ -124,6 +124,11 @@ async function loadPlaces() {
       }
     }
     const grandTotal = Object.values(totals).reduce((sum, n) => sum + n, 0);
+    placeSummary = new Map(result.data.map((province) => [province.nameTh, province]));
+    document.getElementById("stat-places").textContent = grandTotal.toLocaleString("th-TH");
+    document.getElementById("stat-fuel").textContent = (totals.fuel || 0).toLocaleString("th-TH");
+    document.getElementById("stat-hotel").textContent = (totals.hotel || 0).toLocaleString("th-TH");
+    if (explorerProvince) renderExplorerTabs();
     if (!grandTotal) {
       placesStatusElement.textContent = "ยังไม่มีข้อมูลสถานที่ในระบบ";
       return;
@@ -420,7 +425,7 @@ function renderPlan(result, payload) {
     appendTextElement(bubble, "p", `ข้อมูลสถานที่ ${result.meta.attribution} ยังไม่ได้ตรวจสอบ`, "muted");
   }
 
-  updateRouteMap(payload, plan);
+  updateRouteMap(payload, plan, result.meta);
   heading.focus();
 }
 
@@ -477,7 +482,95 @@ function drawRoute(originLabel, destinationLabel, stopLabels) {
   drawPin(pointAt(0.02), originLabel, true, -1);
 }
 
-function updateRouteMap(payload, plan) {
+// ---------- แผนที่จริง (Leaflet + OpenStreetMap) ----------
+// ถ้าโหลด Leaflet จาก CDN ไม่ได้ จะใช้แผนภาพ SVG ด้านบนแทน
+
+const THAILAND_CENTER = [13.2, 101.0];
+let leafletMap = null;
+let leafletLayer = null;
+
+function initLeafletMap() {
+  if (!window.L) return false;
+  const box = document.getElementById("leaflet-map");
+  box.classList.remove("hidden");
+  document.getElementById("route-map").classList.add("hidden");
+  document.getElementById("map-legend").classList.remove("hidden");
+
+  leafletMap = window.L.map(box, { scrollWheelZoom: false }).setView(THAILAND_CENTER, 5);
+  window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 18,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(leafletMap);
+  leafletLayer = window.L.layerGroup().addTo(leafletMap);
+  routeCaption.textContent = "สร้างแผนเพื่อดูจุดแวะบนแผนที่ เส้นประเชื่อมจุดตามลำดับในแผน ไม่ใช่เส้นทางถนนจริง";
+  return true;
+}
+
+function pinIcon(kind, label) {
+  // label เป็นตัวอักษรหรือตัวเลขที่โค้ดนี้สร้างเอง ไม่ได้มาจากข้อมูลภายนอก
+  return window.L.divIcon({
+    html: `<div class="pin-marker pin-${kind}"><span>${label}</span></div>`,
+    className: "",
+    iconSize: [28, 28],
+    iconAnchor: [14, 28],
+    popupAnchor: [0, -26],
+  });
+}
+
+function popupContent(title, lines) {
+  const box = document.createElement("div");
+  box.className = "map-popup";
+  appendTextElement(box, "strong", title);
+  for (const line of lines) appendTextElement(box, "span", line);
+  return box;
+}
+
+function addPin(point, kind, label, title, lines) {
+  window.L.marker([point.lat, point.lon], { icon: pinIcon(kind, label), title })
+    .bindPopup(popupContent(title, lines))
+    .addTo(leafletLayer);
+  return [point.lat, point.lon];
+}
+
+function drawLeafletRoute(payload, plan, meta = {}) {
+  leafletLayer.clearLayers();
+  const path = [];
+
+  if (meta.originPoint) {
+    path.push(addPin(meta.originPoint, "start", "A", `ต้นทาง: ${payload.origin}`, ["ตำแหน่งกลางจังหวัดโดยประมาณ"]));
+  }
+
+  let stopCount = 0;
+  if (plan.status === "ready") {
+    for (const day of plan.itinerary) {
+      for (const stop of day.stops) {
+        if (typeof stop.lat !== "number" || typeof stop.lon !== "number") continue;
+        stopCount += 1;
+        const lines = [`วันที่ ${day.day}`, STOP_TYPE_LABELS[stop.type], "ยังไม่ได้ตรวจสอบ"].filter(Boolean);
+        path.push(addPin(stop, "stop", String(day.day), stop.name || "จุดแวะ", lines));
+      }
+    }
+  }
+
+  if (meta.destinationPoint) {
+    path.push(addPin(meta.destinationPoint, "end", "B", `ปลายทาง: ${payload.destination}`, ["ตำแหน่งกลางจังหวัดโดยประมาณ"]));
+  }
+
+  if (path.length >= 2) {
+    window.L.polyline(path, { color: "#e8a33d", weight: 3, dashArray: "6 8" }).addTo(leafletLayer);
+  }
+  if (path.length) leafletMap.fitBounds(path, { padding: [36, 36], maxZoom: 12 });
+
+  routeCaption.textContent = stopCount
+    ? `${stopCount} จุดแวะตามลำดับในแผน เส้นประไม่ใช่เส้นทางถนนจริง`
+    : "ยังไม่มีจุดแวะที่มีพิกัด แสดงเฉพาะต้นทางและปลายทาง (กลางจังหวัดโดยประมาณ)";
+}
+
+function updateRouteMap(payload, plan, meta) {
+  if (leafletMap) {
+    drawLeafletRoute(payload, plan, meta || {});
+    return;
+  }
   const stops = plan.status === "ready"
     ? plan.itinerary.flatMap((day) => day.stops.map((stop) => stop.name).filter(Boolean)).slice(0, MAX_MAP_STOPS)
     : [];
@@ -536,15 +629,119 @@ function showRegion(regionKey) {
     button.type = "button";
     button.className = "province-btn";
     button.textContent = province;
+    button.setAttribute("aria-pressed", String(province === explorerProvince));
+    button.setAttribute("aria-controls", "place-explorer");
     button.addEventListener("click", () => {
-      form.destination.value = province;
-      if (form.origin.value.trim() === province) form.origin.value = "";
-      setStatus(`ตั้งจุดหมายเป็น ${province} แล้ว กรอกข้อมูลที่เหลือแล้วกดสร้างแผนเที่ยว`);
-      scrollToPlanner(form.origin.value.trim() ? form.days : form.origin);
+      for (const other of list.querySelectorAll(".province-btn")) {
+        other.setAttribute("aria-pressed", String(other === button));
+      }
+      openExplorer(province);
     });
     item.append(button);
     list.append(item);
   }
+}
+
+// ---------- สำรวจสถานที่รายจังหวัด (GET /api/places) ----------
+
+const EXPLORER_TYPES = ["attraction", "restaurant", "cafe", "hotel", "fuel", "rest_stop"];
+const EXPLORER_LIMIT = 12;
+let placeSummary = new Map();
+let explorerProvince = null;
+let explorerType = "attraction";
+let explorerRequest = 0;
+
+function useAsDestination(province) {
+  form.destination.value = province;
+  if (form.origin.value.trim() === province) form.origin.value = "";
+  setStatus(`ตั้งจุดหมายเป็น ${province} แล้ว กรอกข้อมูลที่เหลือแล้วกดสร้างแผนเที่ยว`);
+  scrollToPlanner(form.origin.value.trim() ? form.days : form.origin);
+}
+
+function renderExplorerTabs() {
+  const tabs = document.getElementById("explorer-tabs");
+  const counts = placeSummary.get(explorerProvince)?.counts || {};
+  tabs.replaceChildren();
+  for (const type of EXPLORER_TYPES) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "explorer-tab";
+    button.setAttribute("aria-pressed", String(type === explorerType));
+    button.append(STOP_TYPE_LABELS[type]);
+    if (Number.isFinite(counts[type])) {
+      button.append(" ");
+      appendTextElement(button, "small", `(${counts[type].toLocaleString("th-TH")})`);
+    }
+    button.addEventListener("click", () => {
+      explorerType = type;
+      renderExplorerTabs();
+      loadExplorerPlaces();
+    });
+    tabs.append(button);
+  }
+}
+
+function osmLink(place) {
+  const lat = Number(place.lat);
+  const lon = Number(place.lon);
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+  const link = document.createElement("a");
+  link.href = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=17/${lat}/${lon}`;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = "ดูบนแผนที่ OpenStreetMap";
+  return link;
+}
+
+async function loadExplorerPlaces() {
+  const requestId = ++explorerRequest;
+  const statusEl = document.getElementById("explorer-status");
+  const list = document.getElementById("explorer-list");
+  statusEl.classList.remove("error");
+  statusEl.textContent = "กำลังโหลด…";
+  list.replaceChildren();
+
+  try {
+    const params = new URLSearchParams({ province: explorerProvince, type: explorerType, limit: String(EXPLORER_LIMIT) });
+    const response = await fetch(`${API_BASE_URL}/api/places?${params}`);
+    const result = await response.json().catch(() => null);
+    if (requestId !== explorerRequest) return; // มีคำขอใหม่กว่าแล้ว
+    if (!response.ok || !result || result.success !== true) {
+      throw new Error((result && result.error) || `HTTP ${response.status}`);
+    }
+
+    const { items, total } = result.data;
+    const label = STOP_TYPE_LABELS[explorerType];
+    if (!items.length) {
+      statusEl.textContent = `ยังไม่มีข้อมูล${label}ใน${explorerProvince}`;
+      return;
+    }
+    statusEl.textContent = `แสดง ${items.length} จาก ${total.toLocaleString("th-TH")} แห่ง (${label})`;
+    for (const place of items) {
+      const item = document.createElement("li");
+      appendTextElement(item, "strong", place.name);
+      const extra = [place.nameEn, place.brand && place.brand !== place.name ? place.brand : null].filter(Boolean);
+      if (extra.length) appendTextElement(item, "span", extra.join(" · "));
+      const link = osmLink(place);
+      if (link) item.append(link);
+      list.append(item);
+    }
+  } catch (error) {
+    if (requestId !== explorerRequest) return;
+    statusEl.textContent = `โหลดสถานที่ไม่สำเร็จ: ${error.message}`;
+    statusEl.classList.add("error");
+  }
+}
+
+function openExplorer(province) {
+  explorerProvince = province;
+  const card = document.getElementById("place-explorer");
+  card.classList.remove("hidden");
+  document.getElementById("explorer-heading").textContent = `สถานที่ใน${province}`;
+  document.getElementById("explorer-use").textContent = `ใช้ ${province} เป็นจุดหมาย`;
+  renderExplorerTabs();
+  loadExplorerPlaces();
+  card.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "nearest" });
 }
 
 function applyTemplate(template) {
@@ -638,10 +835,16 @@ for (const button of document.querySelectorAll(".region")) {
   button.addEventListener("click", () => showRegion(button.dataset.region));
 }
 
+document.getElementById("explorer-use").addEventListener("click", () => {
+  if (explorerProvince) useAsDestination(explorerProvince);
+});
+
 renderProvinceOptions();
 renderTemplates();
 showRegion("north");
 initCarousel();
-drawRoute("ต้นทาง", "ปลายทาง", DEMO_MAP_STOPS);
-initRouteCar();
+if (!initLeafletMap()) {
+  drawRoute("ต้นทาง", "ปลายทาง", DEMO_MAP_STOPS);
+  initRouteCar();
+}
 loadPlaces();

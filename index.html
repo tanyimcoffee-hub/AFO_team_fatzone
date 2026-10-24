@@ -8,7 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&family=Prompt:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
   <link rel="stylesheet" href="./styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#planner-heading">ข้ามไปยังฟอร์มวางแผน</a>
@@ -39,6 +41,12 @@
         <p class="eyebrow">ผู้ช่วยวางแผน Road Trip ภาษาไทย</p>
         <h1 id="planner-heading" tabindex="-1">คุยกับ AI วางแผนเที่ยวทั่วไทย</h1>
         <p class="lead">บอกต้นทาง ปลายทาง จำนวนวัน งบ และสิ่งที่ชอบ แล้วรับแผนรายวัน แผนที่ได้เป็นแผนเบื้องต้น ยังไม่ได้ตรวจสอบสถานที่ เส้นทาง ราคา หรือเวลาเปิดปิดกับแหล่งข้อมูลจริง</p>
+        <ul class="hero-stats" aria-label="ข้อมูลในระบบ">
+          <li><strong>77</strong><span>จังหวัด</span></li>
+          <li><strong id="stat-places">–</strong><span>สถานที่ในระบบ</span></li>
+          <li><strong id="stat-fuel">–</strong><span>ปั๊มน้ำมัน</span></li>
+          <li><strong id="stat-hotel">–</strong><span>ที่พัก/โรงแรม</span></li>
+        </ul>
 
         <div class="planner">
           <div class="chat-panel">
@@ -97,6 +105,12 @@
           </div>
 
           <figure class="map-panel" aria-labelledby="route-caption">
+            <div id="leaflet-map" class="leaflet-box hidden" role="region" aria-label="แผนที่จุดแวะในแผนเที่ยว"></div>
+            <ul id="map-legend" class="map-legend hidden" aria-label="สัญลักษณ์บนแผนที่">
+              <li><span class="dot dot-start" aria-hidden="true"></span>ต้นทาง</li>
+              <li><span class="dot dot-stop" aria-hidden="true"></span>จุดแวะ (ตัวเลข = วันที่)</li>
+              <li><span class="dot dot-end" aria-hidden="true"></span>ปลายทาง</li>
+            </ul>
             <svg id="route-map" class="route-map" viewBox="0 0 300 520" role="img" aria-labelledby="route-map-title">
               <title id="route-map-title">แผนภาพเส้นทางแบบจำลอง</title>
               <path id="route-path" d="M150 490 C 60 430, 250 390, 170 320 C 100 260, 230 220, 160 150 C 110 100, 170 60, 150 30" fill="none" stroke="#c62828" stroke-width="3" />
@@ -139,7 +153,7 @@
         <h2 id="provinces-title" class="section-title center">พิมพ์ต้นทาง–ปลายทางได้ทั้ง 77 จังหวัดทั่วไทย</h2>
         <div class="transparency">
           <h3>ความโปร่งใสของข้อมูล</h3>
-          <p>AI รับคำขอได้ทุกจังหวัด แต่จะแนะนำเฉพาะสถานที่ที่อยู่ในฐานข้อมูลของระบบเท่านั้น และทุกจุดแวะจะติดป้าย “ยังไม่ได้ตรวจสอบ” จนกว่าจะยืนยันกับแหล่งข้อมูลภายนอก ระบบยังไม่ได้คำนวณระยะทางหรือเวลาเดินทางจริง</p>
+          <p>AI รับคำขอได้ทุกจังหวัด และเลือกจุดแวะเฉพาะจากฐานข้อมูลของระบบเท่านั้น ข้อมูลส่วนใหญ่มาจาก OpenStreetMap ซึ่งอาสาสมัครร่วมกันบันทึก จึงอาจไม่ครบหรือไม่เป็นปัจจุบัน ทุกจุดแวะจะติดป้าย “ยังไม่ได้ตรวจสอบ” และระบบยังไม่ได้คำนวณระยะทางหรือเวลาเดินทางจริง</p>
           <div class="places-box">
             <h4 id="places-heading">ข้อมูลสถานที่ในระบบ</h4>
             <p id="places-status" class="empty" role="status">กำลังโหลดรายการสถานที่…</p>
@@ -152,7 +166,7 @@
           <ul id="feature-track" class="feature-track" tabindex="0" aria-label="การ์ดความสามารถ เลื่อนซ้ายขวาได้">
             <li class="feature-card"><span class="feature-icon" aria-hidden="true">💬</span><h3>ตอบภาษาไทย</h3><p>AI ถามกลับเมื่อข้อมูลยังไม่ครบ และอธิบายแผนเป็นภาษาไทย</p></li>
             <li class="feature-card"><span class="feature-icon" aria-hidden="true">🗓️</span><h3>จัดแผนรายวันอัตโนมัติ</h3><p>แบ่งแผนตามจำนวนวันที่เลือก ตั้งแต่ 1 ถึง 30 วัน</p></li>
-            <li class="feature-card"><span class="feature-icon" aria-hidden="true">📍</span><h3>สถานที่ระหว่างทาง</h3><p>แนะนำแลนด์มาร์ก ร้านอาหาร คาเฟ่ และจุดพักรถจากฐานข้อมูลระบบ</p></li>
+            <li class="feature-card"><span class="feature-icon" aria-hidden="true">📍</span><h3>สถานที่ระหว่างทาง</h3><p>แนะนำแลนด์มาร์ก ร้านอาหาร คาเฟ่ ที่พัก และปั๊มน้ำมัน จากข้อมูล OpenStreetMap และข้อมูลทีม</p></li>
             <li class="feature-card"><span class="feature-icon" aria-hidden="true">🏞️</span><h3>เที่ยวตามสไตล์</h3><p>เลือกธรรมชาติ ทะเล ภูเขา คาเฟ่ อาหาร หรือพิมพ์ความสนใจเอง</p></li>
             <li class="feature-card"><span class="feature-icon" aria-hidden="true">🔍</span><h3>บอกตรง ๆ ว่ายังไม่ยืนยัน</h3><p>ทุกจุดแวะมีป้ายสถานะ ไม่อ้างว่าตรวจสอบแล้วถ้ายังไม่ได้ตรวจ</p></li>
             <li class="feature-card"><span class="feature-icon" aria-hidden="true">🚗</span><h3>ออกแบบเพื่อ Road Trip</h3><p>คำนึงถึงการพักขับรถ และจุดแวะตามเส้นทาง</p></li>
@@ -166,7 +180,7 @@
     <section id="templates" class="section" aria-labelledby="templates-title">
       <div class="container">
         <h2 id="templates-title" class="section-title dark center">แผนเที่ยวแบบครบวงจร สำเร็จรูป</h2>
-        <p class="section-sub center">กดเลือกแผน ระบบจะกรอกข้อมูลให้ในฟอร์ม แล้วกด “สร้างแผนเที่ยว” ได้ทันที</p>
+        <p class="section-sub center">กดเลือกแผน ระบบจะกรอกข้อมูลให้ในฟอร์ม แล้วกด “สร้างแผนเที่ยว” ได้ทันที จำนวนวันและงบเป็นค่าตั้งต้นให้แก้ไขได้ ไม่ได้อ้างอิงราคาจริง</p>
         <ul id="template-list" class="template-list"></ul>
 
         <div class="explore">
@@ -184,10 +198,21 @@
           </div>
           <div class="province-card">
             <h3 id="province-heading" aria-live="polite">ภาคเหนือ</h3>
-            <p class="hint">กดชื่อจังหวัดเพื่อตั้งเป็นจุดหมายปลายทาง</p>
+            <p class="hint">กดชื่อจังหวัดเพื่อดูร้านอาหาร ปั๊มน้ำมัน ที่พัก และที่เที่ยวในระบบ</p>
             <ul id="province-list" class="province-list" aria-labelledby="province-heading"></ul>
           </div>
         </div>
+
+        <section id="place-explorer" class="explorer-card hidden" aria-labelledby="explorer-heading">
+          <div class="explorer-head">
+            <h3 id="explorer-heading" tabindex="-1">สถานที่ในจังหวัด</h3>
+            <button type="button" id="explorer-use" class="btn btn-primary">ใช้เป็นจุดหมาย</button>
+          </div>
+          <div id="explorer-tabs" class="explorer-tabs" role="group" aria-label="ประเภทสถานที่"></div>
+          <p id="explorer-status" class="status" role="status"></p>
+          <ul id="explorer-list" class="explorer-list"></ul>
+          <p class="hint">ข้อมูล © OpenStreetMap contributors (ODbL) และข้อมูลทีม ยังไม่ได้ตรวจสอบ อาจปิดกิจการหรือย้ายแล้ว</p>
+        </section>
 
         <div class="reviews" aria-labelledby="reviews-title">
           <h3 id="reviews-title" class="reviews-title">รีวิว</h3>

@@ -29,6 +29,16 @@ const CORRIDOR_WIDTH_KM = 60;
 // ปั๊มน้ำมันแบรนด์หลัก ใช้จัดลำดับก่อน เพราะข้อมูล OSM บางแถวใช้ชื่อร้านสะดวกซื้อในปั๊ม
 const FUEL_BRAND_PATTERN = /ptt|ปตท|bangchak|บางจาก|shell|เชลล์|caltex|คาลเท็กซ์|esso|เอสโซ่|\bpt\b|พีที|susco|ซัสโก้|cosmo|คอสโม่/iu;
 
+// คะแนนจัดลำดับ: ข้อมูลทีมก่อน แล้วปั๊มแบรนด์หลัก แล้วสถานที่ที่มีแบรนด์หรือชื่ออังกฤษ (มักเป็นที่รู้จัก)
+function rankScore(place) {
+  return (
+    (place.source === "team" ? 1000 : 0) +
+    (place.type === "fuel" && FUEL_BRAND_PATTERN.test(`${place.brand || ""} ${place.name}`) ? 5 : 0) +
+    (place.brand ? 2 : 0) +
+    (place.nameEn ? 1 : 0)
+  );
+}
+
 const INTEREST_BOOSTS = {
   คาเฟ่: { cafe: 3 },
   อาหาร: { restaurant: 3 },
@@ -99,6 +109,7 @@ export class PlaceStore {
     this.unassigned = [];
     this.sources = [];
     this.centroids = new Map();
+    this.idIndex = null;
   }
 
   addProvince(province) {
@@ -134,6 +145,7 @@ export class PlaceStore {
   /** เพิ่มสถานที่ ถ้า source เป็น team จะทับข้อมูล OSM ที่ซ้ำกัน */
   addPlaces(places) {
     this.centroids.clear();
+    this.idIndex = null;
     for (const place of places) {
       const province = place.provinceCode
         ? this.provinces.find((p) => p.code === place.provinceCode)
@@ -182,7 +194,40 @@ export class PlaceStore {
     if (needle) {
       items = items.filter((place) => normalizeName(place.name).includes(needle) || normalizeName(place.nameEn).includes(needle));
     }
+    items = [...items].sort((a, b) => rankScore(b) - rankScore(a) || a.name.localeCompare(b.name, "th"));
     return { total: items.length, items: items.slice(offset, offset + limit) };
+  }
+
+  getById(id) {
+    if (!this.idIndex) {
+      this.idIndex = new Map();
+      for (const list of this.byProvince.values()) {
+        for (const place of list) this.idIndex.set(place.id, place);
+      }
+    }
+    return this.idIndex.get(id) || null;
+  }
+
+  /** เติมพิกัด lat/lon ให้จุดแวะในแผนจาก placeId (ถ้ามีพิกัดในข้อมูล) */
+  locateItinerary(itinerary) {
+    if (!Array.isArray(itinerary)) return itinerary;
+    return itinerary.map((day) => {
+      if (!day || !Array.isArray(day.stops)) return day;
+      const stops = day.stops.map((stop) => {
+        const place = stop && typeof stop.placeId === "string" ? this.getById(stop.placeId) : null;
+        return place && typeof place.lat === "number" && typeof place.lon === "number"
+          ? { ...stop, lat: place.lat, lon: place.lon }
+          : stop;
+      });
+      return { ...day, stops };
+    });
+  }
+
+  /** จุดกึ่งกลางจังหวัดสำหรับวาดต้นทาง/ปลายทางบนแผนที่ */
+  provincePoint(province) {
+    if (!province) return null;
+    const center = this.centroid(province.code);
+    return center ? { name: province.nameTh, lat: Number(center.lat.toFixed(5)), lon: Number(center.lon.toFixed(5)) } : null;
   }
 
   // จุดกึ่งกลางโดยประมาณของจังหวัด คำนวณจากพิกัดสถานที่ในจังหวัด
@@ -229,11 +274,7 @@ export class PlaceStore {
         .filter((place) => place.type === type)
         .map((place) => ({
           place,
-          score:
-            (place.source === "team" ? 1000 : 0) +
-            (type === "fuel" && FUEL_BRAND_PATTERN.test(`${place.brand || ""} ${place.name}`) ? 5 : 0) +
-            (place.brand ? 2 : 0) +
-            (place.nameEn ? 1 : 0),
+          score: rankScore(place),
           tie: hash(`${seed}|${place.id}`),
         }))
         .sort((x, y) => y.score - x.score || x.tie - y.tie)
