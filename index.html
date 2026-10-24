@@ -5,141 +5,247 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="วางแผนทริปท่องเที่ยวประเทศไทยด้วย Thai Travel AI" />
   <title>Thai Travel AI — วางแผนทริปท่องเที่ยว</title>
-  <style>
-    :root {
-      color-scheme: light;
-      font-family: "Noto Sans Thai", "Segoe UI", Tahoma, sans-serif;
-      color: #1d2939;
-      background: #f3f6fa;
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; line-height: 1.55; }
-    .skip-link { position: absolute; left: -9999px; }
-    .skip-link:focus { left: 1rem; top: .5rem; z-index: 10; padding: .5rem .75rem; border-radius: .5rem; background: #fff; color: #123b32; }
-    header { padding: 1.25rem max(1rem, calc((100% - 980px) / 2)); background: #123b32; color: #fff; }
-    header h1 { margin: 0; font-size: 1.45rem; }
-    header p { margin: .25rem 0 0; color: #d5e8dd; }
-    main { width: min(980px, calc(100% - 2rem)); margin: 1.5rem auto 3rem; }
-    .notice { padding: .9rem 1rem; border: 1px solid #f0c36d; border-radius: .75rem; background: #fff8e7; color: #694b0b; line-height: 1.55; }
-    .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .75fr); gap: 1rem; margin-top: 1rem; align-items: start; }
-    .card { min-width: 0; padding: 1.2rem; border: 1px solid #e1e7ef; border-radius: 1rem; background: #fff; box-shadow: 0 4px 16px #172b4d0c; }
-    h2 { margin: 0 0 1rem; font-size: 1.1rem; }
-    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; }
-    label { display: block; margin-bottom: .35rem; font-size: .9rem; font-weight: 600; }
-    .req { color: #b42318; }
-    .hint { margin: .25rem 0 0; color: #667085; font-size: .82rem; }
-    .field-error { margin: .25rem 0 0; color: #b42318; font-size: .85rem; }
-    input, select { width: 100%; min-height: 2.7rem; padding: .55rem .7rem; border: 1px solid #cbd5e1; border-radius: .55rem; color: inherit; background: #fff; font: inherit; }
-    input:focus, select:focus { outline: 3px solid #2e8b6c33; border-color: #2e8b6c; }
-    input[aria-invalid="true"] { border-color: #b42318; }
-    :focus-visible { outline: 3px solid #1d4ed8; outline-offset: 2px; }
-    .interests { margin: 1rem 0; padding: .75rem; border: 1px solid #e1e7ef; border-radius: .6rem; }
-    .checks { display: flex; flex-wrap: wrap; gap: .5rem .9rem; }
-    .check { display: inline-flex; align-items: center; gap: .35rem; font-weight: 400; }
-    .check input { width: auto; min-height: auto; accent-color: #20785b; }
-    .sub-label { margin-top: .75rem; font-weight: 400; color: #475467; }
-    button { width: 100%; min-height: 2.8rem; display: inline-flex; align-items: center; justify-content: center; gap: .6rem; border: 0; border-radius: .6rem; background: #167252; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
-    button:hover { background: #105c42; }
-    button:disabled { cursor: wait; opacity: .65; }
-    .spinner { display: none; width: 1.1rem; height: 1.1rem; border: 2px solid #ffffff80; border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
-    .is-loading .spinner { display: inline-block; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2s; } }
-    .error-summary { margin-bottom: 1rem; padding: .8rem 1rem; border: 1px solid #b42318; border-radius: .6rem; background: #fdecea; color: #b42318; }
-    .error-summary ul { margin: .4rem 0 0; padding-left: 1.2rem; }
-    .error-summary a { color: inherit; }
-    .status { margin: .85rem 0 0; color: #475467; line-height: 1.5; }
-    .status.error { color: #b42318; }
-    .result { margin-top: 1rem; }
-    .result h3 { margin: 0 0 .35rem; font-size: 1rem; }
-    .result p { margin: .25rem 0; line-height: 1.55; }
-    .ai-reply { padding: .85rem 1rem; border-left: 4px solid #167252; border-radius: .5rem; background: #eef7f3; }
-    .trip-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: .5rem; margin: 1rem 0; }
-    .trip-summary div { padding: .55rem .7rem; border-radius: .55rem; background: #f5f7fa; }
-    .trip-summary dt { font-size: .78rem; color: #667085; }
-    .trip-summary dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
-    .days { margin: 0; padding: 0; list-style: none; }
-    .result-day { padding: .8rem 0; border-top: 1px solid #e7ebf0; }
-    .result-day ul { margin: .4rem 0 0; padding-left: 1.2rem; }
-    .result-day li + li { margin-top: .4rem; }
-    .stop-name { font-weight: 600; overflow-wrap: anywhere; }
-    .badge { display: inline-block; margin-left: .35rem; padding: 0 .45rem; border-radius: 999px; background: #fff3d6; color: #694b0b; font-size: .75rem; font-weight: 400; }
-    .muted { color: #667085; }
-    .empty { padding: .85rem; border-radius: .6rem; background: #f5f7fa; color: #667085; line-height: 1.5; }
-    .hidden { display: none !important; }
-    @media (max-width: 720px) {
-      .layout { grid-template-columns: 1fr; }
-      .field-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&family=Prompt:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
   <a class="skip-link" href="#planner-heading">ข้ามไปยังฟอร์มวางแผน</a>
-  <header>
-    <h1>🧭 Thai Travel AI</h1>
-    <p>ผู้ช่วยวางแผน Road Trip ในประเทศไทย</p>
+
+  <!-- Sticky navbar -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a class="brand" href="#top" aria-label="Thai Travel AI หน้าแรก">
+        <span class="brand-mark" aria-hidden="true">🧭</span>
+        <span>Thai Travel AI</span>
+      </a>
+      <nav aria-label="เมนูหลัก">
+        <ul class="nav-links">
+          <li><a href="#how">วิธีใช้งาน</a></li>
+          <li><a href="#planner">วางแผน</a></li>
+          <li><a href="#provinces">จังหวัด</a></li>
+          <li><a href="#templates">แผนสำเร็จรูป</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn-cta" href="#planner">เริ่มวางแผน</a>
+    </div>
   </header>
-  <main>
-    <div class="notice" role="note">
-      <strong>สถานะระบบ:</strong> แผนเที่ยวสร้างโดย AI เป็นแผนเบื้องต้นเท่านั้น ยังไม่ได้ตรวจสอบสถานที่ เส้นทาง ราคา หรือเวลาเปิดปิดกับแหล่งข้อมูลจริง
-      รายการสถานที่ในเครื่องจะว่างไว้จนกว่าจะมีข้อมูลที่มีแหล่งอ้างอิง
-    </div>
-    <div class="layout">
-      <section class="card" aria-labelledby="planner-heading">
-        <h2 id="planner-heading" tabindex="-1">รายละเอียดการเดินทาง</h2>
-        <div id="form-errors" class="error-summary hidden" role="alert" tabindex="-1"></div>
-        <form id="plan-form" novalidate>
-          <div class="field-grid">
-            <div>
-              <label for="origin">จุดเริ่มต้น <span class="req" aria-hidden="true">*</span></label>
-              <input id="origin" name="origin" required maxlength="120" autocomplete="off" placeholder="เช่น ขอนแก่น" aria-describedby="origin-error" />
-              <p id="origin-error" class="field-error hidden"></p>
-            </div>
-            <div>
-              <label for="destination">จุดหมายปลายทาง <span class="req" aria-hidden="true">*</span></label>
-              <input id="destination" name="destination" required maxlength="120" autocomplete="off" placeholder="เช่น นครราชสีมา" aria-describedby="destination-error" />
-              <p id="destination-error" class="field-error hidden"></p>
-            </div>
-            <div>
-              <label for="days">จำนวนวัน <span class="req" aria-hidden="true">*</span></label>
-              <input id="days" name="days" type="number" inputmode="numeric" min="1" max="30" step="1" value="3" required aria-describedby="days-hint days-error" />
-              <p id="days-hint" class="hint">1–30 วัน</p>
-              <p id="days-error" class="field-error hidden"></p>
-            </div>
-            <div>
-              <label for="budget">งบประมาณรวม (บาท) <span class="req" aria-hidden="true">*</span></label>
-              <input id="budget" name="budgetTHB" type="number" inputmode="numeric" min="1" step="1" value="5000" required aria-describedby="budget-error" />
-              <p id="budget-error" class="field-error hidden"></p>
-            </div>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-inner">
+        <div class="hero-text">
+          <p class="eyebrow">ผู้ช่วยวางแผน Road Trip ภาษาไทย</p>
+          <h1 id="hero-title">ขับรถเที่ยวทั่วไทย<br />ให้ AI ช่วยจัดแผนรายวัน</h1>
+          <p class="lead">บอกต้นทาง ปลายทาง จำนวนวัน งบประมาณ และสิ่งที่ชอบ แล้วรับแผนเที่ยวแบบวันต่อวัน พร้อมจุดแวะระหว่างทาง</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#planner">ลองวางแผนเลย</a>
+            <a class="btn btn-ghost" href="#templates">ดูแผนสำเร็จรูป</a>
           </div>
-          <fieldset class="interests">
-            <legend><strong>ความสนใจ</strong></legend>
-            <div class="checks">
-              <label class="check"><input type="checkbox" name="interests" value="ธรรมชาติ" checked /> ธรรมชาติ</label>
-              <label class="check"><input type="checkbox" name="interests" value="วัฒนธรรม" /> วัฒนธรรม</label>
-              <label class="check"><input type="checkbox" name="interests" value="คาเฟ่" /> คาเฟ่</label>
-              <label class="check"><input type="checkbox" name="interests" value="อาหาร" /> อาหาร</label>
-              <label class="check"><input type="checkbox" name="interests" value="ทะเล" /> ทะเล</label>
-              <label class="check"><input type="checkbox" name="interests" value="ภูเขา" /> ภูเขา</label>
+        </div>
+        <svg class="hero-art" viewBox="0 0 420 300" role="img" aria-label="ภาพประกอบถนนคดเคี้ยวผ่านภูเขา">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#f9d9a8" />
+              <stop offset="1" stop-color="#f3b46b" />
+            </linearGradient>
+          </defs>
+          <rect width="420" height="300" rx="24" fill="url(#sky)" />
+          <circle cx="320" cy="80" r="34" fill="#fff4d6" />
+          <path d="M0 210 L90 120 L150 170 L230 90 L320 180 L420 120 L420 300 L0 300 Z" fill="#8a4a1c" />
+          <path d="M0 240 L110 170 L200 220 L300 160 L420 220 L420 300 L0 300 Z" fill="#5a2a0c" />
+          <path d="M210 300 C 200 260, 260 250, 240 220 C 225 198, 180 205, 200 180" fill="none" stroke="#f6efe6" stroke-width="16" stroke-linecap="round" />
+          <path d="M210 300 C 200 260, 260 250, 240 220 C 225 198, 180 205, 200 180" fill="none" stroke="#e8a33d" stroke-width="2" stroke-dasharray="8 8" />
+          <g transform="translate(228 236) rotate(-20)">
+            <rect x="-11" y="-7" width="22" height="14" rx="4" fill="#f2c230" />
+            <rect x="-5" y="-5" width="9" height="10" rx="2" fill="#3b2a1a" />
+          </g>
+          <g fill="#c62828">
+            <circle cx="200" cy="150" r="10" />
+            <path d="M191 154 L200 172 L209 154 Z" />
+            <circle cx="200" cy="150" r="4" fill="#fff" />
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how" class="section section-brown" aria-labelledby="how-title">
+      <div class="container split">
+        <div>
+          <h2 id="how-title" class="section-title">วางแผนทริปได้ใน 3 ขั้นตอน</h2>
+          <ol class="steps">
+            <li><span class="step-num" aria-hidden="true">1</span><div><strong>กรอกข้อมูลทริป</strong><p>ต้นทาง ปลายทาง จำนวนวัน งบ และความสนใจ</p></div></li>
+            <li><span class="step-num" aria-hidden="true">2</span><div><strong>AI จัดแผนให้</strong><p>ถ้าข้อมูลยังไม่พอ AI จะถามกลับเป็นภาษาไทย</p></div></li>
+            <li><span class="step-num" aria-hidden="true">3</span><div><strong>ดูแผนรายวัน</strong><p>เห็นจุดแวะแต่ละวัน พร้อมป้ายบอกว่าข้อมูลไหนยังไม่ได้ตรวจสอบ</p></div></li>
+          </ol>
+        </div>
+        <div class="mock-card" aria-hidden="true">
+          <p class="mock-title">ตัวอย่างหน้าตาแผน</p>
+          <div class="mock-day"><span>วันที่ 1</span><i></i><i class="short"></i></div>
+          <div class="mock-day"><span>วันที่ 2</span><i></i><i class="short"></i></div>
+          <div class="mock-day"><span>วันที่ 3</span><i></i><i class="short"></i></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Planner: chat + route map -->
+    <section id="planner" class="section" aria-labelledby="planner-heading">
+      <div class="container">
+        <h2 id="planner-heading" class="section-title dark" tabindex="-1">คุยกับ AI วางแผนเที่ยว</h2>
+        <p class="section-sub">แผนที่ได้เป็นแผนเบื้องต้น ยังไม่ได้ตรวจสอบสถานที่ เส้นทาง ราคา หรือเวลาเปิดปิดกับแหล่งข้อมูลจริง</p>
+
+        <div class="planner">
+          <div class="chat-panel">
+            <div id="chat-log" class="chat-log" role="log" aria-label="บทสนทนากับ AI" aria-busy="false">
+              <div class="bubble bubble-ai">
+                <p>สวัสดีครับ บอกจุดเริ่มต้น จุดหมาย จำนวนวัน และงบประมาณ แล้วผมจะช่วยจัดแผน Road Trip ให้ครับ</p>
+              </div>
             </div>
-            <label for="interest-other" class="sub-label">อื่น ๆ (คั่นด้วยเครื่องหมายจุลภาค)</label>
-            <input id="interest-other" name="interestOther" maxlength="200" autocomplete="off" placeholder="เช่น ถ่ายรูป, ตลาดน้ำ" />
-          </fieldset>
-          <button id="submit-button" type="submit">
-            <span class="btn-label">สร้างแผนเที่ยว</span>
-            <span class="spinner" aria-hidden="true"></span>
-          </button>
-        </form>
-        <p id="request-status" class="status" role="status" aria-live="polite">กรอกข้อมูลเพื่อเรียก API วางแผน</p>
-        <section id="plan-result" class="result hidden" aria-labelledby="result-heading" aria-busy="false"></section>
-      </section>
-      <aside class="card" aria-labelledby="places-heading">
-        <h2 id="places-heading">สถานที่ที่มีแหล่งอ้างอิง</h2>
-        <p id="places-status" class="empty" role="status">กำลังโหลดรายการสถานที่…</p>
-        <ul id="places-list"></ul>
-      </aside>
-    </div>
+
+            <div id="form-errors" class="error-summary hidden" role="alert" tabindex="-1"></div>
+
+            <form id="plan-form" class="chat-form" novalidate>
+              <div class="field-grid">
+                <div>
+                  <label for="origin">จุดเริ่มต้น <span class="req" aria-hidden="true">*</span></label>
+                  <input id="origin" name="origin" required maxlength="120" autocomplete="off" placeholder="เช่น กรุงเทพมหานคร" aria-describedby="origin-error" />
+                  <p id="origin-error" class="field-error hidden"></p>
+                </div>
+                <div>
+                  <label for="destination">จุดหมายปลายทาง <span class="req" aria-hidden="true">*</span></label>
+                  <input id="destination" name="destination" required maxlength="120" autocomplete="off" placeholder="เช่น จันทบุรี" list="province-options" aria-describedby="destination-error" />
+                  <datalist id="province-options"></datalist>
+                  <p id="destination-error" class="field-error hidden"></p>
+                </div>
+                <div>
+                  <label for="days">จำนวนวัน <span class="req" aria-hidden="true">*</span></label>
+                  <input id="days" name="days" type="number" inputmode="numeric" min="1" max="30" step="1" value="3" required aria-describedby="days-hint days-error" />
+                  <p id="days-hint" class="hint">1–30 วัน</p>
+                  <p id="days-error" class="field-error hidden"></p>
+                </div>
+                <div>
+                  <label for="budget">งบประมาณรวม (บาท) <span class="req" aria-hidden="true">*</span></label>
+                  <input id="budget" name="budgetTHB" type="number" inputmode="numeric" min="1" step="1" value="5000" required aria-describedby="budget-error" />
+                  <p id="budget-error" class="field-error hidden"></p>
+                </div>
+              </div>
+              <fieldset class="interests">
+                <legend>ความสนใจ</legend>
+                <div class="chips">
+                  <label class="chip"><input type="checkbox" name="interests" value="ธรรมชาติ" checked /><span>ธรรมชาติ</span></label>
+                  <label class="chip"><input type="checkbox" name="interests" value="วัฒนธรรม" /><span>วัฒนธรรม</span></label>
+                  <label class="chip"><input type="checkbox" name="interests" value="คาเฟ่" /><span>คาเฟ่</span></label>
+                  <label class="chip"><input type="checkbox" name="interests" value="อาหาร" /><span>อาหาร</span></label>
+                  <label class="chip"><input type="checkbox" name="interests" value="ทะเล" /><span>ทะเล</span></label>
+                  <label class="chip"><input type="checkbox" name="interests" value="ภูเขา" /><span>ภูเขา</span></label>
+                </div>
+                <label for="interest-other" class="sub-label">อื่น ๆ (คั่นด้วยเครื่องหมายจุลภาค)</label>
+                <input id="interest-other" name="interestOther" maxlength="200" autocomplete="off" placeholder="เช่น ถ่ายรูป, ตลาดน้ำ" />
+              </fieldset>
+              <button id="submit-button" type="submit" class="btn btn-primary btn-block">
+                <span class="btn-label">สร้างแผนเที่ยว</span>
+                <span class="spinner" aria-hidden="true"></span>
+              </button>
+              <p id="request-status" class="status" role="status">กรอกข้อมูลเพื่อเรียก API วางแผน</p>
+            </form>
+          </div>
+
+          <figure class="map-panel" aria-labelledby="route-caption">
+            <svg id="route-map" class="route-map" viewBox="0 0 300 520" role="img" aria-labelledby="route-map-title">
+              <title id="route-map-title">แผนภาพเส้นทางแบบจำลอง</title>
+              <path id="route-path" d="M150 490 C 60 430, 250 390, 170 320 C 100 260, 230 220, 160 150 C 110 100, 170 60, 150 30" fill="none" stroke="#c62828" stroke-width="3" />
+              <path d="M150 490 C 60 430, 250 390, 170 320 C 100 260, 230 220, 160 150 C 110 100, 170 60, 150 30" fill="none" stroke="#c62828" stroke-width="12" stroke-opacity=".15" />
+              <g id="route-pins"></g>
+              <g id="route-car" aria-hidden="true">
+                <rect x="-14" y="-9" width="28" height="18" rx="5" fill="#f2c230" stroke="#3b2a1a" stroke-width="1.5" />
+                <rect x="2" y="-6" width="7" height="12" rx="2" fill="#3b2a1a" />
+              </g>
+            </svg>
+            <figcaption id="route-caption" class="map-caption">ภาพประกอบเส้นทางเท่านั้น ไม่ใช่ตำแหน่งหรือระยะทางจริง</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- Provinces + features -->
+    <section id="provinces" class="section section-brown" aria-labelledby="provinces-title">
+      <div class="container">
+        <h2 id="provinces-title" class="section-title center">พิมพ์ต้นทาง–ปลายทางได้ทั้ง 77 จังหวัดทั่วไทย</h2>
+        <div class="transparency">
+          <h3>ความโปร่งใสของข้อมูล</h3>
+          <p>AI รับคำขอได้ทุกจังหวัด แต่จะแนะนำเฉพาะสถานที่ที่อยู่ในฐานข้อมูลของระบบเท่านั้น และทุกจุดแวะจะติดป้าย “ยังไม่ได้ตรวจสอบ” จนกว่าจะยืนยันกับแหล่งข้อมูลภายนอก ระบบยังไม่ได้คำนวณระยะทางหรือเวลาเดินทางจริง</p>
+          <div class="places-box">
+            <h4 id="places-heading">สถานที่ที่มีแหล่งอ้างอิงในระบบ</h4>
+            <p id="places-status" class="empty" role="status">กำลังโหลดรายการสถานที่…</p>
+            <ul id="places-list" aria-labelledby="places-heading"></ul>
+          </div>
+        </div>
+
+        <div class="carousel" aria-roledescription="carousel" aria-label="ความสามารถของระบบ">
+          <button type="button" class="carousel-btn prev" data-dir="-1" aria-label="เลื่อนไปการ์ดก่อนหน้า">‹</button>
+          <ul id="feature-track" class="feature-track" tabindex="0" aria-label="การ์ดความสามารถ เลื่อนซ้ายขวาได้">
+            <li class="feature-card"><span class="feature-icon" aria-hidden="true">💬</span><h3>ตอบภาษาไทย</h3><p>AI ถามกลับเมื่อข้อมูลยังไม่ครบ และอธิบายแผนเป็นภาษาไทย</p></li>
+            <li class="feature-card"><span class="feature-icon" aria-hidden="true">🗓️</span><h3>จัดแผนรายวันอัตโนมัติ</h3><p>แบ่งแผนตามจำนวนวันที่เลือก ตั้งแต่ 1 ถึง 30 วัน</p></li>
+            <li class="feature-card"><span class="feature-icon" aria-hidden="true">📍</span><h3>สถานที่ระหว่างทาง</h3><p>แนะนำแลนด์มาร์ก ร้านอาหาร คาเฟ่ และจุดพักรถจากฐานข้อมูลระบบ</p></li>
+            <li class="feature-card"><span class="feature-icon" aria-hidden="true">🏞️</span><h3>เที่ยวตามสไตล์</h3><p>เลือกธรรมชาติ ทะเล ภูเขา คาเฟ่ อาหาร หรือพิมพ์ความสนใจเอง</p></li>
+            <li class="feature-card"><span class="feature-icon" aria-hidden="true">🔍</span><h3>บอกตรง ๆ ว่ายังไม่ยืนยัน</h3><p>ทุกจุดแวะมีป้ายสถานะ ไม่อ้างว่าตรวจสอบแล้วถ้ายังไม่ได้ตรวจ</p></li>
+            <li class="feature-card"><span class="feature-icon" aria-hidden="true">🚗</span><h3>ออกแบบเพื่อ Road Trip</h3><p>คำนึงถึงการพักขับรถ และจุดแวะตามเส้นทาง</p></li>
+          </ul>
+          <button type="button" class="carousel-btn next" data-dir="1" aria-label="เลื่อนไปการ์ดถัดไป">›</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Templates + region map + reviews -->
+    <section id="templates" class="section" aria-labelledby="templates-title">
+      <div class="container">
+        <h2 id="templates-title" class="section-title dark center">แผนเที่ยวแบบครบวงจร สำเร็จรูป</h2>
+        <p class="section-sub center">กดเลือกแผน ระบบจะกรอกข้อมูลให้ในฟอร์ม แล้วกด “สร้างแผนเที่ยว” ได้ทันที</p>
+        <ul id="template-list" class="template-list"></ul>
+
+        <div class="explore">
+          <div class="region-card">
+            <h3 id="region-heading">แผนที่ไทยตามภูมิภาค</h3>
+            <div class="region-map" role="group" aria-labelledby="region-heading">
+              <button type="button" class="region r-north" data-region="north" aria-pressed="true">เหนือ</button>
+              <button type="button" class="region r-northeast" data-region="northeast" aria-pressed="false">อีสาน</button>
+              <button type="button" class="region r-west" data-region="west" aria-pressed="false">ตะวันตก</button>
+              <button type="button" class="region r-central" data-region="central" aria-pressed="false">กลาง</button>
+              <button type="button" class="region r-east" data-region="east" aria-pressed="false">ตะวันออก</button>
+              <button type="button" class="region r-south" data-region="south" aria-pressed="false">ใต้</button>
+            </div>
+            <p class="hint">แผนผังภูมิภาคแบบย่อ ไม่ใช่แผนที่ตามมาตราส่วน</p>
+          </div>
+          <div class="province-card">
+            <h3 id="province-heading" aria-live="polite">ภาคเหนือ</h3>
+            <p class="hint">กดชื่อจังหวัดเพื่อตั้งเป็นจุดหมายปลายทาง</p>
+            <ul id="province-list" class="province-list" aria-labelledby="province-heading"></ul>
+          </div>
+        </div>
+
+        <div class="reviews" aria-labelledby="reviews-title">
+          <h3 id="reviews-title" class="reviews-title">รีวิว</h3>
+          <p class="section-sub center">ยังไม่มีรีวิวจากผู้ใช้จริง ส่วนนี้จะเปิดเมื่อระบบเปิดให้ใช้งาน</p>
+          <div class="review-grid" aria-hidden="true">
+            <div class="review-skeleton"><i></i><i></i><i class="short"></i></div>
+            <div class="review-skeleton"><i></i><i></i><i class="short"></i></div>
+            <div class="review-skeleton"><i></i><i></i><i class="short"></i></div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p><strong>Thai Travel AI</strong> · โปรเจกต์ AFO_team_fatzone</p>
+      <p>แผนเที่ยวสร้างโดย AI เป็นแผนเบื้องต้น กรุณาตรวจสอบเส้นทาง สถานที่ และเวลาเปิดปิดก่อนเดินทางทุกครั้ง</p>
+    </div>
+  </footer>
+
   <script src="./app.js" defer></script>
 </body>
 </html>

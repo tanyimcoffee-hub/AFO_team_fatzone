@@ -26,7 +26,7 @@ The AI can accept a travel request in Thai and return a structured sample itiner
 
 ## Web preview
 
-The root `index.html` and `app.js` provide a small Thai-language planning form. Serve the project root with a local static HTTP server (for example, VS Code Live Server) and run the API separately:
+The root `index.html`, `styles.css` and `app.js` provide a Thai-language landing page with a chat-style planning form, an illustrative route diagram, ready-made trip templates and a province picker for all 77 provinces. Serve the project root with a local static HTTP server (for example, VS Code Live Server) and run the API separately:
 
 ```bash
 cd services/api
