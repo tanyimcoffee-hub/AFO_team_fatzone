@@ -6,9 +6,6 @@
   "note": "ข้อมูลเริ่มต้น ยังไม่ได้ตรวจสอบ (verified: false)",
   "provinces": [
     {
-      "code": "TH-10",
-      "nameTh": "กรุงเทพมหานคร",
-      "nameEn": "Bangkok",
       "total": 7647,
       "counts": {
         "attraction": 258,
@@ -18,12 +15,12 @@
         "restaurant": 3610,
         "rest_stop": 7
       },
-      "fetchedAt": "2026-10-24T16:49:05.333Z"
+      "fetchedAt": "2026-10-24T16:49:05.333Z",
+      "code": "TH-10",
+      "nameTh": "กรุงเทพมหานคร",
+      "nameEn": "Bangkok"
     },
     {
-      "code": "TH-11",
-      "nameTh": "สมุทรปราการ",
-      "nameEn": "Samut Prakan",
       "total": 571,
       "counts": {
         "attraction": 156,
@@ -33,12 +30,12 @@
         "restaurant": 163,
         "rest_stop": 2
       },
-      "fetchedAt": "2026-10-24T16:49:46.538Z"
+      "fetchedAt": "2026-10-24T16:49:46.538Z",
+      "code": "TH-11",
+      "nameTh": "สมุทรปราการ",
+      "nameEn": "Samut Prakan"
     },
     {
-      "code": "TH-12",
-      "nameTh": "นนทบุรี",
-      "nameEn": "Nonthaburi",
       "total": 400,
       "counts": {
         "attraction": 14,
@@ -47,12 +44,12 @@
         "hotel": 33,
         "restaurant": 196
       },
-      "fetchedAt": "2026-10-24T16:50:11.617Z"
+      "fetchedAt": "2026-10-24T16:50:11.617Z",
+      "code": "TH-12",
+      "nameTh": "นนทบุรี",
+      "nameEn": "Nonthaburi"
     },
     {
-      "code": "TH-13",
-      "nameTh": "ปทุมธานี",
-      "nameEn": "Pathum Thani",
       "total": 448,
       "counts": {
         "attraction": 35,
@@ -62,12 +59,12 @@
         "restaurant": 154,
         "rest_stop": 1
       },
-      "fetchedAt": "2026-10-24T16:50:52.311Z"
+      "fetchedAt": "2026-10-24T16:50:52.311Z",
+      "code": "TH-13",
+      "nameTh": "ปทุมธานี",
+      "nameEn": "Pathum Thani"
     },
     {
-      "code": "TH-14",
-      "nameTh": "พระนครศรีอยุธยา",
-      "nameEn": "Phra Nakhon Si Ayutthaya",
       "total": 684,
       "counts": {
         "attraction": 310,
@@ -76,12 +73,12 @@
         "hotel": 88,
         "restaurant": 119
       },
-      "fetchedAt": "2026-10-24T16:51:38.109Z"
+      "fetchedAt": "2026-10-24T16:51:38.109Z",
+      "code": "TH-14",
+      "nameTh": "พระนครศรีอยุธยา",
+      "nameEn": "Phra Nakhon Si Ayutthaya"
     },
     {
-      "code": "TH-15",
-      "nameTh": "อ่างทอง",
-      "nameEn": "Ang Thong",
       "total": 90,
       "counts": {
         "attraction": 6,
@@ -90,12 +87,12 @@
         "hotel": 4,
         "restaurant": 46
       },
-      "fetchedAt": "2026-10-24T16:52:17.297Z"
+      "fetchedAt": "2026-10-24T16:52:17.297Z",
+      "code": "TH-15",
+      "nameTh": "อ่างทอง",
+      "nameEn": "Ang Thong"
     },
     {
-      "code": "TH-16",
-      "nameTh": "ลพบุรี",
-      "nameEn": "Lop Buri",
       "total": 145,
       "counts": {
         "attraction": 22,
@@ -104,12 +101,12 @@
         "hotel": 29,
         "restaurant": 22
       },
-      "fetchedAt": "2026-10-24T16:52:52.480Z"
+      "fetchedAt": "2026-10-24T16:52:52.480Z",
+      "code": "TH-16",
+      "nameTh": "ลพบุรี",
+      "nameEn": "Lop Buri"
     },
     {
-      "code": "TH-17",
-      "nameTh": "สิงห์บุรี",
-      "nameEn": "Sing Buri",
       "total": 77,
       "counts": {
         "attraction": 9,
@@ -118,12 +115,12 @@
         "hotel": 10,
         "restaurant": 18
       },
-      "fetchedAt": "2026-10-24T16:53:28.075Z"
+      "fetchedAt": "2026-10-24T16:53:28.075Z",
+      "code": "TH-17",
+      "nameTh": "สิงห์บุรี",
+      "nameEn": "Sing Buri"
     },
     {
-      "code": "TH-18",
-      "nameTh": "ชัยนาท",
-      "nameEn": "Chai Nat",
       "total": 61,
       "counts": {
         "attraction": 5,
@@ -132,12 +129,12 @@
         "hotel": 5,
         "restaurant": 8
       },
-      "fetchedAt": "2026-10-24T16:54:14.202Z"
+      "fetchedAt": "2026-10-24T16:54:14.202Z",
+      "code": "TH-18",
+      "nameTh": "ชัยนาท",
+      "nameEn": "Chai Nat"
     },
     {
-      "code": "TH-19",
-      "nameTh": "สระบุรี",
-      "nameEn": "Saraburi",
       "total": 206,
       "counts": {
         "attraction": 18,
@@ -146,12 +143,12 @@
         "hotel": 31,
         "restaurant": 47
       },
-      "fetchedAt": "2026-10-24T16:54:50.571Z"
+      "fetchedAt": "2026-10-24T16:54:50.571Z",
+      "code": "TH-19",
+      "nameTh": "สระบุรี",
+      "nameEn": "Saraburi"
     },
     {
-      "code": "TH-20",
-      "nameTh": "ชลบุรี",
-      "nameEn": "Chon Buri",
       "total": 3631,
       "counts": {
         "attraction": 179,
@@ -161,12 +158,12 @@
         "restaurant": 1186,
         "rest_stop": 7
       },
-      "fetchedAt": "2026-10-24T16:55:31.046Z"
+      "fetchedAt": "2026-10-24T16:55:31.046Z",
+      "code": "TH-20",
+      "nameTh": "ชลบุรี",
+      "nameEn": "Chon Buri"
     },
     {
-      "code": "TH-21",
-      "nameTh": "ระยอง",
-      "nameEn": "Rayong",
       "total": 1491,
       "counts": {
         "attraction": 25,
@@ -176,527 +173,945 @@
         "restaurant": 217,
         "rest_stop": 2
       },
-      "fetchedAt": "2026-10-24T16:56:20.171Z"
+      "fetchedAt": "2026-10-24T16:56:20.171Z",
+      "code": "TH-21",
+      "nameTh": "ระยอง",
+      "nameEn": "Rayong"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
+      "total": 452,
+      "counts": {
+        "attraction": 41,
+        "cafe": 89,
+        "fuel": 96,
+        "hotel": 80,
+        "restaurant": 145,
+        "rest_stop": 1
+      },
+      "fetchedAt": "2026-10-24T17:06:29.132Z",
       "code": "TH-22",
       "nameTh": "จันทบุรี",
       "nameEn": "Chanthaburi"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
+      "total": 802,
+      "counts": {
+        "attraction": 56,
+        "cafe": 70,
+        "fuel": 45,
+        "hotel": 320,
+        "restaurant": 311
+      },
+      "fetchedAt": "2026-10-24T17:07:05.558Z",
       "code": "TH-23",
       "nameTh": "ตราด",
       "nameEn": "Trat"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
+      "total": 148,
+      "counts": {
+        "attraction": 11,
+        "cafe": 29,
+        "fuel": 75,
+        "hotel": 8,
+        "restaurant": 22,
+        "rest_stop": 3
+      },
+      "fetchedAt": "2026-10-24T17:07:50.804Z",
       "code": "TH-24",
       "nameTh": "ฉะเชิงเทรา",
       "nameEn": "Chachoengsao"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
+      "total": 122,
+      "counts": {
+        "attraction": 3,
+        "cafe": 22,
+        "fuel": 36,
+        "hotel": 30,
+        "restaurant": 30,
+        "rest_stop": 1
+      },
+      "fetchedAt": "2026-10-24T17:08:35.806Z",
       "code": "TH-25",
       "nameTh": "ปราจีนบุรี",
       "nameEn": "Prachin Buri"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
+      "total": 77,
+      "counts": {
+        "attraction": 13,
+        "cafe": 14,
+        "fuel": 10,
+        "hotel": 22,
+        "restaurant": 18
+      },
+      "fetchedAt": "2026-10-24T17:09:14.815Z",
       "code": "TH-26",
       "nameTh": "นครนายก",
       "nameEn": "Nakhon Nayok"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
+      "total": 133,
+      "counts": {
+        "attraction": 3,
+        "cafe": 23,
+        "fuel": 68,
+        "hotel": 26,
+        "restaurant": 13
+      },
+      "fetchedAt": "2026-10-24T17:10:01.902Z",
       "code": "TH-27",
       "nameTh": "สระแก้ว",
       "nameEn": "Sa Kaeo"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
+      "total": 983,
+      "counts": {
+        "attraction": 78,
+        "cafe": 279,
+        "fuel": 223,
+        "hotel": 208,
+        "restaurant": 190,
+        "rest_stop": 5
+      },
+      "fetchedAt": "2026-10-24T17:10:46.095Z",
       "code": "TH-30",
       "nameTh": "นครราชสีมา",
       "nameEn": "Nakhon Ratchasima"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
+      "total": 289,
+      "counts": {
+        "attraction": 16,
+        "cafe": 44,
+        "fuel": 96,
+        "hotel": 98,
+        "restaurant": 35
+      },
+      "fetchedAt": "2026-10-24T17:11:29.540Z",
       "code": "TH-31",
       "nameTh": "บุรีรัมย์",
       "nameEn": "Buri Ram"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
+      "total": 177,
+      "counts": {
+        "attraction": 13,
+        "cafe": 43,
+        "fuel": 66,
+        "hotel": 40,
+        "restaurant": 15
+      },
+      "fetchedAt": "2026-10-24T17:12:05.727Z",
       "code": "TH-32",
       "nameTh": "สุรินทร์",
       "nameEn": "Surin"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
+      "total": 259,
+      "counts": {
+        "attraction": 21,
+        "cafe": 56,
+        "fuel": 64,
+        "hotel": 27,
+        "restaurant": 90,
+        "rest_stop": 1
+      },
+      "fetchedAt": "2026-10-24T17:12:33.927Z",
       "code": "TH-33",
       "nameTh": "ศรีสะเกษ",
       "nameEn": "Si Sa Ket"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
+      "total": 488,
+      "counts": {
+        "attraction": 56,
+        "cafe": 116,
+        "fuel": 78,
+        "hotel": 124,
+        "restaurant": 114
+      },
+      "fetchedAt": "2026-10-24T17:13:11.916Z",
       "code": "TH-34",
       "nameTh": "อุบลราชธานี",
       "nameEn": "Ubon Ratchathani"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
+      "total": 78,
+      "counts": {
+        "attraction": 5,
+        "cafe": 18,
+        "fuel": 26,
+        "hotel": 12,
+        "restaurant": 17
+      },
+      "fetchedAt": "2026-10-24T17:13:53.450Z",
       "code": "TH-35",
       "nameTh": "ยโสธร",
       "nameEn": "Yasothon"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
+      "total": 154,
+      "counts": {
+        "attraction": 25,
+        "cafe": 25,
+        "fuel": 80,
+        "hotel": 16,
+        "restaurant": 6,
+        "rest_stop": 2
+      },
+      "fetchedAt": "2026-10-24T17:14:35.207Z",
       "code": "TH-36",
       "nameTh": "ชัยภูมิ",
       "nameEn": "Chaiyaphum"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-37",
       "nameTh": "อำนาจเจริญ",
-      "nameEn": "Amnat Charoen"
+      "nameEn": "Amnat Charoen",
+      "total": 30,
+      "counts": {
+        "attraction": 7,
+        "cafe": 6,
+        "fuel": 11,
+        "hotel": 2,
+        "restaurant": 4
+      },
+      "fetchedAt": "2026-10-24T17:16:39.024Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-38",
       "nameTh": "บึงกาฬ",
-      "nameEn": "Bueng Kan"
+      "nameEn": "Bueng Kan",
+      "total": 65,
+      "counts": {
+        "attraction": 16,
+        "cafe": 12,
+        "fuel": 10,
+        "hotel": 19,
+        "restaurant": 8
+      },
+      "fetchedAt": "2026-10-24T17:17:21.109Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-39",
       "nameTh": "หนองบัวลำภู",
-      "nameEn": "Nong Bua Lam Phu"
+      "nameEn": "Nong Bua Lam Phu",
+      "total": 104,
+      "counts": {
+        "attraction": 12,
+        "cafe": 23,
+        "fuel": 53,
+        "hotel": 7,
+        "restaurant": 9
+      },
+      "fetchedAt": "2026-10-24T17:17:55.269Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-40",
       "nameTh": "ขอนแก่น",
-      "nameEn": "Khon Kaen"
+      "nameEn": "Khon Kaen",
+      "total": 957,
+      "counts": {
+        "attraction": 104,
+        "cafe": 161,
+        "fuel": 210,
+        "hotel": 137,
+        "restaurant": 342,
+        "rest_stop": 3
+      },
+      "fetchedAt": "2026-10-24T17:18:44.732Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-41",
       "nameTh": "อุดรธานี",
-      "nameEn": "Udon Thani"
+      "nameEn": "Udon Thani",
+      "total": 489,
+      "counts": {
+        "attraction": 27,
+        "cafe": 92,
+        "fuel": 159,
+        "hotel": 123,
+        "restaurant": 88
+      },
+      "fetchedAt": "2026-10-24T17:19:25.671Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-42",
       "nameTh": "เลย",
-      "nameEn": "Loei"
+      "nameEn": "Loei",
+      "total": 339,
+      "counts": {
+        "attraction": 56,
+        "cafe": 46,
+        "fuel": 83,
+        "hotel": 110,
+        "restaurant": 42,
+        "rest_stop": 2
+      },
+      "fetchedAt": "2026-10-24T17:20:06.514Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-43",
       "nameTh": "หนองคาย",
-      "nameEn": "Nong Khai"
+      "nameEn": "Nong Khai",
+      "total": 227,
+      "counts": {
+        "attraction": 21,
+        "cafe": 48,
+        "fuel": 50,
+        "hotel": 53,
+        "restaurant": 55
+      },
+      "fetchedAt": "2026-10-24T17:20:40.341Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-44",
       "nameTh": "มหาสารคาม",
-      "nameEn": "Maha Sarakham"
+      "nameEn": "Maha Sarakham",
+      "total": 114,
+      "counts": {
+        "attraction": 13,
+        "cafe": 23,
+        "fuel": 49,
+        "hotel": 13,
+        "restaurant": 15,
+        "rest_stop": 1
+      },
+      "fetchedAt": "2026-10-24T17:21:25.975Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-45",
       "nameTh": "ร้อยเอ็ด",
-      "nameEn": "Roi Et"
+      "nameEn": "Roi Et",
+      "total": 170,
+      "counts": {
+        "attraction": 9,
+        "cafe": 49,
+        "fuel": 48,
+        "hotel": 37,
+        "restaurant": 27
+      },
+      "fetchedAt": "2026-10-24T17:22:13.252Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-46",
       "nameTh": "กาฬสินธุ์",
-      "nameEn": "Kalasin"
+      "nameEn": "Kalasin",
+      "total": 156,
+      "counts": {
+        "attraction": 21,
+        "cafe": 23,
+        "fuel": 54,
+        "hotel": 28,
+        "restaurant": 30
+      },
+      "fetchedAt": "2026-10-24T17:22:51.209Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-47",
       "nameTh": "สกลนคร",
-      "nameEn": "Sakon Nakhon"
+      "nameEn": "Sakon Nakhon",
+      "total": 186,
+      "counts": {
+        "attraction": 17,
+        "cafe": 41,
+        "fuel": 71,
+        "hotel": 38,
+        "restaurant": 19
+      },
+      "fetchedAt": "2026-10-24T17:23:31.474Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-48",
       "nameTh": "นครพนม",
-      "nameEn": "Nakhon Phanom"
+      "nameEn": "Nakhon Phanom",
+      "total": 127,
+      "counts": {
+        "attraction": 16,
+        "cafe": 31,
+        "fuel": 18,
+        "hotel": 54,
+        "restaurant": 8
+      },
+      "fetchedAt": "2026-10-24T17:24:26.264Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-49",
       "nameTh": "มุกดาหาร",
-      "nameEn": "Mukdahan"
+      "nameEn": "Mukdahan",
+      "total": 140,
+      "counts": {
+        "attraction": 29,
+        "cafe": 18,
+        "fuel": 28,
+        "hotel": 52,
+        "restaurant": 13
+      },
+      "fetchedAt": "2026-10-24T17:24:58.390Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-50",
       "nameTh": "เชียงใหม่",
-      "nameEn": "Chiang Mai"
+      "nameEn": "Chiang Mai",
+      "total": 5230,
+      "counts": {
+        "attraction": 308,
+        "cafe": 1101,
+        "fuel": 310,
+        "hotel": 1470,
+        "restaurant": 2033,
+        "rest_stop": 8
+      },
+      "fetchedAt": "2026-10-24T17:25:44.157Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-51",
       "nameTh": "ลำพูน",
-      "nameEn": "Lamphun"
+      "nameEn": "Lamphun",
+      "total": 186,
+      "counts": {
+        "attraction": 14,
+        "cafe": 33,
+        "fuel": 71,
+        "hotel": 30,
+        "restaurant": 38
+      },
+      "fetchedAt": "2026-10-24T17:26:33.742Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-52",
       "nameTh": "ลำปาง",
-      "nameEn": "Lampang"
+      "nameEn": "Lampang",
+      "total": 457,
+      "counts": {
+        "attraction": 33,
+        "cafe": 89,
+        "fuel": 132,
+        "hotel": 69,
+        "restaurant": 132,
+        "rest_stop": 2
+      },
+      "fetchedAt": "2026-10-24T17:27:30.803Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-53",
       "nameTh": "อุตรดิตถ์",
-      "nameEn": "Uttaradit"
+      "nameEn": "Uttaradit",
+      "total": 267,
+      "counts": {
+        "attraction": 17,
+        "cafe": 36,
+        "fuel": 74,
+        "hotel": 82,
+        "restaurant": 56,
+        "rest_stop": 2
+      },
+      "fetchedAt": "2026-10-24T17:28:22.160Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-54",
       "nameTh": "แพร่",
-      "nameEn": "Phrae"
+      "nameEn": "Phrae",
+      "total": 210,
+      "counts": {
+        "attraction": 29,
+        "cafe": 45,
+        "fuel": 66,
+        "hotel": 37,
+        "restaurant": 33
+      },
+      "fetchedAt": "2026-10-24T17:28:53.979Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-55",
       "nameTh": "น่าน",
-      "nameEn": "Nan"
+      "nameEn": "Nan",
+      "total": 423,
+      "counts": {
+        "attraction": 45,
+        "cafe": 73,
+        "fuel": 72,
+        "hotel": 134,
+        "restaurant": 99
+      },
+      "fetchedAt": "2026-10-24T17:29:35.283Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-56",
       "nameTh": "พะเยา",
-      "nameEn": "Phayao"
+      "nameEn": "Phayao",
+      "total": 258,
+      "counts": {
+        "attraction": 43,
+        "cafe": 37,
+        "fuel": 80,
+        "hotel": 49,
+        "restaurant": 49
+      },
+      "fetchedAt": "2026-10-24T17:30:20.042Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-57",
       "nameTh": "เชียงราย",
-      "nameEn": "Chiang Rai"
+      "nameEn": "Chiang Rai",
+      "total": 1528,
+      "counts": {
+        "attraction": 154,
+        "cafe": 294,
+        "fuel": 229,
+        "hotel": 366,
+        "restaurant": 483,
+        "rest_stop": 2
+      },
+      "fetchedAt": "2026-10-24T17:31:22.732Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-58",
       "nameTh": "แม่ฮ่องสอน",
-      "nameEn": "Mae Hong Son"
+      "nameEn": "Mae Hong Son",
+      "total": 652,
+      "counts": {
+        "attraction": 68,
+        "cafe": 104,
+        "fuel": 34,
+        "hotel": 294,
+        "restaurant": 152
+      },
+      "fetchedAt": "2026-10-24T17:32:08.363Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-60",
       "nameTh": "นครสวรรค์",
-      "nameEn": "Nakhon Sawan"
+      "nameEn": "Nakhon Sawan",
+      "total": 376,
+      "counts": {
+        "attraction": 20,
+        "cafe": 58,
+        "fuel": 102,
+        "hotel": 29,
+        "restaurant": 166,
+        "rest_stop": 1
+      },
+      "fetchedAt": "2026-10-24T17:32:59.163Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-61",
       "nameTh": "อุทัยธานี",
-      "nameEn": "Uthai Thani"
+      "nameEn": "Uthai Thani",
+      "total": 88,
+      "counts": {
+        "attraction": 15,
+        "cafe": 16,
+        "fuel": 32,
+        "hotel": 13,
+        "restaurant": 12
+      },
+      "fetchedAt": "2026-10-24T17:33:38.611Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-62",
       "nameTh": "กำแพงเพชร",
-      "nameEn": "Kamphaeng Phet"
+      "nameEn": "Kamphaeng Phet",
+      "total": 354,
+      "counts": {
+        "attraction": 103,
+        "cafe": 45,
+        "fuel": 119,
+        "hotel": 23,
+        "restaurant": 64
+      },
+      "fetchedAt": "2026-10-24T17:34:20.000Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-63",
       "nameTh": "ตาก",
-      "nameEn": "Tak"
+      "nameEn": "Tak",
+      "total": 399,
+      "counts": {
+        "attraction": 40,
+        "cafe": 54,
+        "fuel": 89,
+        "hotel": 105,
+        "restaurant": 110,
+        "rest_stop": 1
+      },
+      "fetchedAt": "2026-10-24T17:35:04.026Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-64",
       "nameTh": "สุโขทัย",
-      "nameEn": "Sukhothai"
+      "nameEn": "Sukhothai",
+      "total": 680,
+      "counts": {
+        "attraction": 305,
+        "cafe": 57,
+        "fuel": 108,
+        "hotel": 90,
+        "restaurant": 120
+      },
+      "fetchedAt": "2026-10-24T17:35:38.217Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-65",
       "nameTh": "พิษณุโลก",
-      "nameEn": "Phitsanulok"
+      "nameEn": "Phitsanulok",
+      "total": 420,
+      "counts": {
+        "attraction": 32,
+        "cafe": 74,
+        "fuel": 134,
+        "hotel": 82,
+        "restaurant": 96,
+        "rest_stop": 2
+      },
+      "fetchedAt": "2026-10-24T17:36:18.938Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-66",
       "nameTh": "พิจิตร",
-      "nameEn": "Phichit"
+      "nameEn": "Phichit",
+      "total": 73,
+      "counts": {
+        "attraction": 5,
+        "cafe": 10,
+        "fuel": 45,
+        "hotel": 8,
+        "restaurant": 5
+      },
+      "fetchedAt": "2026-10-24T17:36:48.508Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-67",
       "nameTh": "เพชรบูรณ์",
-      "nameEn": "Phetchabun"
+      "nameEn": "Phetchabun",
+      "total": 267,
+      "counts": {
+        "attraction": 27,
+        "cafe": 44,
+        "fuel": 98,
+        "hotel": 58,
+        "restaurant": 37,
+        "rest_stop": 3
+      },
+      "fetchedAt": "2026-10-24T17:37:24.985Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-70",
       "nameTh": "ราชบุรี",
-      "nameEn": "Ratchaburi"
+      "nameEn": "Ratchaburi",
+      "total": 195,
+      "counts": {
+        "attraction": 35,
+        "cafe": 28,
+        "fuel": 37,
+        "hotel": 38,
+        "restaurant": 57
+      },
+      "fetchedAt": "2026-10-24T17:38:00.112Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-71",
       "nameTh": "กาญจนบุรี",
-      "nameEn": "Kanchanaburi"
+      "nameEn": "Kanchanaburi",
+      "total": 571,
+      "counts": {
+        "attraction": 93,
+        "cafe": 68,
+        "fuel": 119,
+        "hotel": 168,
+        "restaurant": 123
+      },
+      "fetchedAt": "2026-10-24T17:38:36.582Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-72",
       "nameTh": "สุพรรณบุรี",
-      "nameEn": "Suphan Buri"
+      "nameEn": "Suphan Buri",
+      "total": 209,
+      "counts": {
+        "attraction": 15,
+        "cafe": 31,
+        "fuel": 92,
+        "hotel": 25,
+        "restaurant": 46
+      },
+      "fetchedAt": "2026-10-24T17:39:15.320Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-73",
       "nameTh": "นครปฐม",
-      "nameEn": "Nakhon Pathom"
+      "nameEn": "Nakhon Pathom",
+      "total": 284,
+      "counts": {
+        "attraction": 23,
+        "cafe": 67,
+        "fuel": 92,
+        "hotel": 21,
+        "restaurant": 80,
+        "rest_stop": 1
+      },
+      "fetchedAt": "2026-10-24T17:39:46.904Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-74",
       "nameTh": "สมุทรสาคร",
-      "nameEn": "Samut Sakhon"
+      "nameEn": "Samut Sakhon",
+      "total": 116,
+      "counts": {
+        "attraction": 8,
+        "cafe": 17,
+        "fuel": 34,
+        "hotel": 7,
+        "restaurant": 50
+      },
+      "fetchedAt": "2026-10-24T17:40:25.325Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-75",
       "nameTh": "สมุทรสงคราม",
-      "nameEn": "Samut Songkhram"
+      "nameEn": "Samut Songkhram",
+      "total": 146,
+      "counts": {
+        "attraction": 18,
+        "cafe": 20,
+        "fuel": 21,
+        "hotel": 51,
+        "restaurant": 35,
+        "rest_stop": 1
+      },
+      "fetchedAt": "2026-10-24T17:41:16.291Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-76",
       "nameTh": "เพชรบุรี",
-      "nameEn": "Phetchaburi"
+      "nameEn": "Phetchaburi",
+      "total": 387,
+      "counts": {
+        "attraction": 27,
+        "cafe": 49,
+        "fuel": 64,
+        "hotel": 147,
+        "restaurant": 99,
+        "rest_stop": 1
+      },
+      "fetchedAt": "2026-10-24T17:41:54.532Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-77",
       "nameTh": "ประจวบคีรีขันธ์",
-      "nameEn": "Prachuap Khiri Khan"
+      "nameEn": "Prachuap Khiri Khan",
+      "total": 1156,
+      "counts": {
+        "attraction": 48,
+        "cafe": 141,
+        "fuel": 98,
+        "hotel": 480,
+        "restaurant": 388,
+        "rest_stop": 1
+      },
+      "fetchedAt": "2026-10-24T17:42:38.633Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-80",
       "nameTh": "นครศรีธรรมราช",
-      "nameEn": "Nakhon Si Thammarat"
+      "nameEn": "Nakhon Si Thammarat",
+      "total": 359,
+      "counts": {
+        "attraction": 31,
+        "cafe": 43,
+        "fuel": 99,
+        "hotel": 124,
+        "restaurant": 59,
+        "rest_stop": 3
+      },
+      "fetchedAt": "2026-10-24T17:43:28.123Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-81",
       "nameTh": "กระบี่",
-      "nameEn": "Krabi"
+      "nameEn": "Krabi",
+      "total": 1787,
+      "counts": {
+        "attraction": 96,
+        "cafe": 144,
+        "fuel": 80,
+        "hotel": 838,
+        "restaurant": 628,
+        "rest_stop": 1
+      },
+      "fetchedAt": "2026-10-24T17:43:57.163Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-82",
       "nameTh": "พังงา",
-      "nameEn": "Phang-nga"
+      "nameEn": "Phang-nga",
+      "total": 803,
+      "counts": {
+        "attraction": 90,
+        "cafe": 78,
+        "fuel": 44,
+        "hotel": 282,
+        "restaurant": 309
+      },
+      "fetchedAt": "2026-10-24T17:44:33.087Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-83",
       "nameTh": "ภูเก็ต",
-      "nameEn": "Phuket"
+      "nameEn": "Phuket",
+      "total": 2910,
+      "counts": {
+        "attraction": 148,
+        "cafe": 426,
+        "fuel": 59,
+        "hotel": 1118,
+        "restaurant": 1154,
+        "rest_stop": 5
+      },
+      "fetchedAt": "2026-10-24T17:45:14.337Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-84",
       "nameTh": "สุราษฎร์ธานี",
-      "nameEn": "Surat Thani"
+      "nameEn": "Surat Thani",
+      "total": 2656,
+      "counts": {
+        "attraction": 139,
+        "cafe": 270,
+        "fuel": 108,
+        "hotel": 1178,
+        "restaurant": 956,
+        "rest_stop": 5
+      },
+      "fetchedAt": "2026-10-24T17:45:59.732Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-85",
       "nameTh": "ระนอง",
-      "nameEn": "Ranong"
+      "nameEn": "Ranong",
+      "total": 300,
+      "counts": {
+        "attraction": 13,
+        "cafe": 44,
+        "fuel": 19,
+        "hotel": 144,
+        "restaurant": 80
+      },
+      "fetchedAt": "2026-10-24T17:46:35.977Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-86",
       "nameTh": "ชุมพร",
-      "nameEn": "Chumphon"
+      "nameEn": "Chumphon",
+      "total": 293,
+      "counts": {
+        "attraction": 23,
+        "cafe": 37,
+        "fuel": 56,
+        "hotel": 105,
+        "restaurant": 72
+      },
+      "fetchedAt": "2026-10-24T17:47:22.502Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-90",
       "nameTh": "สงขลา",
-      "nameEn": "Songkhla"
+      "nameEn": "Songkhla",
+      "total": 476,
+      "counts": {
+        "attraction": 22,
+        "cafe": 81,
+        "fuel": 75,
+        "hotel": 121,
+        "restaurant": 177
+      },
+      "fetchedAt": "2026-10-24T17:48:12.806Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-91",
       "nameTh": "สตูล",
-      "nameEn": "Satun"
+      "nameEn": "Satun",
+      "total": 271,
+      "counts": {
+        "attraction": 28,
+        "cafe": 15,
+        "fuel": 10,
+        "hotel": 128,
+        "restaurant": 90
+      },
+      "fetchedAt": "2026-10-24T17:48:55.221Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-92",
       "nameTh": "ตรัง",
-      "nameEn": "Trang"
+      "nameEn": "Trang",
+      "total": 259,
+      "counts": {
+        "attraction": 25,
+        "cafe": 30,
+        "fuel": 49,
+        "hotel": 85,
+        "restaurant": 70
+      },
+      "fetchedAt": "2026-10-24T17:49:32.112Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-93",
       "nameTh": "พัทลุง",
-      "nameEn": "Phatthalung"
+      "nameEn": "Phatthalung",
+      "total": 124,
+      "counts": {
+        "attraction": 13,
+        "cafe": 27,
+        "fuel": 26,
+        "hotel": 27,
+        "restaurant": 31
+      },
+      "fetchedAt": "2026-10-24T17:50:05.994Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-94",
       "nameTh": "ปัตตานี",
-      "nameEn": "Pattani"
+      "nameEn": "Pattani",
+      "total": 31,
+      "counts": {
+        "attraction": 2,
+        "cafe": 10,
+        "fuel": 4,
+        "hotel": 7,
+        "restaurant": 8
+      },
+      "fetchedAt": "2026-10-24T17:50:51.704Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-95",
       "nameTh": "ยะลา",
-      "nameEn": "Yala"
+      "nameEn": "Yala",
+      "total": 82,
+      "counts": {
+        "attraction": 13,
+        "cafe": 17,
+        "fuel": 6,
+        "hotel": 16,
+        "restaurant": 30
+      },
+      "fetchedAt": "2026-10-24T17:51:29.554Z"
     },
     {
-      "total": 0,
-      "counts": {},
-      "fetchedAt": null,
       "code": "TH-96",
       "nameTh": "นราธิวาส",
-      "nameEn": "Narathiwat"
+      "nameEn": "Narathiwat",
+      "total": 90,
+      "counts": {
+        "attraction": 7,
+        "cafe": 21,
+        "fuel": 12,
+        "hotel": 24,
+        "restaurant": 26
+      },
+      "fetchedAt": "2026-10-24T17:51:56.391Z"
     }
   ]
 }
