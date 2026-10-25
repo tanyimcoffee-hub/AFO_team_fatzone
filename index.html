@@ -39,7 +39,7 @@
     <section id="planner" class="hero-planner" aria-labelledby="planner-heading">
       <div class="container">
         <p class="eyebrow">ผู้ช่วยวางแผน Road Trip ภาษาไทย</p>
-        <h1 id="planner-heading" tabindex="-1">คุยกับ AI วางแผนเที่ยวทั่วไทย</h1>
+        <h1 id="planner-heading" tabindex="-1">คุยกับ AI <span class="grad">วางแผนเที่ยวทั่วไทย</span></h1>
         <p class="lead">บอกต้นทาง ปลายทาง จำนวนวัน งบ และสิ่งที่ชอบ แล้วรับแผนรายวัน แผนที่ได้เป็นแผนเบื้องต้น ยังไม่ได้ตรวจสอบสถานที่ เส้นทาง ราคา หรือเวลาเปิดปิดกับแหล่งข้อมูลจริง</p>
         <ul class="hero-stats" aria-label="ข้อมูลในระบบ">
           <li><strong>77</strong><span>จังหวัด</span></li>
@@ -170,7 +170,7 @@
     </section>
 
     <!-- Provinces + features -->
-    <section id="provinces" class="section section-brown" aria-labelledby="provinces-title">
+    <section id="provinces" class="section section-dark" aria-labelledby="provinces-title">
       <div class="container">
         <h2 id="provinces-title" class="section-title center">พิมพ์ต้นทาง–ปลายทางได้ทั้ง 77 จังหวัดทั่วไทย</h2>
         <div class="transparency">
@@ -194,6 +194,9 @@
             <li class="feature-card"><span class="feature-icon" aria-hidden="true">🚗</span><h3>ออกแบบเพื่อ Road Trip</h3><p>คำนึงถึงการพักขับรถ และจุดแวะตามเส้นทาง</p></li>
           </ul>
           <button type="button" class="carousel-btn next" data-dir="1" aria-label="เลื่อนไปการ์ดถัดไป">›</button>
+          <div class="carousel-controls">
+            <button type="button" id="carousel-toggle" class="carousel-toggle"></button>
+          </div>
         </div>
       </div>
     </section>

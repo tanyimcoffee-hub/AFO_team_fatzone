@@ -570,7 +570,7 @@ function drawLeafletRoute(payload, plan, meta = {}) {
   }
 
   if (path.length >= 2) {
-    window.L.polyline(path, { color: "#e8a33d", weight: 3, dashArray: "6 8" }).addTo(leafletLayer);
+    window.L.polyline(path, { color: "#f4b69c", weight: 3, dashArray: "6 8" }).addTo(leafletLayer);
   }
   if (path.length) leafletMap.fitBounds(path, { padding: [36, 36], maxZoom: 12 });
 
@@ -789,15 +789,54 @@ function renderTemplates() {
   }
 }
 
+// การ์ดเลื่อนเองทุก 3.5 วินาที หยุดเมื่อชี้เมาส์/โฟกัสอยู่ในการ์ด หรือกดปุ่มหยุด
+// ผู้ใช้ที่ตั้งค่าลดการเคลื่อนไหว (prefers-reduced-motion) จะเห็นการ์ดเปลี่ยนแบบทันที ไม่มีแอนิเมชันเลื่อน
+const CAROUSEL_INTERVAL_MS = 3500;
+
 function initCarousel() {
+  const carousel = document.querySelector(".carousel");
   const track = document.getElementById("feature-track");
+  const toggle = document.getElementById("carousel-toggle");
+  const behavior = prefersReducedMotion ? "auto" : "smooth";
+
+  const stepWidth = () => {
+    const card = track.querySelector(".feature-card");
+    return card ? card.getBoundingClientRect().width + 16 : track.clientWidth;
+  };
+
+  // เลื่อนทีละการ์ด ถึงปลายแล้ววนกลับ
+  const move = (dir) => {
+    const max = track.scrollWidth - track.clientWidth;
+    if (dir > 0 && track.scrollLeft >= max - 4) track.scrollTo({ left: 0, behavior });
+    else if (dir < 0 && track.scrollLeft <= 4) track.scrollTo({ left: max, behavior });
+    else track.scrollBy({ left: stepWidth() * dir, behavior });
+  };
+
   for (const button of document.querySelectorAll(".carousel-btn")) {
-    button.addEventListener("click", () => {
-      const card = track.querySelector(".feature-card");
-      const step = card ? card.getBoundingClientRect().width + 16 : track.clientWidth;
-      track.scrollBy({ left: step * Number(button.dataset.dir), behavior: prefersReducedMotion ? "auto" : "smooth" });
-    });
+    button.addEventListener("click", () => move(Number(button.dataset.dir)));
   }
+
+  let paused = false;
+  let interacting = false;
+  const renderToggle = () => {
+    toggle.textContent = paused ? "▶ เลื่อนการ์ดอัตโนมัติ" : "❚❚ หยุดเลื่อนการ์ด";
+  };
+  toggle.addEventListener("click", () => {
+    paused = !paused;
+    renderToggle();
+  });
+  renderToggle();
+
+  carousel.addEventListener("mouseenter", () => { interacting = true; });
+  carousel.addEventListener("mouseleave", () => { interacting = false; });
+  carousel.addEventListener("focusin", (event) => { interacting = event.target !== toggle; });
+  carousel.addEventListener("focusout", () => { interacting = false; });
+  track.addEventListener("touchstart", () => { interacting = true; }, { passive: true });
+  track.addEventListener("touchend", () => { interacting = false; }, { passive: true });
+
+  setInterval(() => {
+    if (!paused && !interacting && !document.hidden) move(1);
+  }, CAROUSEL_INTERVAL_MS);
 }
 
 // ---------- ส่งฟอร์ม ----------
