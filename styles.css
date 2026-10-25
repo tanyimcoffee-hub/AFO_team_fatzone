@@ -493,3 +493,9 @@ body {
 .footer .brand { color: var(--mist); text-decoration: none; }
 .footer-bottom { padding: 1.25rem 0 1.75rem; border-top: 1px solid rgba(238, 243, 239, .08); color: var(--muted-on-dark); font-size: .85rem; }
 .footer-bottom p { margin: 0; }
+
+/* Brand logo image (round badge; the artwork is circular on a white square) */
+.logo-img { display: block; flex: none; border-radius: 50%; object-fit: cover; background: #fff; box-shadow: 0 0 0 2px rgba(169, 201, 164, .55), 0 4px 12px rgba(8, 16, 20, .35); }
+.logo-navbar { width: 44px; height: 44px; }
+.logo-footer { width: 72px; height: 72px; }
+.footer-brand .brand { gap: .8rem; font-size: 1.2rem; }
