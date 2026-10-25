@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="วางแผนทริปท่องเที่ยวประเทศไทยด้วย Thai Travel AI" />
   <title>คุยกับ AI วางแผนเที่ยว — Thai Travel AI</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23a9c9a4'/%3E%3Ccircle cx='22.5' cy='10' r='3' fill='%23f4b69c'/%3E%3Cpath d='M4 25L12.5 12L17 18.5L20 14.5L28 25Z' fill='%2316242a'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&family=Prompt:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -18,14 +19,19 @@
   <header class="navbar">
     <div class="container nav-inner">
       <a class="brand" href="./index.html" aria-label="Thai Travel AI หน้าแรก">
-        <span class="brand-mark" aria-hidden="true">🧭</span>
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <rect width="32" height="32" rx="9" fill="#a9c9a4" />
+          <circle cx="22.5" cy="10" r="3" fill="#f4b69c" />
+          <path d="M4 25L12.5 12L17 18.5L20 14.5L28 25Z" fill="#16242a" />
+          <path d="M12.5 12L10.4 15.2L11.8 14.4L13.2 15.4L15 15.6Z" fill="#eef3ef" />
+        </svg>
         <span>Thai Travel AI</span>
       </a>
       <nav aria-label="เมนูหลัก">
         <ul class="nav-links">
-          <li><a href="./index.html#how">วิธีใช้งาน</a></li>
-          <li><a href="./index.html#provinces">จังหวัด</a></li>
-          <li><a href="./index.html#templates">แผนสำเร็จรูป</a></li>
+          <li><a href="./index.html#features">ฟีเจอร์</a></li>
+          <li><a href="./index.html#templates">แผนตั้งต้น</a></li>
+          <li><a href="./index.html#faq">คำถามที่พบบ่อย</a></li>
         </ul>
       </nav>
       <a class="btn btn-ghost btn-sm" href="./index.html">กลับหน้าแรก</a>
@@ -34,7 +40,7 @@
 
   <main id="planner" class="plan-page" aria-labelledby="planner-heading">
     <div class="plan-head">
-      <h1 id="planner-heading" tabindex="-1">คุยกับ AI <span class="grad">วางแผนเที่ยวทั่วไทย</span></h1>
+      <h1 id="planner-heading" tabindex="-1">วางแผนเที่ยวกับ <span class="accent">AI</span></h1>
       <p class="plan-note">แผนเบื้องต้นจาก AI ยังไม่ได้ตรวจสอบสถานที่ ราคา หรือเวลาเปิดปิด · เส้นทางถนนคำนวณโดย OSRM</p>
     </div>
     <div class="plan-grid">

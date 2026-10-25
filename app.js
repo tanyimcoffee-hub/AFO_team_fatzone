@@ -137,11 +137,12 @@ async function loadPlaces() {
     }
 
     placesStatusElement.textContent =
-      `${grandTotal.toLocaleString("th-TH")} สถานที่ใน ${result.data.length} จังหวัด ` +
+      `รวม ${grandTotal.toLocaleString("th-TH")} แห่งใน ${result.data.length} จังหวัด ` +
       `(ข้อมูลทีม ${teamTotal.toLocaleString("th-TH")} แห่ง ที่เหลือจาก OpenStreetMap ยังไม่ได้ตรวจสอบ)`;
     for (const [type, count] of Object.entries(totals)) {
       const item = document.createElement("li");
-      item.textContent = `${STOP_TYPE_LABELS[type] || type}: ${count.toLocaleString("th-TH")} แห่ง`;
+      appendTextElement(item, "strong", count.toLocaleString("th-TH"));
+      appendTextElement(item, "span", STOP_TYPE_LABELS[type] || type);
       placesListElement.append(item);
     }
     if (result.attribution) appendTextElement(placesListElement.parentElement, "p", `ข้อมูลแผนที่ ${result.attribution}`, "hint");
@@ -622,7 +623,7 @@ async function drawRoadRoute(points, summaryTarget) {
 
     const summary = `เส้นทางถนนรวมประมาณ ${route.distanceKm.toLocaleString("th-TH")} กม. ขับประมาณ ${formatDuration(route.durationMin)}`;
     routeCaption.textContent = `${summary} (ไม่รวมเวลาแวะพักและรถติด) · ${route.attribution}`;
-    if (summaryTarget) appendTextElement(summaryTarget, "p", `🚗 ${summary}`, "route-summary");
+    if (summaryTarget) appendTextElement(summaryTarget, "p", summary, "route-summary");
   } catch (error) {
     if (requestId !== routeRequestId) return;
     // คำนวณเส้นทางไม่ได้: แสดงเส้นตรงเชื่อมจุดแทน และบอกให้ชัด
@@ -860,8 +861,8 @@ function renderTemplates() {
     button.type = "button";
     button.className = "template-btn";
     appendTextElement(button, "strong", template.destination);
-    button.append(` ${template.days} วัน · ${template.interest}`);
-    button.setAttribute("aria-label", `ใช้แผน ${template.destination} ${template.days} วัน สาย${template.interest}`);
+    appendTextElement(button, "span", `${template.days} วัน · สาย${template.interest}`, "tpl-meta");
+    appendTextElement(button, "span", "ให้ AI จัดแผน →", "tpl-go");
     button.addEventListener("click", () => applyTemplate(template));
     item.append(button);
     list.append(item);
@@ -915,7 +916,7 @@ function initCarousel() {
   let paused = false;
   let interacting = false;
   const renderToggle = () => {
-    toggle.textContent = paused ? "▶ เลื่อนการ์ดอัตโนมัติ" : "❚❚ หยุดเลื่อนการ์ด";
+    toggle.textContent = paused ? "เล่นการ์ดอัตโนมัติ" : "หยุดเลื่อนการ์ด";
   };
   toggle.addEventListener("click", () => {
     paused = !paused;

@@ -3,29 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="วางแผนทริปท่องเที่ยวประเทศไทยด้วย Thai Travel AI" />
-  <title>Thai Travel AI — วางแผนทริปท่องเที่ยว</title>
+  <meta name="description" content="Thai Travel AI ผู้ช่วยวางแผน Road Trip ทั่วไทย คุยกับ AI ภาษาไทย รับแผนรายวัน พร้อมเส้นทางถนนจริง ปั๊มน้ำมัน ร้านอาหาร และที่พักใน 77 จังหวัด" />
+  <title>Thai Travel AI — วางแผน Road Trip ทั่วไทยด้วย AI</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23a9c9a4'/%3E%3Ccircle cx='22.5' cy='10' r='3' fill='%23f4b69c'/%3E%3Cpath d='M4 25L12.5 12L17 18.5L20 14.5L28 25Z' fill='%2316242a'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&family=Prompt:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
+  <!-- Line icons (stroke uses currentColor) -->
+  <svg class="icon-sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" /><path d="M8 9.5h8M8 12.5h5" /></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2" /><path d="M3.5 10h17M8 3v4M16 3v4" /></symbol>
+    <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2.5" /><circle cx="18" cy="6" r="2.5" /><path d="M8.5 18H15a3.5 3.5 0 0 0 0-7H9a2.5 2.5 0 0 1 0-5h6.5" /></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z" /><circle cx="12" cy="10" r="2.3" /></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8" /><circle cx="16" cy="7" r="2" /><circle cx="10" cy="17" r="2" /></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.3-7.5 9.5-4.3-1.2-7.5-4.9-7.5-9.5V6z" /><path d="M8.8 12.2l2.3 2.3 4.3-4.6" /></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" /></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></symbol>
+  </svg>
+
   <a class="skip-link" href="#planner-heading">ข้ามไปยังเนื้อหาหลัก</a>
 
-  <!-- Sticky navbar -->
   <header class="navbar">
     <div class="container nav-inner">
       <a class="brand" href="#top" aria-label="Thai Travel AI หน้าแรก">
-        <span class="brand-mark" aria-hidden="true">🧭</span>
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <rect width="32" height="32" rx="9" fill="#a9c9a4" />
+          <circle cx="22.5" cy="10" r="3" fill="#f4b69c" />
+          <path d="M4 25L12.5 12L17 18.5L20 14.5L28 25Z" fill="#16242a" />
+          <path d="M12.5 12L10.4 15.2L11.8 14.4L13.2 15.4L15 15.6Z" fill="#eef3ef" />
+        </svg>
         <span>Thai Travel AI</span>
       </a>
       <nav aria-label="เมนูหลัก">
         <ul class="nav-links">
+          <li><a href="#features">ฟีเจอร์</a></li>
           <li><a href="#how">วิธีใช้งาน</a></li>
-          <li><a href="./plan.html">วางแผน</a></li>
-          <li><a href="#provinces">จังหวัด</a></li>
-          <li><a href="#templates">แผนสำเร็จรูป</a></li>
+          <li><a href="#provinces">ข้อมูลครอบคลุม</a></li>
+          <li><a href="#templates">แผนตั้งต้น</a></li>
+          <li><a href="#faq">คำถามที่พบบ่อย</a></li>
         </ul>
       </nav>
       <a class="btn btn-cta" href="./plan.html">เริ่มวางแผน</a>
@@ -33,19 +51,13 @@
   </header>
 
   <main id="top">
-    <!-- Hero: quick start -> opens the full chat page (plan.html) -->
-    <section id="planner" class="hero-planner hero-home" aria-labelledby="planner-heading">
+    <!-- Hero -->
+    <section id="planner" class="hero-home" aria-labelledby="planner-heading">
       <div class="container hero-grid">
-        <div>
+        <div class="hero-copy">
           <p class="eyebrow">ผู้ช่วยวางแผน Road Trip ภาษาไทย</p>
-          <h1 id="planner-heading" tabindex="-1">คุยกับ AI <span class="grad">วางแผนเที่ยวทั่วไทย</span></h1>
-          <p class="lead">บอกต้นทาง ปลายทาง และจำนวนวัน แล้วคุยกับ AI ในหน้าต่างแชตเต็มจอ พร้อมแผนที่เส้นทางถนนจริง แผนที่ได้เป็นแผนเบื้องต้น ยังไม่ได้ตรวจสอบสถานที่ ราคา หรือเวลาเปิดปิด</p>
-          <ul class="hero-stats" aria-label="ข้อมูลในระบบ">
-            <li><strong>77</strong><span>จังหวัด</span></li>
-            <li><strong id="stat-places">–</strong><span>สถานที่ในระบบ</span></li>
-            <li><strong id="stat-fuel">–</strong><span>ปั๊มน้ำมัน</span></li>
-            <li><strong id="stat-hotel">–</strong><span>ที่พัก/โรงแรม</span></li>
-          </ul>
+          <h1 id="planner-heading" tabindex="-1">วางแผนขับรถเที่ยวทั่วไทย <span class="accent">จบในแชตเดียว</span></h1>
+          <p class="lead">บอกต้นทาง ปลายทาง และจำนวนวัน AI จะจัดแผนรายวัน พร้อมจุดแวะปั๊มน้ำมัน ร้านอาหาร ที่พัก และเส้นทางตามถนนจริงบนแผนที่</p>
 
           <form id="quick-form" class="quick-form" action="./plan.html" method="get">
             <input type="hidden" name="go" value="1" />
@@ -56,82 +68,89 @@
               </div>
               <div>
                 <label for="quick-destination">ปลายทาง</label>
-                <input id="quick-destination" name="destination" required maxlength="120" autocomplete="off" list="province-options" placeholder="จันทบุรี" />
+                <input id="quick-destination" name="destination" required maxlength="120" autocomplete="off" list="province-options" placeholder="เชียงใหม่" />
               </div>
               <div class="quick-days">
                 <label for="quick-days">จำนวนวัน</label>
                 <input id="quick-days" name="days" type="number" inputmode="numeric" min="1" max="30" step="1" value="3" required />
               </div>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">เริ่มคุยกับ AI</button>
+            <button type="submit" class="btn btn-primary btn-block">
+              สร้างแผนเที่ยวด้วย AI
+              <svg class="icon" aria-hidden="true"><use href="#i-arrow" /></svg>
+            </button>
             <datalist id="province-options"></datalist>
           </form>
-          <p class="hero-more"><a href="./plan.html">เปิดหน้าแชตเพื่อกรอกรายละเอียดเต็ม</a></p>
+
+          <ul class="hero-stats" aria-label="ข้อมูลในระบบ">
+            <li><strong>77</strong><span>จังหวัด</span></li>
+            <li><strong id="stat-places">–</strong><span>สถานที่ในระบบ</span></li>
+            <li><strong id="stat-fuel">–</strong><span>ปั๊มน้ำมัน</span></li>
+            <li><strong id="stat-hotel">–</strong><span>ที่พัก/โรงแรม</span></li>
+          </ul>
         </div>
 
-        <aside class="route-card" aria-labelledby="route-card-title">
-          <p class="route-card-tag">ตัวอย่างทริป</p>
-          <div class="route-card-head">
-            <span class="route-card-icon" aria-hidden="true">🚗</span>
-            <div>
-              <h2 id="route-card-title">ขับรถเที่ยว กรุงเทพฯ – จันทบุรี</h2>
-              <p>ระยะทางถนนประมาณ 249 กม. · ขับประมาณ 3 ชม. (OSRM)</p>
+        <figure class="preview">
+          <div class="preview-window" aria-hidden="true">
+            <div class="preview-bar"><span></span><span></span><span></span><em>Thai Travel AI · วางแผนเที่ยว</em></div>
+            <div class="preview-body">
+              <div class="preview-chat">
+                <p class="pv-bubble pv-user">อยากขับรถไปจันทบุรี 2 วัน ไป-กลับ 2 คน</p>
+                <p class="pv-bubble pv-ai">จัดแผนให้แล้วครับ วันแรกแวะเติมน้ำมันและพักรถระหว่างทาง แล้วเที่ยวชุมชนริมน้ำจันทบูร</p>
+                <div class="pv-day"><b>วันที่ 1</b><span>ปั๊มน้ำมัน · จุดพักรถ · ร้านอาหารทะเล</span></div>
+                <div class="pv-day"><b>วันที่ 2</b><span>จุดชมวิว · คาเฟ่ · ขับกลับกรุงเทพฯ</span></div>
+              </div>
+              <div class="preview-map">
+                <svg viewBox="0 0 200 240" preserveAspectRatio="xMidYMid slice">
+                  <rect width="200" height="240" fill="#22363d" />
+                  <path d="M0 40 C 40 30 70 60 110 50 S 170 20 200 35 V0 H0Z" fill="#2c444c" />
+                  <path d="M0 190 C 50 175 90 210 140 195 S 185 180 200 188 V240 H0Z" fill="#1d3a46" />
+                  <path d="M40 60 C 70 90 60 120 95 140 S 150 170 160 205" fill="none" stroke="#16242a" stroke-width="7" stroke-linecap="round" />
+                  <path d="M40 60 C 70 90 60 120 95 140 S 150 170 160 205" fill="none" stroke="#f4b69c" stroke-width="4" stroke-linecap="round" />
+                  <circle cx="40" cy="60" r="8" fill="#2e7d32" stroke="#fff" stroke-width="2" />
+                  <circle cx="95" cy="140" r="7" fill="#4f7d4a" stroke="#fff" stroke-width="2" />
+                  <circle cx="160" cy="205" r="8" fill="#d64545" stroke="#fff" stroke-width="2" />
+                </svg>
+              </div>
+            </div>
+            <div class="preview-foot">
+              <svg class="icon" aria-hidden="true"><use href="#i-route" /></svg>
+              เส้นทางถนนประมาณ 249 กม. · ขับประมาณ 3 ชม.
             </div>
           </div>
-          <ol class="route-card-rows">
-            <li><span>📍 ต้นทาง</span><strong>กรุงเทพมหานคร</strong></li>
-            <li><span>⛽ จุดแวะ</span><strong>ปั๊มน้ำมันระหว่างทาง</strong></li>
-            <li><span>🍽️ จุดแวะ</span><strong>ร้านอาหารทะเล</strong></li>
-            <li><span>🏁 ปลายทาง</span><strong>จันทบุรี</strong></li>
-          </ol>
-          <a class="btn btn-ghost btn-block" href="./plan.html?origin=%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3&amp;destination=%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%9A%E0%B8%B8%E0%B8%A3%E0%B8%B5&amp;days=2&amp;go=1">ลองแผนนี้กับ AI</a>
-        </aside>
+          <figcaption>ภาพตัวอย่างหน้าวางแผน</figcaption>
+        </figure>
       </div>
     </section>
 
-    <!-- How it works -->
-    <section id="how" class="section section-light" aria-labelledby="how-title">
-      <div class="container split">
-        <div>
-          <h2 id="how-title" class="section-title dark">วางแผนทริปได้ใน 3 ขั้นตอน</h2>
-          <ol class="steps">
-            <li><span class="step-num" aria-hidden="true">1</span><div><strong>กรอกข้อมูลทริป</strong><p>ต้นทาง ปลายทาง จำนวนวัน งบ และความสนใจ</p></div></li>
-            <li><span class="step-num" aria-hidden="true">2</span><div><strong>AI จัดแผนให้</strong><p>ถ้าข้อมูลยังไม่พอ AI จะถามกลับเป็นภาษาไทย</p></div></li>
-            <li><span class="step-num" aria-hidden="true">3</span><div><strong>ดูแผนรายวัน</strong><p>เห็นจุดแวะแต่ละวัน พร้อมป้ายบอกว่าข้อมูลไหนยังไม่ได้ตรวจสอบ</p></div></li>
-          </ol>
-        </div>
-        <div class="mock-card" aria-hidden="true">
-          <p class="mock-title">ตัวอย่างหน้าตาแผน</p>
-          <div class="mock-day"><span>วันที่ 1</span><i></i><i class="short"></i></div>
-          <div class="mock-day"><span>วันที่ 2</span><i></i><i class="short"></i></div>
-          <div class="mock-day"><span>วันที่ 3</span><i></i><i class="short"></i></div>
-        </div>
+    <!-- Credits strip: real technologies used -->
+    <section class="credits" aria-label="เทคโนโลยีและแหล่งข้อมูล">
+      <div class="container credits-inner">
+        <span>ข้อมูลสถานที่จาก <strong>OpenStreetMap</strong></span>
+        <span>เส้นทางถนนโดย <strong>OSRM</strong></span>
+        <span>ประมวลผลภาษาไทยด้วย <strong>AI</strong></span>
+        <span>แผนที่ <strong>Leaflet</strong></span>
       </div>
     </section>
 
-    <!-- Provinces + features -->
-    <section id="provinces" class="section section-dark" aria-labelledby="provinces-title">
+    <!-- Features -->
+    <section id="features" class="section" aria-labelledby="features-title">
       <div class="container">
-        <h2 id="provinces-title" class="section-title center">พิมพ์ต้นทาง–ปลายทางได้ทั้ง 77 จังหวัดทั่วไทย</h2>
-        <div class="transparency">
-          <h3>ความโปร่งใสของข้อมูล</h3>
-          <p>AI รับคำขอได้ทุกจังหวัด และเลือกจุดแวะเฉพาะจากฐานข้อมูลของระบบเท่านั้น ข้อมูลส่วนใหญ่มาจาก OpenStreetMap ซึ่งอาสาสมัครร่วมกันบันทึก จึงอาจไม่ครบหรือไม่เป็นปัจจุบัน ทุกจุดแวะจะติดป้าย “ยังไม่ได้ตรวจสอบ” ส่วนระยะทางและเวลาขับรถคำนวณตามถนนจริงโดย OSRM เป็นค่าประมาณ ไม่รวมรถติดหรือการปิดถนน</p>
-          <div class="places-box">
-            <h4 id="places-heading">ข้อมูลสถานที่ในระบบ</h4>
-            <p id="places-status" class="empty" role="status">กำลังโหลดรายการสถานที่…</p>
-            <ul id="places-list" aria-labelledby="places-heading"></ul>
-          </div>
-        </div>
+        <header class="section-head">
+          <p class="kicker">ทำไมต้อง Thai Travel AI</p>
+          <h2 id="features-title" class="section-title">ทุกอย่างที่ต้องใช้สำหรับ Road Trip อยู่ในที่เดียว</h2>
+          <p class="section-sub">ไม่ต้องสลับหลายแอป ไม่ต้องจดรายการปั๊มน้ำมันหรือที่พักเอง</p>
+        </header>
 
-        <div class="carousel" aria-roledescription="carousel" aria-label="ความสามารถของระบบ">
+        <div class="carousel" aria-roledescription="carousel" aria-label="ฟีเจอร์ของระบบ">
           <button type="button" class="carousel-btn prev" data-dir="-1" aria-label="เลื่อนไปการ์ดก่อนหน้า">‹</button>
-          <ul id="feature-track" class="feature-track" tabindex="0" aria-label="การ์ดความสามารถ เลื่อนซ้ายขวาได้">
-            <li class="feature-card"><span class="feature-icon" aria-hidden="true">💬</span><h3>ตอบภาษาไทย</h3><p>AI ถามกลับเมื่อข้อมูลยังไม่ครบ และอธิบายแผนเป็นภาษาไทย</p></li>
-            <li class="feature-card"><span class="feature-icon" aria-hidden="true">🗓️</span><h3>จัดแผนรายวันอัตโนมัติ</h3><p>แบ่งแผนตามจำนวนวันที่เลือก ตั้งแต่ 1 ถึง 30 วัน</p></li>
-            <li class="feature-card"><span class="feature-icon" aria-hidden="true">📍</span><h3>สถานที่ระหว่างทาง</h3><p>แนะนำแลนด์มาร์ก ร้านอาหาร คาเฟ่ ที่พัก และปั๊มน้ำมัน จากข้อมูล OpenStreetMap และข้อมูลทีม</p></li>
-            <li class="feature-card"><span class="feature-icon" aria-hidden="true">🏞️</span><h3>เที่ยวตามสไตล์</h3><p>เลือกธรรมชาติ ทะเล ภูเขา คาเฟ่ อาหาร หรือพิมพ์ความสนใจเอง</p></li>
-            <li class="feature-card"><span class="feature-icon" aria-hidden="true">🔍</span><h3>บอกตรง ๆ ว่ายังไม่ยืนยัน</h3><p>ทุกจุดแวะมีป้ายสถานะ ไม่อ้างว่าตรวจสอบแล้วถ้ายังไม่ได้ตรวจ</p></li>
-            <li class="feature-card"><span class="feature-icon" aria-hidden="true">🚗</span><h3>ออกแบบเพื่อ Road Trip</h3><p>คำนึงถึงการพักขับรถ และจุดแวะตามเส้นทาง</p></li>
+          <ul id="feature-track" class="feature-track" tabindex="0" aria-label="การ์ดฟีเจอร์ เลื่อนซ้ายขวาได้">
+            <li class="feature-card"><span class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-chat" /></svg></span><h3>คุยภาษาไทยได้เป็นธรรมชาติ</h3><p>พิมพ์บอกเหมือนคุยกับเพื่อนร่วมทริป ถ้าข้อมูลยังไม่ครบ AI จะถามกลับให้เอง</p></li>
+            <li class="feature-card"><span class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-calendar" /></svg></span><h3>แผนรายวันอัตโนมัติ</h3><p>แบ่งจุดแวะตามวัน 1–30 วัน พร้อมหมายเหตุสิ่งที่ควรตรวจสอบก่อนออกเดินทาง</p></li>
+            <li class="feature-card"><span class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-route" /></svg></span><h3>เส้นทางตามถนนจริง</h3><p>เห็นเส้นทางขับรถบนแผนที่ พร้อมระยะทางรวมและเวลาขับโดยประมาณ</p></li>
+            <li class="feature-card"><span class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-pin" /></svg></span><h3>จุดแวะครบทั้งประเทศ</h3><p>ปั๊มน้ำมัน ร้านอาหาร คาเฟ่ ที่พัก และที่เที่ยวกว่า 48,000 แห่งใน 77 จังหวัด</p></li>
+            <li class="feature-card"><span class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-sliders" /></svg></span><h3>ปรับแผนได้ทันที</h3><p>อยากเพิ่มคาเฟ่ เปลี่ยนวัน หรือลดงบ พิมพ์บอก AI แล้วรับแผนใหม่ได้เลย</p></li>
+            <li class="feature-card"><span class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-shield" /></svg></span><h3>โปร่งใสเรื่องข้อมูล</h3><p>บอกชัดว่าจุดไหนยังไม่ได้ตรวจสอบ ไม่สร้างชื่อสถานที่ขึ้นมาเอง</p></li>
           </ul>
           <button type="button" class="carousel-btn next" data-dir="1" aria-label="เลื่อนไปการ์ดถัดไป">›</button>
           <div class="carousel-controls">
@@ -141,16 +160,67 @@
       </div>
     </section>
 
-    <!-- Templates + region map + reviews -->
-    <section id="templates" class="section" aria-labelledby="templates-title">
+    <!-- How it works -->
+    <section id="how" class="section section-dark" aria-labelledby="how-title">
       <div class="container">
-        <h2 id="templates-title" class="section-title dark center">แผนเที่ยวแบบครบวงจร สำเร็จรูป</h2>
-        <p class="section-sub center">กดเลือกแผน ระบบจะเปิดหน้าแชตและให้ AI จัดแผนทันที จำนวนวันและงบเป็นค่าตั้งต้นแก้ไขได้ ไม่ได้อ้างอิงราคาจริง</p>
+        <header class="section-head">
+          <p class="kicker">วิธีใช้งาน</p>
+          <h2 id="how-title" class="section-title">ได้แผนเที่ยวใน 3 ขั้นตอน</h2>
+        </header>
+        <ol class="steps">
+          <li>
+            <span class="step-num" aria-hidden="true">1</span>
+            <h3>บอกทริปที่อยากไป</h3>
+            <p>ต้นทาง ปลายทาง จำนวนวัน งบประมาณ และสไตล์ที่ชอบ เช่น ธรรมชาติ คาเฟ่ หรือทะเล</p>
+          </li>
+          <li>
+            <span class="step-num" aria-hidden="true">2</span>
+            <h3>AI จัดแผนให้</h3>
+            <p>เลือกจุดแวะจากฐานข้อมูลจริง แบ่งตามวัน และคำนวณเส้นทางถนนพร้อมเวลาขับ</p>
+          </li>
+          <li>
+            <span class="step-num" aria-hidden="true">3</span>
+            <h3>ปรับจนพอใจแล้วออกเดินทาง</h3>
+            <p>คุยต่อเพื่อแก้แผน ดูทุกจุดบนแผนที่ และเปิดตำแหน่งใน OpenStreetMap ได้ทันที</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Coverage -->
+    <section id="provinces" class="section" aria-labelledby="provinces-title">
+      <div class="container coverage">
+        <div>
+          <p class="kicker">ข้อมูลครอบคลุม</p>
+          <h2 id="provinces-title" class="section-title">ครบ 77 จังหวัด ตั้งแต่เหนือสุดถึงใต้สุด</h2>
+          <p class="section-sub">AI เลือกจุดแวะจากฐานข้อมูลของระบบเท่านั้น ข้อมูลส่วนใหญ่มาจาก OpenStreetMap ซึ่งอาสาสมัครทั่วโลกร่วมกันบันทึก ทุกจุดจะติดป้าย “ยังไม่ได้ตรวจสอบ” ส่วนระยะทางและเวลาขับเป็นค่าประมาณ ไม่รวมรถติด</p>
+          <ul class="check-list">
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check" /></svg>ข้อมูลทีมงานจะแทนที่ข้อมูล OpenStreetMap ที่ซ้ำกันเสมอ</li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check" /></svg>ทุกสถานที่เปิดดูตำแหน่งบนแผนที่ได้</li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check" /></svg>ไม่มีการสร้างชื่อสถานที่ขึ้นมาเอง</li>
+          </ul>
+        </div>
+        <div class="places-box">
+          <h3 id="places-heading">ข้อมูลสถานที่ในระบบ</h3>
+          <p id="places-status" class="places-total" role="status">กำลังโหลดข้อมูล…</p>
+          <ul id="places-list" class="places-grid" aria-labelledby="places-heading"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Templates + region explorer -->
+    <section id="templates" class="section section-dark" aria-labelledby="templates-title">
+      <div class="container">
+        <header class="section-head">
+          <p class="kicker">แผนตั้งต้น</p>
+          <h2 id="templates-title" class="section-title">เลือกเส้นทาง แล้วให้ AI จัดต่อ</h2>
+          <p class="section-sub">กดเลือกแผน ระบบจะเปิดหน้าวางแผนและให้ AI จัดแผนทันที จำนวนวันและงบเป็นค่าตั้งต้น แก้ไขได้ ไม่ได้อ้างอิงราคาจริง</p>
+        </header>
         <ul id="template-list" class="template-list"></ul>
 
         <div class="explore">
           <div class="region-card">
-            <h3 id="region-heading">แผนที่ไทยตามภูมิภาค</h3>
+            <h3 id="region-heading">เลือกภูมิภาค</h3>
             <div class="region-map" role="group" aria-labelledby="region-heading">
               <button type="button" class="region r-north" data-region="north" aria-pressed="true">เหนือ</button>
               <button type="button" class="region r-northeast" data-region="northeast" aria-pressed="false">อีสาน</button>
@@ -178,25 +248,90 @@
           <ul id="explorer-list" class="explorer-list"></ul>
           <p class="hint">ข้อมูล © OpenStreetMap contributors (ODbL) และข้อมูลทีม ยังไม่ได้ตรวจสอบ อาจปิดกิจการหรือย้ายแล้ว</p>
         </section>
+      </div>
+    </section>
 
-        <div class="reviews" aria-labelledby="reviews-title">
-          <h3 id="reviews-title" class="reviews-title">รีวิว</h3>
-          <p class="section-sub center">ยังไม่มีรีวิวจากผู้ใช้จริง ส่วนนี้จะเปิดเมื่อระบบเปิดให้ใช้งาน</p>
-          <div class="review-grid" aria-hidden="true">
-            <div class="review-skeleton"><i></i><i></i><i class="short"></i></div>
-            <div class="review-skeleton"><i></i><i></i><i class="short"></i></div>
-            <div class="review-skeleton"><i></i><i></i><i class="short"></i></div>
-          </div>
+    <!-- FAQ -->
+    <section id="faq" class="section" aria-labelledby="faq-title">
+      <div class="container faq">
+        <header class="section-head">
+          <p class="kicker">คำถามที่พบบ่อย</p>
+          <h2 id="faq-title" class="section-title">ข้อสงสัยก่อนเริ่มใช้งาน</h2>
+        </header>
+        <div class="faq-list">
+          <details>
+            <summary>ข้อมูลสถานที่มาจากไหน</summary>
+            <p>ส่วนใหญ่มาจาก OpenStreetMap ฐานข้อมูลแผนที่เปิดที่อาสาสมัครทั่วโลกร่วมกันบันทึก รวมกับข้อมูลที่ทีมงานรวบรวมเอง ตอนนี้มีกว่า 48,000 แห่งใน 77 จังหวัด</p>
+          </details>
+          <details>
+            <summary>เส้นทางและเวลาขับรถแม่นแค่ไหน</summary>
+            <p>เส้นทางคำนวณตามถนนจริงด้วย OSRM ระยะทางค่อนข้างใกล้เคียง แต่เวลาขับเป็นค่าประมาณ ไม่รวมรถติด การแวะพัก หรือการปิดถนน</p>
+          </details>
+          <details>
+            <summary>ทำไม AI บางครั้งถามกลับ</summary>
+            <p>ถ้าข้อมูลทริปยังไม่พอ เช่น ไม่รู้ว่าไป-กลับหรือเที่ยวเดียว AI จะถามก่อนจัดแผน พิมพ์ตอบในช่องแชตได้เลย</p>
+          </details>
+          <details>
+            <summary>จองที่พักหรือดูราคาได้ไหม</summary>
+            <p>ยังไม่ได้ ระบบแนะนำสถานที่และเส้นทางเท่านั้น ราคา เวลาเปิดปิด และการจอง ควรตรวจสอบกับผู้ให้บริการโดยตรงก่อนเดินทาง</p>
+          </details>
+          <details>
+            <summary>ใช้บนมือถือได้ไหม</summary>
+            <p>ได้ หน้าเว็บปรับขนาดตามหน้าจอ ใช้ได้ทั้งมือถือ แท็บเล็ต และคอมพิวเตอร์</p>
+          </details>
         </div>
+      </div>
+    </section>
+
+    <!-- Final call to action -->
+    <section class="cta-band" aria-labelledby="cta-title">
+      <div class="container cta-inner">
+        <div>
+          <h2 id="cta-title">ทริปถัดไปของคุณ เริ่มได้ในหนึ่งข้อความ</h2>
+          <p>บอก AI ว่าอยากไปไหน แล้วรับแผนรายวันพร้อมเส้นทางถนนจริง</p>
+        </div>
+        <a class="btn btn-primary btn-lg" href="./plan.html">
+          เริ่มวางแผนเลย
+          <svg class="icon" aria-hidden="true"><use href="#i-arrow" /></svg>
+        </a>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <div class="container footer-inner">
-      <p><strong>Thai Travel AI</strong> · โปรเจกต์ AFO_team_fatzone</p>
-      <p>แผนเที่ยวสร้างโดย AI เป็นแผนเบื้องต้น กรุณาตรวจสอบเส้นทาง สถานที่ และเวลาเปิดปิดก่อนเดินทางทุกครั้ง</p>
-      <p>ข้อมูลสถานที่บางส่วน © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL)</p>
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="#top" aria-label="Thai Travel AI กลับขึ้นด้านบน">
+          <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+            <rect width="32" height="32" rx="9" fill="#a9c9a4" />
+            <circle cx="22.5" cy="10" r="3" fill="#f4b69c" />
+            <path d="M4 25L12.5 12L17 18.5L20 14.5L28 25Z" fill="#16242a" />
+            <path d="M12.5 12L10.4 15.2L11.8 14.4L13.2 15.4L15 15.6Z" fill="#eef3ef" />
+          </svg>
+          <span>Thai Travel AI</span>
+        </a>
+        <p>ผู้ช่วยวางแผน Road Trip ภาษาไทย แผนจาก AI เป็นแผนเบื้องต้น กรุณาตรวจสอบเส้นทาง สถานที่ และเวลาเปิดปิดก่อนเดินทางทุกครั้ง</p>
+      </div>
+      <nav class="footer-col" aria-label="เมนูท้ายหน้า">
+        <h2>เมนู</h2>
+        <ul>
+          <li><a href="./plan.html">เริ่มวางแผน</a></li>
+          <li><a href="#features">ฟีเจอร์</a></li>
+          <li><a href="#templates">แผนตั้งต้น</a></li>
+          <li><a href="#faq">คำถามที่พบบ่อย</a></li>
+        </ul>
+      </nav>
+      <div class="footer-col">
+        <h2>แหล่งข้อมูล</h2>
+        <ul>
+          <li>สถานที่ © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL)</li>
+          <li>เส้นทางโดย <a href="https://project-osrm.org/">OSRM</a></li>
+          <li>แผนที่โดย <a href="https://leafletjs.com/">Leaflet</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>© 2026 Thai Travel AI · โปรเจกต์ AFO_team_fatzone</p>
     </div>
   </footer>
 
