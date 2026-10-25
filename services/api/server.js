@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { loadPlaceStore, PLACE_TYPES, OSM_ATTRIBUTION } from './places-store.js';
+import { createRouter, isValidPoint, MAX_ROUTE_POINTS, RouteError } from './routing.js';
 
 // GROQ_API_KEY ถูกโหลดใน travel-ai.js จาก ai-engine/.env แล้ว
 // ไฟล์นี้ใช้ dotenv เฉพาะตัวแปรของ server เอง เช่น PORT (อ่านจาก .env ในโฟลเดอร์ที่รัน)
@@ -52,6 +53,27 @@ const isValidHistory = (history) =>
 
 const attributionFor = (places) =>
     places.some((place) => place.source === 'osm') ? OSM_ATTRIBUTION : null;
+
+// เส้นทางถนนจริงผ่าน OSRM (ตั้ง OSRM_URL เพื่อใช้เซิร์ฟเวอร์อื่น)
+const router = createRouter({ baseUrl: process.env.OSRM_URL || undefined });
+
+// body: { points: [{ lat, lon }, ...] } ตามลำดับการขับรถ (2–25 จุด)
+app.post('/api/route', async (req, res) => {
+    const { points } = req.body || {};
+    if (!Array.isArray(points) || points.length < 2 || points.length > MAX_ROUTE_POINTS || !points.every(isValidPoint)) {
+        return res.status(400).json({ success: false, error: `points ต้องเป็น Array ของ { lat, lon } จำนวน 2–${MAX_ROUTE_POINTS} จุด` });
+    }
+    try {
+        const route = await router.route(points.map(({ lat, lon }) => ({ lat, lon })));
+        res.json({ success: true, data: route });
+    } catch (error) {
+        if (error instanceof RouteError) {
+            return res.status(error.status).json({ success: false, error: error.message });
+        }
+        console.error('Route Error:', error);
+        res.status(500).json({ success: false, error: 'คำนวณเส้นทางไม่สำเร็จ' });
+    }
+});
 
 app.get('/api/health', (req, res) => {
     res.json({ status: 'OK', message: 'AI Travel Planner API is running!' });

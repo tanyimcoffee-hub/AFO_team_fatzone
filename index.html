@@ -8,12 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&family=Prompt:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
   <link rel="stylesheet" href="./styles.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#planner-heading">ข้ามไปยังฟอร์มวางแผน</a>
+  <a class="skip-link" href="#planner-heading">ข้ามไปยังเนื้อหาหลัก</a>
 
   <!-- Sticky navbar -->
   <header class="navbar">
@@ -25,127 +23,69 @@
       <nav aria-label="เมนูหลัก">
         <ul class="nav-links">
           <li><a href="#how">วิธีใช้งาน</a></li>
-          <li><a href="#planner">วางแผน</a></li>
+          <li><a href="./plan.html">วางแผน</a></li>
           <li><a href="#provinces">จังหวัด</a></li>
           <li><a href="#templates">แผนสำเร็จรูป</a></li>
         </ul>
       </nav>
-      <a class="btn btn-cta" href="#planner">เริ่มวางแผน</a>
+      <a class="btn btn-cta" href="./plan.html">เริ่มวางแผน</a>
     </div>
   </header>
 
   <main id="top">
-    <!-- Planner: chat + route map -->
-    <section id="planner" class="hero-planner" aria-labelledby="planner-heading">
-      <div class="container">
-        <p class="eyebrow">ผู้ช่วยวางแผน Road Trip ภาษาไทย</p>
-        <h1 id="planner-heading" tabindex="-1">คุยกับ AI <span class="grad">วางแผนเที่ยวทั่วไทย</span></h1>
-        <p class="lead">บอกต้นทาง ปลายทาง จำนวนวัน งบ และสิ่งที่ชอบ แล้วรับแผนรายวัน แผนที่ได้เป็นแผนเบื้องต้น ยังไม่ได้ตรวจสอบสถานที่ เส้นทาง ราคา หรือเวลาเปิดปิดกับแหล่งข้อมูลจริง</p>
-        <ul class="hero-stats" aria-label="ข้อมูลในระบบ">
-          <li><strong>77</strong><span>จังหวัด</span></li>
-          <li><strong id="stat-places">–</strong><span>สถานที่ในระบบ</span></li>
-          <li><strong id="stat-fuel">–</strong><span>ปั๊มน้ำมัน</span></li>
-          <li><strong id="stat-hotel">–</strong><span>ที่พัก/โรงแรม</span></li>
-        </ul>
+    <!-- Hero: quick start -> opens the full chat page (plan.html) -->
+    <section id="planner" class="hero-planner hero-home" aria-labelledby="planner-heading">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">ผู้ช่วยวางแผน Road Trip ภาษาไทย</p>
+          <h1 id="planner-heading" tabindex="-1">คุยกับ AI <span class="grad">วางแผนเที่ยวทั่วไทย</span></h1>
+          <p class="lead">บอกต้นทาง ปลายทาง และจำนวนวัน แล้วคุยกับ AI ในหน้าต่างแชตเต็มจอ พร้อมแผนที่เส้นทางถนนจริง แผนที่ได้เป็นแผนเบื้องต้น ยังไม่ได้ตรวจสอบสถานที่ ราคา หรือเวลาเปิดปิด</p>
+          <ul class="hero-stats" aria-label="ข้อมูลในระบบ">
+            <li><strong>77</strong><span>จังหวัด</span></li>
+            <li><strong id="stat-places">–</strong><span>สถานที่ในระบบ</span></li>
+            <li><strong id="stat-fuel">–</strong><span>ปั๊มน้ำมัน</span></li>
+            <li><strong id="stat-hotel">–</strong><span>ที่พัก/โรงแรม</span></li>
+          </ul>
 
-        <div class="planner">
-          <div class="chat-panel">
-            <div id="chat-log" class="chat-log" role="log" aria-label="บทสนทนากับ AI" aria-busy="false">
-              <div class="bubble bubble-ai">
-                <p>สวัสดีครับ บอกจุดเริ่มต้น จุดหมาย จำนวนวัน และงบประมาณ แล้วผมจะช่วยจัดแผน Road Trip ให้ครับ</p>
+          <form id="quick-form" class="quick-form" action="./plan.html" method="get">
+            <input type="hidden" name="go" value="1" />
+            <div class="quick-fields">
+              <div>
+                <label for="quick-origin">ต้นทาง</label>
+                <input id="quick-origin" name="origin" required maxlength="120" autocomplete="off" list="province-options" placeholder="กรุงเทพมหานคร" />
+              </div>
+              <div>
+                <label for="quick-destination">ปลายทาง</label>
+                <input id="quick-destination" name="destination" required maxlength="120" autocomplete="off" list="province-options" placeholder="จันทบุรี" />
+              </div>
+              <div class="quick-days">
+                <label for="quick-days">จำนวนวัน</label>
+                <input id="quick-days" name="days" type="number" inputmode="numeric" min="1" max="30" step="1" value="3" required />
               </div>
             </div>
-
-            <form id="reply-form" class="reply-form hidden" novalidate>
-              <label for="reply-input" class="visually-hidden">ตอบ AI</label>
-              <input id="reply-input" name="reply" maxlength="1000" autocomplete="off" placeholder="พิมพ์ตอบ AI เช่น ไป-กลับ 2 คน" />
-              <button id="reply-button" type="submit" class="btn btn-primary">ส่ง</button>
-            </form>
-
-            <div id="form-errors" class="error-summary hidden" role="alert" tabindex="-1"></div>
-
-            <details id="trip-details" class="trip-details" open>
-              <summary>ข้อมูลทริป <span class="summary-hint">(กดเพื่อแก้ไข)</span></summary>
-              <form id="plan-form" class="chat-form" novalidate>
-                <div class="field-grid">
-                  <div>
-                    <label for="origin">จุดเริ่มต้น <span class="req" aria-hidden="true">*</span></label>
-                    <input id="origin" name="origin" required maxlength="120" autocomplete="off" placeholder="เช่น กรุงเทพมหานคร" aria-describedby="origin-error" />
-                    <p id="origin-error" class="field-error hidden"></p>
-                  </div>
-                  <div>
-                    <label for="destination">จุดหมายปลายทาง <span class="req" aria-hidden="true">*</span></label>
-                    <input id="destination" name="destination" required maxlength="120" autocomplete="off" placeholder="เช่น จันทบุรี" list="province-options" aria-describedby="destination-error" />
-                    <datalist id="province-options"></datalist>
-                    <p id="destination-error" class="field-error hidden"></p>
-                  </div>
-                  <div>
-                    <label for="tripType">ประเภททริป <span class="req" aria-hidden="true">*</span></label>
-                    <select id="tripType" name="tripType" required aria-describedby="tripType-error">
-                      <option value="round_trip" selected>ไป-กลับ</option>
-                      <option value="one_way">เที่ยวเดียว</option>
-                    </select>
-                    <p id="tripType-error" class="field-error hidden"></p>
-                  </div>
-                  <div>
-                    <label for="travelers">จำนวนผู้เดินทาง <span class="req" aria-hidden="true">*</span></label>
-                    <input id="travelers" name="travelers" type="number" inputmode="numeric" min="1" max="50" step="1" value="2" required aria-describedby="travelers-error" />
-                    <p id="travelers-error" class="field-error hidden"></p>
-                  </div>
-                  <div>
-                    <label for="days">จำนวนวัน <span class="req" aria-hidden="true">*</span></label>
-                    <input id="days" name="days" type="number" inputmode="numeric" min="1" max="30" step="1" value="3" required aria-describedby="days-hint days-error" />
-                    <p id="days-hint" class="hint">1–30 วัน</p>
-                    <p id="days-error" class="field-error hidden"></p>
-                  </div>
-                  <div>
-                    <label for="budget">งบประมาณรวม (บาท) <span class="req" aria-hidden="true">*</span></label>
-                    <input id="budget" name="budgetTHB" type="number" inputmode="numeric" min="1" step="1" value="5000" required aria-describedby="budget-error" />
-                    <p id="budget-error" class="field-error hidden"></p>
-                  </div>
-                </div>
-                <fieldset class="interests">
-                  <legend>ความสนใจ</legend>
-                  <div class="chips">
-                    <label class="chip"><input type="checkbox" name="interests" value="ธรรมชาติ" checked /><span>ธรรมชาติ</span></label>
-                    <label class="chip"><input type="checkbox" name="interests" value="วัฒนธรรม" /><span>วัฒนธรรม</span></label>
-                    <label class="chip"><input type="checkbox" name="interests" value="คาเฟ่" /><span>คาเฟ่</span></label>
-                    <label class="chip"><input type="checkbox" name="interests" value="อาหาร" /><span>อาหาร</span></label>
-                    <label class="chip"><input type="checkbox" name="interests" value="ทะเล" /><span>ทะเล</span></label>
-                    <label class="chip"><input type="checkbox" name="interests" value="ภูเขา" /><span>ภูเขา</span></label>
-                  </div>
-                  <label for="interest-other" class="sub-label">อื่น ๆ (คั่นด้วยเครื่องหมายจุลภาค)</label>
-                  <input id="interest-other" name="interestOther" maxlength="200" autocomplete="off" placeholder="เช่น ถ่ายรูป, ตลาดน้ำ" />
-                </fieldset>
-                <button id="submit-button" type="submit" class="btn btn-primary btn-block">
-                  <span class="btn-label">สร้างแผนเที่ยว</span>
-                  <span class="spinner" aria-hidden="true"></span>
-                </button>
-                <p id="request-status" class="status" role="status">กรอกข้อมูลเพื่อเรียก API วางแผน</p>
-              </form>
-            </details>
-          </div>
-
-          <figure class="map-panel" aria-labelledby="route-caption">
-            <div id="leaflet-map" class="leaflet-box hidden" role="region" aria-label="แผนที่จุดแวะในแผนเที่ยว"></div>
-            <ul id="map-legend" class="map-legend hidden" aria-label="สัญลักษณ์บนแผนที่">
-              <li><span class="dot dot-start" aria-hidden="true"></span>ต้นทาง</li>
-              <li><span class="dot dot-stop" aria-hidden="true"></span>จุดแวะ (ตัวเลข = วันที่)</li>
-              <li><span class="dot dot-end" aria-hidden="true"></span>ปลายทาง</li>
-            </ul>
-            <svg id="route-map" class="route-map" viewBox="0 0 300 520" role="img" aria-labelledby="route-map-title">
-              <title id="route-map-title">แผนภาพเส้นทางแบบจำลอง</title>
-              <path id="route-path" d="M150 490 C 60 430, 250 390, 170 320 C 100 260, 230 220, 160 150 C 110 100, 170 60, 150 30" fill="none" stroke="#c62828" stroke-width="3" />
-              <path d="M150 490 C 60 430, 250 390, 170 320 C 100 260, 230 220, 160 150 C 110 100, 170 60, 150 30" fill="none" stroke="#c62828" stroke-width="12" stroke-opacity=".15" />
-              <g id="route-pins"></g>
-              <g id="route-car" aria-hidden="true">
-                <rect x="-14" y="-9" width="28" height="18" rx="5" fill="#f2c230" stroke="#3b2a1a" stroke-width="1.5" />
-                <rect x="2" y="-6" width="7" height="12" rx="2" fill="#3b2a1a" />
-              </g>
-            </svg>
-            <figcaption id="route-caption" class="map-caption">ภาพประกอบเส้นทางเท่านั้น ไม่ใช่ตำแหน่งหรือระยะทางจริง</figcaption>
-          </figure>
+            <button type="submit" class="btn btn-primary btn-block">เริ่มคุยกับ AI</button>
+            <datalist id="province-options"></datalist>
+          </form>
+          <p class="hero-more"><a href="./plan.html">เปิดหน้าแชตเพื่อกรอกรายละเอียดเต็ม</a></p>
         </div>
+
+        <aside class="route-card" aria-labelledby="route-card-title">
+          <p class="route-card-tag">ตัวอย่างทริป</p>
+          <div class="route-card-head">
+            <span class="route-card-icon" aria-hidden="true">🚗</span>
+            <div>
+              <h2 id="route-card-title">ขับรถเที่ยว กรุงเทพฯ – จันทบุรี</h2>
+              <p>ระยะทางถนนประมาณ 249 กม. · ขับประมาณ 3 ชม. (OSRM)</p>
+            </div>
+          </div>
+          <ol class="route-card-rows">
+            <li><span>📍 ต้นทาง</span><strong>กรุงเทพมหานคร</strong></li>
+            <li><span>⛽ จุดแวะ</span><strong>ปั๊มน้ำมันระหว่างทาง</strong></li>
+            <li><span>🍽️ จุดแวะ</span><strong>ร้านอาหารทะเล</strong></li>
+            <li><span>🏁 ปลายทาง</span><strong>จันทบุรี</strong></li>
+          </ol>
+          <a class="btn btn-ghost btn-block" href="./plan.html?origin=%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3&amp;destination=%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%9A%E0%B8%B8%E0%B8%A3%E0%B8%B5&amp;days=2&amp;go=1">ลองแผนนี้กับ AI</a>
+        </aside>
       </div>
     </section>
 
@@ -175,7 +115,7 @@
         <h2 id="provinces-title" class="section-title center">พิมพ์ต้นทาง–ปลายทางได้ทั้ง 77 จังหวัดทั่วไทย</h2>
         <div class="transparency">
           <h3>ความโปร่งใสของข้อมูล</h3>
-          <p>AI รับคำขอได้ทุกจังหวัด และเลือกจุดแวะเฉพาะจากฐานข้อมูลของระบบเท่านั้น ข้อมูลส่วนใหญ่มาจาก OpenStreetMap ซึ่งอาสาสมัครร่วมกันบันทึก จึงอาจไม่ครบหรือไม่เป็นปัจจุบัน ทุกจุดแวะจะติดป้าย “ยังไม่ได้ตรวจสอบ” และระบบยังไม่ได้คำนวณระยะทางหรือเวลาเดินทางจริง</p>
+          <p>AI รับคำขอได้ทุกจังหวัด และเลือกจุดแวะเฉพาะจากฐานข้อมูลของระบบเท่านั้น ข้อมูลส่วนใหญ่มาจาก OpenStreetMap ซึ่งอาสาสมัครร่วมกันบันทึก จึงอาจไม่ครบหรือไม่เป็นปัจจุบัน ทุกจุดแวะจะติดป้าย “ยังไม่ได้ตรวจสอบ” ส่วนระยะทางและเวลาขับรถคำนวณตามถนนจริงโดย OSRM เป็นค่าประมาณ ไม่รวมรถติดหรือการปิดถนน</p>
           <div class="places-box">
             <h4 id="places-heading">ข้อมูลสถานที่ในระบบ</h4>
             <p id="places-status" class="empty" role="status">กำลังโหลดรายการสถานที่…</p>
@@ -205,7 +145,7 @@
     <section id="templates" class="section" aria-labelledby="templates-title">
       <div class="container">
         <h2 id="templates-title" class="section-title dark center">แผนเที่ยวแบบครบวงจร สำเร็จรูป</h2>
-        <p class="section-sub center">กดเลือกแผน ระบบจะกรอกข้อมูลให้ในฟอร์ม แล้วกด “สร้างแผนเที่ยว” ได้ทันที จำนวนวันและงบเป็นค่าตั้งต้นให้แก้ไขได้ ไม่ได้อ้างอิงราคาจริง</p>
+        <p class="section-sub center">กดเลือกแผน ระบบจะเปิดหน้าแชตและให้ AI จัดแผนทันที จำนวนวันและงบเป็นค่าตั้งต้นแก้ไขได้ ไม่ได้อ้างอิงราคาจริง</p>
         <ul id="template-list" class="template-list"></ul>
 
         <div class="explore">

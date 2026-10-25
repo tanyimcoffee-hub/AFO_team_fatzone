@@ -9,6 +9,7 @@ const REQUEST_TIMEOUT_MS = window.TRAVEL_API_TIMEOUT_MS || 60000;
 const MAX_DAYS = 30;
 const MAX_CHAT_ITEMS = 30;
 const MAX_MAP_STOPS = 6;
+const MAX_ROUTE_POINTS = 25;
 const DEFAULT_ORIGIN = "กรุงเทพมหานคร";
 
 const STOP_TYPE_LABELS = {
@@ -75,7 +76,7 @@ const DEMO_MAP_STOPS = ["ปั๊มน้ำมัน", "ร้านอาห
 
 const form = document.getElementById("plan-form");
 const submitButton = document.getElementById("submit-button");
-const submitLabel = submitButton.querySelector(".btn-label");
+const submitLabel = submitButton?.querySelector(".btn-label");
 const formErrorsElement = document.getElementById("form-errors");
 const statusElement = document.getElementById("request-status");
 const chatLog = document.getElementById("chat-log");
@@ -125,10 +126,11 @@ async function loadPlaces() {
     }
     const grandTotal = Object.values(totals).reduce((sum, n) => sum + n, 0);
     placeSummary = new Map(result.data.map((province) => [province.nameTh, province]));
-    document.getElementById("stat-places").textContent = grandTotal.toLocaleString("th-TH");
-    document.getElementById("stat-fuel").textContent = (totals.fuel || 0).toLocaleString("th-TH");
-    document.getElementById("stat-hotel").textContent = (totals.hotel || 0).toLocaleString("th-TH");
+    setTextIfPresent("stat-places", grandTotal.toLocaleString("th-TH"));
+    setTextIfPresent("stat-fuel", (totals.fuel || 0).toLocaleString("th-TH"));
+    setTextIfPresent("stat-hotel", (totals.hotel || 0).toLocaleString("th-TH"));
     if (explorerProvince) renderExplorerTabs();
+    if (!placesStatusElement) return;
     if (!grandTotal) {
       placesStatusElement.textContent = "ยังไม่มีข้อมูลสถานที่ในระบบ";
       return;
@@ -144,9 +146,15 @@ async function loadPlaces() {
     }
     if (result.attribution) appendTextElement(placesListElement.parentElement, "p", `ข้อมูลแผนที่ ${result.attribution}`, "hint");
   } catch (error) {
+    if (!placesStatusElement) return;
     placesStatusElement.textContent = `โหลดข้อมูลสถานที่จาก API ไม่สำเร็จ: ${error.message}`;
     placesStatusElement.classList.add("error");
   }
+}
+
+function setTextIfPresent(id, text) {
+  const element = document.getElementById(id);
+  if (element) element.textContent = text;
 }
 
 // ---------- ตรวจสอบข้อมูลในฟอร์ม ----------
@@ -437,7 +445,7 @@ function renderPlan(result, payload) {
     appendTextElement(bubble, "p", `ข้อมูลสถานที่ ${result.meta.attribution} ยังไม่ได้ตรวจสอบ`, "muted");
   }
 
-  updateRouteMap(payload, plan, result.meta);
+  updateRouteMap(payload, plan, result.meta, bubble);
   heading.focus();
 }
 
@@ -501,6 +509,12 @@ function drawRoute(originLabel, destinationLabel, stopLabels) {
 const THAILAND_CENTER = [13.2, 101.0];
 let leafletMap = null;
 let leafletLayer = null;
+let lastMapBounds = null;
+
+function fitMap(latLngs) {
+  lastMapBounds = latLngs;
+  leafletMap.fitBounds(latLngs, { padding: [36, 36], maxZoom: 12 });
+}
 
 function initLeafletMap() {
   if (!window.L) return false;
@@ -515,7 +529,14 @@ function initLeafletMap() {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(leafletMap);
   leafletLayer = window.L.layerGroup().addTo(leafletMap);
-  routeCaption.textContent = "สร้างแผนเพื่อดูจุดแวะบนแผนที่ เส้นประเชื่อมจุดตามลำดับในแผน ไม่ใช่เส้นทางถนนจริง";
+  // หน้าต่างเปลี่ยนขนาด: ให้ Leaflet คำนวณขนาดใหม่ แล้วซูมให้เห็นทั้งเส้นทางอีกครั้ง
+  if (window.ResizeObserver) {
+    new ResizeObserver(() => {
+      leafletMap.invalidateSize();
+      if (lastMapBounds) fitMap(lastMapBounds);
+    }).observe(box);
+  }
+  routeCaption.textContent = "สร้างแผนเพื่อดูเส้นทางถนนและจุดแวะบนแผนที่";
   return true;
 }
 
@@ -545,43 +566,106 @@ function addPin(point, kind, label, title, lines) {
   return [point.lat, point.lon];
 }
 
-function drawLeafletRoute(payload, plan, meta = {}) {
+// ลำดับจุดที่ขับผ่าน: ต้นทาง → จุดแวะ → ปลายทาง (ทริปไป-กลับ: จุดแวะวันสุดท้ายอยู่ขากลับ แล้ววนกลับต้นทาง)
+function routePoints(payload, plan, meta) {
+  const days = plan.status === "ready" ? plan.itinerary : [];
+  const lastDay = days.reduce((max, day) => Math.max(max, day.day), 0);
+  const roundTrip = payload.tripType === "round_trip";
+  const outbound = [];
+  const inbound = [];
+  for (const day of days) {
+    for (const stop of day.stops) {
+      if (typeof stop.lat !== "number" || typeof stop.lon !== "number") continue;
+      (roundTrip && lastDay > 1 && day.day === lastDay ? inbound : outbound).push({ lat: stop.lat, lon: stop.lon });
+    }
+  }
+  const points = [meta.originPoint, ...outbound, meta.destinationPoint, ...inbound, roundTrip ? meta.originPoint : null]
+    .filter(Boolean)
+    .map(({ lat, lon }) => ({ lat, lon }))
+    .filter((point, index, list) => index === 0 || point.lat !== list[index - 1].lat || point.lon !== list[index - 1].lon);
+
+  // API รับได้ไม่เกิน MAX_ROUTE_POINTS จุด: เก็บจุดแรก/สุดท้าย และเลือกจุดกลางให้กระจายเท่า ๆ กัน
+  if (points.length <= MAX_ROUTE_POINTS) return points;
+  const step = (points.length - 1) / (MAX_ROUTE_POINTS - 1);
+  return Array.from({ length: MAX_ROUTE_POINTS }, (_, i) => points[Math.round(i * step)]);
+}
+
+function formatDuration(minutes) {
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  if (!hours) return `${rest} นาที`;
+  return rest ? `${hours} ชม. ${rest} นาที` : `${hours} ชม.`;
+}
+
+let routeRequestId = 0;
+
+async function drawRoadRoute(points, summaryTarget) {
+  const requestId = ++routeRequestId;
+  routeCaption.textContent = "กำลังคำนวณเส้นทางถนน…";
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/route`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ points }),
+    });
+    const result = await response.json().catch(() => null);
+    if (requestId !== routeRequestId) return; // มีแผนใหม่กว่าแล้ว
+    if (!response.ok || !result || result.success !== true) {
+      throw new Error((result && result.error) || `HTTP ${response.status}`);
+    }
+
+    const route = result.data;
+    // เส้นขอบเข้ม + เส้นสีพีช ให้เห็นชัดบนแผนที่
+    window.L.polyline(route.geometry, { color: "#16242a", weight: 8, opacity: 0.55 }).addTo(leafletLayer);
+    window.L.polyline(route.geometry, { color: "#f4b69c", weight: 5 }).addTo(leafletLayer);
+    fitMap(route.geometry);
+
+    const summary = `เส้นทางถนนรวมประมาณ ${route.distanceKm.toLocaleString("th-TH")} กม. ขับประมาณ ${formatDuration(route.durationMin)}`;
+    routeCaption.textContent = `${summary} (ไม่รวมเวลาแวะพักและรถติด) · ${route.attribution}`;
+    if (summaryTarget) appendTextElement(summaryTarget, "p", `🚗 ${summary}`, "route-summary");
+  } catch (error) {
+    if (requestId !== routeRequestId) return;
+    // คำนวณเส้นทางไม่ได้: แสดงเส้นตรงเชื่อมจุดแทน และบอกให้ชัด
+    window.L.polyline(points.map((p) => [p.lat, p.lon]), { color: "#f4b69c", weight: 3, dashArray: "6 8" }).addTo(leafletLayer);
+    routeCaption.textContent = `คำนวณเส้นทางถนนไม่สำเร็จ (${error.message}) จึงแสดงเส้นตรงเชื่อมจุดแทน ไม่ใช่เส้นทางจริง`;
+  }
+}
+
+function drawLeafletRoute(payload, plan, meta = {}, summaryTarget = null) {
   leafletLayer.clearLayers();
-  const path = [];
+  const pins = [];
 
   if (meta.originPoint) {
-    path.push(addPin(meta.originPoint, "start", "A", `ต้นทาง: ${payload.origin}`, ["ตำแหน่งกลางจังหวัดโดยประมาณ"]));
+    pins.push(addPin(meta.originPoint, "start", "A", `ต้นทาง: ${payload.origin}`, ["ตำแหน่งกลางจังหวัดโดยประมาณ"]));
   }
 
-  let stopCount = 0;
   if (plan.status === "ready") {
     for (const day of plan.itinerary) {
       for (const stop of day.stops) {
         if (typeof stop.lat !== "number" || typeof stop.lon !== "number") continue;
-        stopCount += 1;
         const lines = [`วันที่ ${day.day}`, STOP_TYPE_LABELS[stop.type], "ยังไม่ได้ตรวจสอบ"].filter(Boolean);
-        path.push(addPin(stop, "stop", String(day.day), stop.name || "จุดแวะ", lines));
+        pins.push(addPin(stop, "stop", String(day.day), stop.name || "จุดแวะ", lines));
       }
     }
   }
 
   if (meta.destinationPoint) {
-    path.push(addPin(meta.destinationPoint, "end", "B", `ปลายทาง: ${payload.destination}`, ["ตำแหน่งกลางจังหวัดโดยประมาณ"]));
+    pins.push(addPin(meta.destinationPoint, "end", "B", `ปลายทาง: ${payload.destination}`, ["ตำแหน่งกลางจังหวัดโดยประมาณ"]));
   }
 
-  if (path.length >= 2) {
-    window.L.polyline(path, { color: "#f4b69c", weight: 3, dashArray: "6 8" }).addTo(leafletLayer);
-  }
-  if (path.length) leafletMap.fitBounds(path, { padding: [36, 36], maxZoom: 12 });
+  if (pins.length) fitMap(pins);
 
-  routeCaption.textContent = stopCount
-    ? `${stopCount} จุดแวะตามลำดับในแผน เส้นประไม่ใช่เส้นทางถนนจริง`
-    : "ยังไม่มีจุดแวะที่มีพิกัด แสดงเฉพาะต้นทางและปลายทาง (กลางจังหวัดโดยประมาณ)";
+  const points = routePoints(payload, plan, meta);
+  if (points.length >= 2) {
+    drawRoadRoute(points, summaryTarget);
+  } else {
+    routeCaption.textContent = "ยังไม่มีพิกัดพอสำหรับคำนวณเส้นทาง";
+  }
 }
 
-function updateRouteMap(payload, plan, meta) {
+function updateRouteMap(payload, plan, meta, summaryTarget) {
   if (leafletMap) {
-    drawLeafletRoute(payload, plan, meta || {});
+    drawLeafletRoute(payload, plan, meta || {}, summaryTarget);
     return;
   }
   const stops = plan.status === "ready"
@@ -611,10 +695,12 @@ function initRouteCar() {
 
 // ---------- จังหวัด แผนสำเร็จรูป และการ์ด ----------
 
-function scrollToPlanner(focusTarget) {
-  document.getElementById("trip-details").open = true;
-  document.getElementById("planner").scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
-  focusTarget.focus({ preventScroll: true });
+// สร้างลิงก์ไปหน้าแชต (plan.html) พร้อมข้อมูลทริป และส่งต่อ ?api= ถ้ามี
+function planUrl(params) {
+  const query = new URLSearchParams(params);
+  const api = new URLSearchParams(window.location.search).get("api");
+  if (api) query.set("api", api);
+  return `./plan.html?${query}`;
 }
 
 function renderProvinceOptions() {
@@ -666,10 +752,7 @@ let explorerType = "attraction";
 let explorerRequest = 0;
 
 function useAsDestination(province) {
-  form.destination.value = province;
-  if (form.origin.value.trim() === province) form.origin.value = "";
-  setStatus(`ตั้งจุดหมายเป็น ${province} แล้ว กรอกข้อมูลที่เหลือแล้วกดสร้างแผนเที่ยว`);
-  scrollToPlanner(form.origin.value.trim() ? form.days : form.origin);
+  window.location.href = planUrl({ destination: province });
 }
 
 function renderExplorerTabs() {
@@ -759,18 +842,14 @@ function openExplorer(province) {
 }
 
 function applyTemplate(template) {
-  clearFormErrors();
-  const origin = form.origin.value.trim();
-  form.origin.value = origin && origin !== template.destination ? origin : DEFAULT_ORIGIN;
-  form.destination.value = template.destination;
-  form.days.value = String(template.days);
-  form.budgetTHB.value = String(template.budgetTHB);
-  for (const checkbox of form.querySelectorAll('input[name="interests"]')) {
-    checkbox.checked = checkbox.value === template.interest;
-  }
-  form.interestOther.value = "";
-  setStatus(`ใส่แผน ${template.destination} ${template.days} วันในฟอร์มแล้ว แก้ไขได้ก่อนกดสร้างแผนเที่ยว`);
-  scrollToPlanner(submitButton);
+  window.location.href = planUrl({
+    origin: DEFAULT_ORIGIN,
+    destination: template.destination,
+    days: template.days,
+    budget: template.budgetTHB,
+    interest: template.interest,
+    go: 1,
+  });
 }
 
 function renderTemplates() {
@@ -789,15 +868,31 @@ function renderTemplates() {
   }
 }
 
-// การ์ดเลื่อนเองทุก 3.5 วินาที หยุดเมื่อชี้เมาส์/โฟกัสอยู่ในการ์ด หรือกดปุ่มหยุด
-// ผู้ใช้ที่ตั้งค่าลดการเคลื่อนไหว (prefers-reduced-motion) จะเห็นการ์ดเปลี่ยนแบบทันที ไม่มีแอนิเมชันเลื่อน
+// การ์ดเลื่อนเองทุก 3.5 วินาทีแบบนุ่มนวล หยุดเมื่อชี้เมาส์/โฟกัสอยู่ในการ์ด หรือกดปุ่มหยุด
 const CAROUSEL_INTERVAL_MS = 3500;
+const CAROUSEL_SLIDE_MS = 700;
+
+// เลื่อนด้วย requestAnimationFrame + easing เอง เพื่อให้นุ่มเท่ากันทุกเบราว์เซอร์
+function animateScroll(element, target, duration) {
+  const start = element.scrollLeft;
+  const distance = target - start;
+  const startTime = performance.now();
+  // ปิด scroll-snap ระหว่างเลื่อน ไม่ให้ดึงกลับกลางทาง
+  element.style.scrollSnapType = "none";
+  const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const frame = (now) => {
+    const t = Math.min((now - startTime) / duration, 1);
+    element.scrollLeft = start + distance * ease(t);
+    if (t < 1) requestAnimationFrame(frame);
+    else element.style.scrollSnapType = "";
+  };
+  requestAnimationFrame(frame);
+}
 
 function initCarousel() {
   const carousel = document.querySelector(".carousel");
   const track = document.getElementById("feature-track");
   const toggle = document.getElementById("carousel-toggle");
-  const behavior = prefersReducedMotion ? "auto" : "smooth";
 
   const stepWidth = () => {
     const card = track.querySelector(".feature-card");
@@ -807,9 +902,10 @@ function initCarousel() {
   // เลื่อนทีละการ์ด ถึงปลายแล้ววนกลับ
   const move = (dir) => {
     const max = track.scrollWidth - track.clientWidth;
-    if (dir > 0 && track.scrollLeft >= max - 4) track.scrollTo({ left: 0, behavior });
-    else if (dir < 0 && track.scrollLeft <= 4) track.scrollTo({ left: max, behavior });
-    else track.scrollBy({ left: stepWidth() * dir, behavior });
+    let target = track.scrollLeft + stepWidth() * dir;
+    if (dir > 0 && track.scrollLeft >= max - 4) target = 0;
+    else if (dir < 0 && track.scrollLeft <= 4) target = max;
+    animateScroll(track, Math.max(0, Math.min(max, target)), CAROUSEL_SLIDE_MS);
   };
 
   for (const button of document.querySelectorAll(".carousel-btn")) {
@@ -896,7 +992,7 @@ async function sendPlanRequest(payload, userText, { retry = false } = {}) {
   }
 }
 
-form.addEventListener("submit", async (event) => {
+async function handlePlanSubmit(event) {
   event.preventDefault();
   clearFormErrors();
 
@@ -921,9 +1017,9 @@ form.addEventListener("submit", async (event) => {
   conversation = [];
   currentPayload = payload;
   await sendPlanRequest(payload, describeRequest(payload));
-});
+}
 
-replyForm.addEventListener("submit", async (event) => {
+async function handleReplySubmit(event) {
   event.preventDefault();
   const message = replyInput.value.trim();
   if (!message || !currentPayload) {
@@ -932,22 +1028,73 @@ replyForm.addEventListener("submit", async (event) => {
   }
   replyInput.value = "";
   await sendPlanRequest({ ...currentPayload, message }, message);
-});
-
-for (const button of document.querySelectorAll(".region")) {
-  button.addEventListener("click", () => showRegion(button.dataset.region));
 }
 
-document.getElementById("explorer-use").addEventListener("click", () => {
-  if (explorerProvince) useAsDestination(explorerProvince);
-});
+// กรอกฟอร์มจากลิงก์ เช่น plan.html?origin=...&destination=...&days=3&go=1 (go=1 = ส่งให้ AI ทันที)
+function prefillFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const setValue = (name, field) => {
+    const value = params.get(name);
+    if (value) form[field].value = value.slice(0, 200);
+  };
+  setValue("origin", "origin");
+  setValue("destination", "destination");
+  setValue("days", "days");
+  setValue("budget", "budgetTHB");
+  setValue("travelers", "travelers");
+  if (TRIP_TYPE_LABELS[params.get("tripType")]) form.tripType.value = params.get("tripType");
 
-renderProvinceOptions();
-renderTemplates();
-showRegion("north");
-initCarousel();
-if (!initLeafletMap()) {
-  drawRoute("ต้นทาง", "ปลายทาง", DEMO_MAP_STOPS);
-  initRouteCar();
+  const interest = params.get("interest");
+  if (interest) {
+    const boxes = [...form.querySelectorAll('input[name="interests"]')];
+    const match = boxes.find((box) => box.value === interest);
+    for (const box of boxes) box.checked = box === match;
+    if (!match) form.interestOther.value = interest.slice(0, 200);
+  }
+
+  if (params.get("go") !== "1") return false;
+  // ลบ go ออกจาก URL ไม่ให้ส่งซ้ำเมื่อรีเฟรช
+  params.delete("go");
+  const query = params.toString();
+  window.history.replaceState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}`);
+  return true;
 }
-loadPlaces();
+
+function initPlannerPage() {
+  form.addEventListener("submit", handlePlanSubmit);
+  replyForm.addEventListener("submit", handleReplySubmit);
+  if (!initLeafletMap()) {
+    drawRoute("ต้นทาง", "ปลายทาง", DEMO_MAP_STOPS);
+    initRouteCar();
+  }
+  if (prefillFromUrl()) form.requestSubmit();
+}
+
+function initLandingPage() {
+  // ส่งต่อ ?api= ไปหน้าแชตด้วย
+  const quickForm = document.getElementById("quick-form");
+  const api = new URLSearchParams(window.location.search).get("api");
+  if (quickForm && api) {
+    const hidden = document.createElement("input");
+    hidden.type = "hidden";
+    hidden.name = "api";
+    hidden.value = api;
+    quickForm.append(hidden);
+  }
+
+  for (const button of document.querySelectorAll(".region")) {
+    button.addEventListener("click", () => showRegion(button.dataset.region));
+  }
+  document.getElementById("explorer-use").addEventListener("click", () => {
+    if (explorerProvince) useAsDestination(explorerProvince);
+  });
+
+  renderTemplates();
+  showRegion("north");
+  initCarousel();
+  loadPlaces();
+}
+
+if (document.getElementById("province-options")) renderProvinceOptions();
+if (form) initPlannerPage();
+if (document.getElementById("template-list")) initLandingPage();
