@@ -14,10 +14,31 @@ export const PLACE_TYPES = ["attraction", "restaurant", "cafe", "hotel", "fuel",
 
 export const OSM_ATTRIBUTION = "© OpenStreetMap contributors (ODbL)";
 
+// ชื่อย่อ และแหล่งท่องเที่ยวยอดนิยมที่คนมักพิมพ์แทนชื่อจังหวัด (อำเภอ/เกาะ/อุทยาน)
+// แต่ละกลุ่มคือชื่อไทย/อังกฤษของที่เดียวกัน ใช้หาจุดศูนย์กลางของแหล่งนั้นจากชื่อสถานที่
 const PROVINCE_ALIASES = {
-  "TH-10": ["กรุงเทพ", "กรุงเทพฯ", "กทม", "กทม.", "bangkok", "krungthep"],
-  "TH-14": ["อยุธยา", "ayutthaya"],
+  "TH-10": [["กรุงเทพ", "กรุงเทพฯ", "กทม", "กทม.", "bangkok", "krungthep"]],
+  "TH-14": [["อยุธยา", "ayutthaya"]],
+  "TH-20": [["พัทยา", "pattaya"], ["บางแสน", "bangsaen"], ["เกาะล้าน", "kohlarn"]],
+  "TH-21": [["เกาะเสม็ด", "kohsamet", "samet"]],
+  "TH-23": [["เกาะช้าง", "kohchang"], ["เกาะกูด", "kohkood"]],
+  "TH-30": [["โคราช", "korat"], ["เขาใหญ่", "khaoyai"], ["ปากช่อง", "pakchong"]],
+  "TH-42": [["เชียงคาน", "chiangkhan"]],
+  "TH-50": [["ดอยอินทนนท์", "doiinthanon"], ["แม่กำปอง", "maekampong"]],
+  "TH-58": [["ปาย", "pai"]],
+  "TH-67": [["เขาค้อ", "khaokho"], ["ภูทับเบิก", "phutabboek"]],
+  "TH-71": [["สังขละบุรี", "sangkhlaburi"]],
+  "TH-75": [["อัมพวา", "amphawa"]],
+  "TH-76": [["ชะอำ", "chaam"]],
+  "TH-77": [["หัวหิน", "huahin"], ["ปราณบุรี", "pranburi"]],
+  "TH-81": [["อ่าวนาง", "aonang"], ["ไร่เลย์", "railay"], ["เกาะพีพี", "phiphi", "kohphiphi"], ["เกาะลันตา", "kohlanta", "lanta"]],
+  "TH-84": [["สมุย", "เกาะสมุย", "samui", "kohsamui"], ["เกาะพะงัน", "kohphangan", "phangan"], ["เกาะเต่า", "kohtao"]],
+  "TH-90": [["หาดใหญ่", "hatyai"]],
+  "TH-91": [["เกาะหลีเป๊ะ", "หลีเป๊ะ", "kohlipe", "lipe"]],
+  "TH-95": [["เบตง", "betong"]],
 };
+
+const aliasesOf = (code) => (PROVINCE_ALIASES[code] || []).flat();
 
 // จำนวนสถานที่สูงสุดต่อประเภทที่ส่งให้ AI ต่อจังหวัดต้นทาง/ปลายทาง
 // เก็บให้น้อย เพราะ Groq แผนฟรีจำกัด 8,000 token ต่อนาที และ system prompt ใช้ไปมากแล้ว
@@ -25,6 +46,9 @@ const PLAN_CAPS = { attraction: 4, restaurant: 2, cafe: 2, hotel: 2, fuel: 2, re
 // จังหวัดที่อยู่ระหว่างทาง (ประมาณจากเส้นตรง) ส่งเฉพาะประเภทที่ใช้แวะพัก
 const CORRIDOR_CAPS = { fuel: 1, rest_stop: 1, restaurant: 1 };
 const MAX_CORRIDOR_PROVINCES = 2;
+// พิมพ์ชื่อแหล่งท่องเที่ยว (เช่น หัวหิน) แทนชื่อจังหวัด: ใช้เฉพาะสถานที่ในรัศมีนี้รอบแหล่งนั้น
+const FOCUS_RADIUS_KM = 40;
+const MIN_FOCUS_MATCHES = 3;
 const CORRIDOR_WIDTH_KM = 60;
 
 // ปั๊มน้ำมันแบรนด์หลัก ใช้จัดลำดับก่อน เพราะข้อมูล OSM บางแถวใช้ชื่อร้านสะดวกซื้อในปั๊ม
@@ -125,15 +149,17 @@ export class PlaceStore {
     if (!needle) return null;
 
     for (const province of this.provinces) {
-      const names = [province.nameTh, province.nameEn, ...(PROVINCE_ALIASES[province.code] || [])].map(normalizeProvinceText);
+      const names = [province.nameTh, province.nameEn, ...aliasesOf(province.code)].map(normalizeProvinceText);
       if (names.includes(needle)) return province;
     }
 
-    // ข้อความยาวที่มีชื่อจังหวัดอยู่ข้างใน เช่น "อำเภอเมืองเชียงใหม่"
+    // ข้อความยาวที่มีชื่อจังหวัด/แหล่งท่องเที่ยวอยู่ข้างใน เช่น "อำเภอเมืองเชียงใหม่", "อำเภอหัวหิน"
+    // ชื่อย่อสั้นกว่า 4 ตัวอักษร (เช่น ปาย) ใช้เฉพาะตอนพิมพ์ตรงทั้งคำ กันจับผิดคำ
     let best = null;
     let bestLength = 0;
     for (const province of this.provinces) {
-      for (const name of [province.nameTh, province.nameEn].map(normalizeProvinceText)) {
+      const aliases = aliasesOf(province.code).map(normalizeProvinceText).filter((alias) => alias.length >= 4);
+      for (const name of [...[province.nameTh, province.nameEn].map(normalizeProvinceText), ...aliases]) {
         if (name && name.length > bestLength && needle.includes(name)) {
           best = province;
           bestLength = name.length;
@@ -246,9 +272,51 @@ export class PlaceStore {
     return center;
   }
 
-  corridorProvinces(fromCode, toCode) {
-    const a = this.centroid(fromCode);
-    const b = this.centroid(toCode);
+  /**
+   * แปลงข้อความต้นทาง/ปลายทางเป็นจังหวัด และจุดศูนย์กลาง (focus) ถ้าพิมพ์ชื่อแหล่งท่องเที่ยว
+   * เช่น "หัวหิน" = จังหวัดประจวบคีรีขันธ์ + จุดกึ่งกลางของสถานที่ที่มีคำว่าหัวหินในชื่อ
+   */
+  resolveArea(text) {
+    const province = this.findProvince(text);
+    if (!province) return null;
+    const needle = normalizeProvinceText(text);
+    const typedProvinceName = [province.nameTh, province.nameEn]
+      .map(normalizeProvinceText)
+      .some((name) => name && needle.includes(name));
+    if (typedProvinceName) return { province, focus: null, label: province.nameTh };
+
+    // ใช้ทุกชื่อในกลุ่มเดียวกับคำที่พิมพ์ (เช่น หัวหิน + huahin) เพื่อจับทั้งชื่อไทยและอังกฤษ
+    const groups = (PROVINCE_ALIASES[province.code] || []).map((group) => group.map(normalizeProvinceText));
+    const matchedGroup = groups.find((group) => group.some((alias) => needle.includes(alias)));
+    const keys = matchedGroup || [needle];
+    const hits = (this.byProvince.get(province.code) || []).filter(
+      (place) =>
+        typeof place.lat === "number" &&
+        keys.some((key) => normalizeName(place.name).includes(key) || normalizeName(place.nameEn).includes(key))
+    );
+    if (hits.length < MIN_FOCUS_MATCHES) return { province, focus: null, label: province.nameTh };
+
+    // ใช้ค่ากลาง (median) กันสถานที่ชื่อซ้ำที่อยู่ไกลออกไป
+    const median = (values) => {
+      const sorted = [...values].sort((x, y) => x - y);
+      return sorted[Math.floor(sorted.length / 2)];
+    };
+    const focus = { lat: median(hits.map((p) => p.lat)), lon: median(hits.map((p) => p.lon)) };
+    return { province, focus, label: String(text).trim() };
+  }
+
+  /** จุดบนแผนที่ของต้นทาง/ปลายทาง: จุดแหล่งท่องเที่ยวถ้ามี ไม่เช่นนั้นกลางจังหวัด */
+  areaPoint(area) {
+    if (!area) return null;
+    if (area.focus) {
+      return { name: area.label, lat: Number(area.focus.lat.toFixed(5)), lon: Number(area.focus.lon.toFixed(5)) };
+    }
+    return this.provincePoint(area.province);
+  }
+
+  corridorProvinces(fromCode, toCode, fromPoint = null, toPoint = null) {
+    const a = fromPoint || this.centroid(fromCode);
+    const b = toPoint || this.centroid(toCode);
     if (!a || !b || fromCode === toCode) return [];
     return this.provinces
       .filter((p) => p.code !== fromCode && p.code !== toCode)
@@ -266,8 +334,11 @@ export class PlaceStore {
       .map((item) => item.province);
   }
 
-  pick(provinceCode, caps, seed) {
-    const places = this.byProvince.get(provinceCode) || [];
+  pick(provinceCode, caps, seed, focus = null) {
+    let places = this.byProvince.get(provinceCode) || [];
+    if (focus) {
+      places = places.filter((place) => typeof place.lat === "number" && distanceKm(focus, place) <= FOCUS_RADIUS_KM);
+    }
     const picked = [];
     for (const [type, cap] of Object.entries(caps)) {
       if (cap <= 0) continue;
@@ -287,8 +358,10 @@ export class PlaceStore {
 
   /** เลือกสถานที่สำหรับส่งให้ AI ตามต้นทาง ปลายทาง และความสนใจ */
   selectForPlan({ origin, destination, interests = [] }) {
-    const from = this.findProvince(origin);
-    const to = this.findProvince(destination);
+    const fromArea = this.resolveArea(origin);
+    const toArea = this.resolveArea(destination);
+    const from = fromArea?.province ?? null;
+    const to = toArea?.province ?? null;
     const seed = `${origin}|${destination}|${interests.join(",")}`;
 
     const caps = { ...PLAN_CAPS };
@@ -296,17 +369,25 @@ export class PlaceStore {
       for (const [type, extra] of Object.entries(INTEREST_BOOSTS[interest] || {})) caps[type] += extra;
     }
 
-    const endpoints = [...new Map([from, to].filter(Boolean).map((p) => [p.code, p])).values()];
-    const corridor = from && to ? this.corridorProvinces(from.code, to.code) : [];
+    // ต้นทางและปลายทางอยู่จังหวัดเดียวกัน: ใช้สถานที่ของจังหวัดครั้งเดียว (ไม่จำกัดรัศมี)
+    const sameProvince = from && to && from.code === to.code;
+    const endpoints = sameProvince
+      ? [{ province: from, focus: null }]
+      : [fromArea, toArea].filter(Boolean);
+    const corridor = from && to && !sameProvince
+      ? this.corridorProvinces(from.code, to.code, fromArea.focus, toArea.focus)
+      : [];
 
     const places = [
-      ...endpoints.flatMap((p) => this.pick(p.code, caps, seed)),
+      ...endpoints.flatMap((area) => this.pick(area.province.code, caps, seed, area.focus)),
       ...corridor.flatMap((p) => this.pick(p.code, CORRIDOR_CAPS, seed)),
     ];
 
     return {
       origin: from,
       destination: to,
+      originArea: fromArea,
+      destinationArea: toArea,
       corridor,
       places: places.map(({ id, name, province, type }) => ({ id, name, province, type })),
       hasOsm: places.some((p) => p.source === "osm"),

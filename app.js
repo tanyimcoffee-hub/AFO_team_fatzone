@@ -1,8 +1,11 @@
 // ตั้งค่า API: window.TRAVEL_API_BASE_URL (ก่อนโหลด app.js) หรือแนบ ?api=http://host:port ใน URL
+// ค่าเริ่มต้น: เปิดหน้าเว็บจากเครื่อง (localhost หรือไฟล์) ใช้ API ที่ localhost:3000
+// ส่วนเว็บที่ deploy แล้ว (เช่น Vercel) เรียก /api บนโดเมนเดียวกัน
+const IS_LOCAL_PAGE = ["localhost", "127.0.0.1", "[::1]", ""].includes(window.location.hostname);
 const API_BASE_URL = (
   new URLSearchParams(window.location.search).get("api") ||
   window.TRAVEL_API_BASE_URL ||
-  "http://localhost:3000"
+  (IS_LOCAL_PAGE ? "http://localhost:3000" : "")
 ).replace(/\/+$/, "");
 // AI ใช้เวลาตอบนานกว่า API ทั่วไป
 const REQUEST_TIMEOUT_MS = window.TRAVEL_API_TIMEOUT_MS || 60000;
@@ -292,7 +295,9 @@ async function requestPlan(payload) {
       }
       if (controller.signal.aborted) throw error;
       throw new Error(
-        `ไม่สามารถเชื่อมต่อ ${API_BASE_URL} ได้ ตรวจสอบว่า services/api กำลังทำงานและเปิด CORS ไว้`
+        API_BASE_URL
+          ? `ไม่สามารถเชื่อมต่อ ${API_BASE_URL} ได้ ตรวจสอบว่า services/api กำลังทำงานและเปิด CORS ไว้`
+          : "ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง"
       );
     }
 
@@ -580,6 +585,11 @@ function routePoints(payload, plan, meta) {
       (roundTrip && lastDay > 1 && day.day === lastDay ? inbound : outbound).push({ lat: stop.lat, lon: stop.lon });
     }
   }
+  // เรียงจุดแวะตามระยะทางจากจุดเริ่มของแต่ละขา เพื่อไม่ให้เส้นทางวนกลับไปกลับมา
+  const byDistanceFrom = (start) => (a, b) => (start ? approxKm(start, a) - approxKm(start, b) : 0);
+  outbound.sort(byDistanceFrom(meta.originPoint));
+  inbound.sort(byDistanceFrom(meta.destinationPoint));
+
   const points = [meta.originPoint, ...outbound, meta.destinationPoint, ...inbound, roundTrip ? meta.originPoint : null]
     .filter(Boolean)
     .map(({ lat, lon }) => ({ lat, lon }))
@@ -589,6 +599,14 @@ function routePoints(payload, plan, meta) {
   if (points.length <= MAX_ROUTE_POINTS) return points;
   const step = (points.length - 1) / (MAX_ROUTE_POINTS - 1);
   return Array.from({ length: MAX_ROUTE_POINTS }, (_, i) => points[Math.round(i * step)]);
+}
+
+// ระยะทางเส้นตรงโดยประมาณ (กม.) ใช้แค่จัดลำดับจุด
+function approxKm(a, b) {
+  const rad = Math.PI / 180;
+  const x = (b.lon - a.lon) * rad * Math.cos(((a.lat + b.lat) / 2) * rad);
+  const y = (b.lat - a.lat) * rad;
+  return Math.sqrt(x * x + y * y) * 6371;
 }
 
 function formatDuration(minutes) {

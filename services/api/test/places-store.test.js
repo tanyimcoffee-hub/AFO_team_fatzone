@@ -10,6 +10,7 @@ const PROVINCES = [
   { code: "TH-19", nameTh: "สระบุรี", nameEn: "Saraburi" },
   { code: "TH-50", nameTh: "เชียงใหม่", nameEn: "Chiang Mai" },
   { code: "TH-60", nameTh: "นครสวรรค์", nameEn: "Nakhon Sawan" },
+  { code: "TH-77", nameTh: "ประจวบคีรีขันธ์", nameEn: "Prachuap Khiri Khan" },
   { code: "TH-83", nameTh: "ภูเก็ต", nameEn: "Phuket" },
 ];
 
@@ -42,6 +43,13 @@ async function makeFixture({ team = [], legacy = [] } = {}) {
       osmPlace("osm-way-7", "TH-50", "โรงแรมทดสอบ", "hotel", 18.79, 98.97, { nameEn: "Test Hotel" }),
     ],
     "TH-83": [osmPlace("osm-node-8", "TH-83", "หาดป่าตอง", "attraction", 7.9, 98.3)],
+    // หัวหินอยู่เหนือสุดของจังหวัด ส่วนจุดพักรถเขาโพธิ์อยู่ห่างลงไปทางใต้ราว 170 กม.
+    "TH-77": [
+      osmPlace("osm-node-h1", "TH-77", "Hua Hin Beach Hotel", "hotel", 12.57, 99.96),
+      osmPlace("osm-node-h2", "TH-77", "โรงแรมหัวหินวิว", "hotel", 12.56, 99.95),
+      osmPlace("osm-node-h3", "TH-77", "หัวหินคาเฟ่", "cafe", 12.58, 99.96),
+      osmPlace("osm-node-h4", "TH-77", "Khaopho Service Area", "rest_stop", 10.99, 99.35),
+    ],
   };
   for (const [code, places] of Object.entries(osm)) {
     await writeFile(path.join(osmDir, `${code}.json`), JSON.stringify(places));
@@ -71,6 +79,10 @@ test("findProvince รองรับชื่อไทย อังกฤษ �
   assert.equal(store.findProvince("กทม.").code, "TH-10");
   assert.equal(store.findProvince("อำเภอเมืองเชียงใหม่").code, "TH-50");
   assert.equal(store.findProvince("ปารีส"), null);
+  // แหล่งท่องเที่ยวที่ไม่ใช่ชื่อจังหวัด
+  assert.equal(store.findProvince("เกาะภูเก็ต").code, "TH-83");
+  assert.equal(store.findProvince("Hua Hin").code, "TH-77");
+  assert.equal(store.findProvince("อำเภอหัวหิน").code, "TH-77");
   assert.equal(store.findProvince(""), null);
 });
 
@@ -179,6 +191,25 @@ test("provincePoint คืนจุดกึ่งกลางจังหวั
   const point = store.provincePoint(store.findProvince("ภูเก็ต"));
   assert.deepEqual(point, { name: "ภูเก็ต", lat: 7.9, lon: 98.3 });
   assert.equal(store.provincePoint(null), null);
+});
+
+test("ปลายทางเป็นแหล่งท่องเที่ยว: ใช้จุดของแหล่งนั้นและเฉพาะสถานที่ใกล้ ๆ", async () => {
+  const store = await makeFixture();
+  const selection = store.selectForPlan({ origin: "กรุงเทพฯ", destination: "หัวหิน" });
+  assert.equal(selection.destination.code, "TH-77");
+  assert.ok(Math.abs(selection.destinationArea.focus.lat - 12.57) < 0.02);
+  assert.ok(!selection.places.some((p) => p.id === "osm-node-h4"), "ไม่ควรเลือกจุดพักรถที่ห่างจากหัวหิน 170 กม.");
+  assert.ok(selection.places.some((p) => p.id === "osm-node-h3"));
+
+  const point = store.areaPoint(selection.destinationArea);
+  assert.equal(point.name, "หัวหิน");
+  assert.ok(Math.abs(point.lat - 12.57) < 0.02);
+
+  // พิมพ์ชื่อจังหวัดตรง ๆ: ไม่จำกัดรัศมี และใช้จุดกลางจังหวัด
+  const whole = store.selectForPlan({ origin: "กรุงเทพฯ", destination: "ประจวบคีรีขันธ์" });
+  assert.equal(whole.destinationArea.focus, null);
+  assert.ok(whole.places.some((p) => p.id === "osm-node-h4"));
+  assert.equal(store.areaPoint(whole.destinationArea).name, "ประจวบคีรีขันธ์");
 });
 
 test("loadPlaceStore แจ้งเมื่อยังไม่มีไฟล์ provinces.json", async () => {
