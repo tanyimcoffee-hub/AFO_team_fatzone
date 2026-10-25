@@ -46,7 +46,7 @@ npm start
 python -m http.server 8080
 ```
 
-The page calls `http://localhost:3000`. Override it with `window.TRAVEL_API_BASE_URL` before `app.js` loads, or add `?api=http://host:port` to the page URL.
+The page calls `http://localhost:3000`. Override it with `window.TRAVEL_API_BASE_URL` before `script.js` loads, or add `?api=http://host:port` to the page URL.
 
 When the page is opened from `localhost`, `127.0.0.1` or a file, it calls the API at `http://localhost:3000`. On any other host (for example a Vercel URL) it calls `/api` on the same domain.
 
@@ -82,7 +82,7 @@ To test the same setup locally, install the Vercel CLI and run `vercel dev` from
 
 ## Web pages
 
-Repo root, sharing `styles.css` and `app.js`:
+Repo root, sharing `styles.css` and `script.js` (the browser script; not to be confused with `services/api/app.js`):
 
 - `index.html` (landing): quick-start box (origin, destination, days) that opens the chat page, ready-made trip templates, auto-scrolling feature cards, a region picker for all 77 provinces and a per-province place explorer.
 - `plan.html` (chat page): a large chat window (trip form, AI replies, reply box for follow-up questions) next to a large map. Links can prefill it, e.g. `plan.html?origin=กรุงเทพมหานคร&destination=จันทบุรี&days=2&go=1` (`go=1` sends to the AI right away; other params: `budget`, `travelers`, `tripType`, `interest`).

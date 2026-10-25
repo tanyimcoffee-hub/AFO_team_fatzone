@@ -1,4 +1,5 @@
-// ตั้งค่า API: window.TRAVEL_API_BASE_URL (ก่อนโหลด app.js) หรือแนบ ?api=http://host:port ใน URL
+// สคริปต์ฝั่งเบราว์เซอร์ของ index.html และ plan.html (ตั้งชื่อ script.js ไม่ใช่ app.js เพื่อไม่ให้ Vercel เข้าใจว่าเป็น Express server)
+// ตั้งค่า API: window.TRAVEL_API_BASE_URL (ก่อนโหลด script.js) หรือแนบ ?api=http://host:port ใน URL
 // ค่าเริ่มต้น: เปิดหน้าเว็บจากเครื่อง (localhost หรือไฟล์) ใช้ API ที่ localhost:3000
 // ส่วนเว็บที่ deploy แล้ว (เช่น Vercel) เรียก /api บนโดเมนเดียวกัน
 const IS_LOCAL_PAGE = ["localhost", "127.0.0.1", "[::1]", ""].includes(window.location.hostname);
